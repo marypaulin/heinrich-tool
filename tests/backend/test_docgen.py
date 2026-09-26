@@ -12,7 +12,6 @@ from docx.table import Table
 
 from src.backend.docgen import (
     fill_table_with_line_items,
-    replace_delivery_date,
     replace_placeholders,
 )
 from src.backend.models import LineItem
@@ -123,11 +122,11 @@ def test_placeholder_is_replaced_at_every_occurrence(sample_template):
     assert item_table(sample_template).cell(3, 0).text == "Ust. 19% auf 254,70€ netto"
 
 
-# — Delivery date —————————————————————————————————————————————————————————————
+# — Placeholders split across runs ————————————————————————————————————————————
 
 
 def test_delivery_date_split_across_runs_is_replaced(sample_template):
-    replace_delivery_date(sample_template, {PH_DELIVERY_DATE: "10.10.2026"})
+    replace_placeholders(sample_template, {PH_DELIVERY_DATE: "10.10.2026"})
 
     assert "Liefertermin: 10.10.2026" in paragraph_texts(sample_template)
 
@@ -138,7 +137,7 @@ def test_text_around_split_delivery_date_is_kept():
     paragraph.add_run("Liefertermin: <Liefer")
     paragraph.add_run("datum> ab Werk")
 
-    replace_delivery_date(doc, {PH_DELIVERY_DATE: "10.10.2026"})
+    replace_placeholders(doc, {PH_DELIVERY_DATE: "10.10.2026"})
 
     assert paragraph.text == "Liefertermin: 10.10.2026 ab Werk"
 

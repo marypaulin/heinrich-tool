@@ -12,7 +12,6 @@ from .docgen import (
     fill_table_with_line_items,
     load_intermediate_template,
     load_template,
-    replace_delivery_date,
     replace_placeholders,
     save_docx,
     save_intermediate_template,
@@ -109,7 +108,7 @@ def _generate_offer_or_delivery_docx(
 
     fill_table_with_line_items(doc, line_items)
     replace_placeholders(doc, totals.to_mapping())
-    replace_delivery_date(doc, delivery_date.to_mapping(config.date_format))
+    replace_placeholders(doc, delivery_date.to_mapping(config.date_format))
     save_intermediate_template(project_number, doc)
 
     _fill_and_save_docx(

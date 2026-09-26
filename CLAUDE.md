@@ -59,7 +59,7 @@ working notes and is always fine to read.
 - No inline comments unless the *why* is non-obvious (a hidden constraint, a workaround,
   a non-intuitive invariant). Never describe *what* the code does.
 - Docstrings only for functions with a non-obvious contract or complex behavior (see
-  `_replace_placeholder_across_runs`, `csv_rows_to_line_items` for examples of what
+  `_replace_in_paragraph`, `csv_rows_to_line_items` for examples of what
   warrants one).
 - Short one-line module docstrings at the top of each file.
 - Be explicit about what another developer would otherwise have to ask: a hidden
