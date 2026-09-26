@@ -2,30 +2,15 @@
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
 
-from src.backend.config import Config
 from src.backend.csv_transformer import csv_rows_to_line_items
 from src.backend.models import CsvRow, LineItem
-
-CONFIG = Config(
-    data_root=Path("."),
-    hourly_rate_mapping={
-        Decimal("85.00"): "Meisterstunde",
-        Decimal("48.00"): "Helferstunde",
-    },
-    hourly_rate_default="Arbeitsstunde",
-    date_format="%d.%m.%Y",
-    vat_rate=Decimal("0.19"),
-    documents={},
-    filenames={},
-)
 
 
 def csv_row(
     order_number: str = "90010001",
     duration_hours: Decimal = Decimal("3.00"),
-    hourly_rate: Decimal = Decimal("85.00"),
+    hourly_rate: Decimal = Decimal("84.90"),
     material_cost: Decimal = Decimal("0.00"),
     row_number: int = 2,
 ) -> CsvRow:
@@ -44,8 +29,8 @@ def csv_row(
 # — Hours ———————————————————————————————————————————————————————————————————————
 
 
-def test_row_without_material_becomes_one_hours_item():
-    line_items, messages = csv_rows_to_line_items([csv_row()], CONFIG)
+def test_row_without_material_becomes_one_hours_item(sample_config):
+    line_items, messages = csv_rows_to_line_items([csv_row()], sample_config)
 
     assert line_items == [
         LineItem(
@@ -53,20 +38,20 @@ def test_row_without_material_becomes_one_hours_item():
             order_number="90010001",
             quantity=Decimal("3.00"),
             description="Meisterstunde zu Auftrag Nr. 90010001",
-            unit_price=Decimal("85.00"),
-            total_price=Decimal("255.00"),
+            unit_price=Decimal("84.90"),
+            total_price=Decimal("254.70"),
         )
     ]
     assert messages == []
 
 
-def test_each_row_gets_the_description_of_its_hourly_rate():
+def test_each_row_gets_the_description_of_its_hourly_rate(sample_config):
     rows = [
-        csv_row(hourly_rate=Decimal("85.00")),
+        csv_row(hourly_rate=Decimal("84.90")),
         csv_row(hourly_rate=Decimal("48.00")),
     ]
 
-    line_items, _ = csv_rows_to_line_items(rows, CONFIG)
+    line_items, _ = csv_rows_to_line_items(rows, sample_config)
 
     assert [item.description for item in line_items] == [
         "Meisterstunde zu Auftrag Nr. 90010001",
@@ -74,20 +59,22 @@ def test_each_row_gets_the_description_of_its_hourly_rate():
     ]
 
 
-def test_unknown_hourly_rate_falls_back_to_default_with_warning():
+def test_unknown_hourly_rate_falls_back_to_default_with_warning(sample_config):
     line_items, messages = csv_rows_to_line_items(
-        [csv_row(hourly_rate=Decimal("82.50"))], CONFIG
+        [csv_row(hourly_rate=Decimal("65.00"))], sample_config
     )
 
     assert line_items[0].description == "Arbeitsstunde zu Auftrag Nr. 90010001"
-    assert line_items[0].total_price == Decimal("247.50")
+    assert line_items[0].total_price == Decimal("195.00")
     assert len(messages) == 1
 
 
-def test_line_total_is_rounded_to_cents_half_up():
+def test_line_total_is_rounded_to_cents_half_up(sample_config):
+    # No rate in the sample config has odd cents, so none reaches a half cent on
+    # half hours; this rate is invented for the rounding case.
     line_items, _ = csv_rows_to_line_items(
         [csv_row(duration_hours=Decimal("0.50"), hourly_rate=Decimal("60.25"))],
-        CONFIG,
+        sample_config,
     )
 
     assert line_items[0].total_price == Decimal("30.13")
@@ -96,10 +83,10 @@ def test_line_total_is_rounded_to_cents_half_up():
 # — Material ————————————————————————————————————————————————————————————————————
 
 
-def test_material_adds_a_material_item_after_the_hours():
+def test_material_adds_a_material_item_after_the_hours(sample_config):
     line_items, messages = csv_rows_to_line_items(
         [csv_row(duration_hours=Decimal("1.00"), material_cost=Decimal("95.00"))],
-        CONFIG,
+        sample_config,
     )
 
     assert [item.kind for item in line_items] == ["hours", "material"]
@@ -114,10 +101,10 @@ def test_material_adds_a_material_item_after_the_hours():
     assert messages == []
 
 
-def test_row_without_hours_becomes_only_a_material_item():
+def test_row_without_hours_becomes_only_a_material_item(sample_config):
     line_items, messages = csv_rows_to_line_items(
         [csv_row(duration_hours=Decimal("0.00"), material_cost=Decimal("95.00"))],
-        CONFIG,
+        sample_config,
     )
 
     assert line_items == [
@@ -136,22 +123,23 @@ def test_row_without_hours_becomes_only_a_material_item():
 # — Skipped rows ————————————————————————————————————————————————————————————————
 
 
-def test_row_without_order_number_is_skipped_with_warning():
+def test_row_without_order_number_is_skipped_with_warning(sample_config):
     rows = [
         csv_row(order_number="90010001", row_number=2),
         csv_row(order_number="", row_number=3),
         csv_row(order_number="90010002", row_number=4),
     ]
 
-    line_items, messages = csv_rows_to_line_items(rows, CONFIG)
+    line_items, messages = csv_rows_to_line_items(rows, sample_config)
 
     assert [item.order_number for item in line_items] == ["90010001", "90010002"]
     assert len(messages) == 1
 
 
-def test_row_without_hours_and_material_is_skipped_with_warning():
+def test_row_without_hours_and_material_is_skipped_with_warning(sample_config):
     line_items, messages = csv_rows_to_line_items(
-        [csv_row(duration_hours=Decimal("0.00"), material_cost=Decimal("0.00"))], CONFIG
+        [csv_row(duration_hours=Decimal("0.00"), material_cost=Decimal("0.00"))],
+        sample_config,
     )
 
     assert line_items == []
@@ -161,13 +149,13 @@ def test_row_without_hours_and_material_is_skipped_with_warning():
 # — Order of items ——————————————————————————————————————————————————————————————
 
 
-def test_items_follow_the_csv_order():
+def test_items_follow_the_csv_order(sample_config):
     rows = [
         csv_row(order_number="90010001", material_cost=Decimal("30.00")),
         csv_row(order_number="90010002"),
     ]
 
-    line_items, _ = csv_rows_to_line_items(rows, CONFIG)
+    line_items, _ = csv_rows_to_line_items(rows, sample_config)
 
     assert [(item.order_number, item.kind) for item in line_items] == [
         ("90010001", "hours"),

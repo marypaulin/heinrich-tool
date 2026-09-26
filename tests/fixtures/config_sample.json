@@ -1,0 +1,41 @@
+{
+  "DATA_ROOT": ".",
+  "HOURLY_RATE_MAPPING": {
+    "84.90": "Meisterstunde",
+    "139.90": "Meisterstunde Sonntag",
+    "48.00": "Helferstunde",
+    "74.90": "Helferstunde Sonntag",
+    "92.00": "Meisterstunde",
+    "151.00": "Meisterstunde Sonntag"
+  },
+  "HOURLY_RATE_DEFAULT": "Arbeitsstunde",
+  "DATE_FORMAT": "%d.%m.%Y",
+  "VAT_RATE": 0.19,
+  "DOCUMENTS": {
+    "ANGEBOT": {
+      "DOCTYPE": "Angebot",
+      "HEADER": "Wir bieten folgende Positionen an:",
+      "DELIVERY_DAYS": 14
+    },
+    "LIEFERSCHEIN": {
+      "DOCTYPE": "Lieferschein",
+      "HEADER": "Wir liefern folgende Positionen an:",
+      "DELIVERY_DAYS": 0
+    },
+    "RECHNUNG": {
+      "DOCTYPE": "Rechnung",
+      "HEADER": "Wir bitten um Ausgleich der folgenden Positionen:"
+    },
+    "AUFTRAG": {
+      "DOCTYPE": "Auftragsbestätigung",
+      "HEADER": "Wir bestätigen den Auftrag über folgende Positionen:"
+    }
+  },
+  "FILENAMES": {
+    "CSV_NAME_RE": "heinrich_zeiterfassung_*.csv",
+    "ANGEBOT": "Angebot Nr. {project_number}.docx",
+    "LIEFERSCHEIN": "Lieferschein Nr. {project_number}.docx",
+    "RECHNUNG": "Rechnung Nr. {project_number} - {receipt_number}.docx",
+    "AUFTRAG": "Auftragsbestätigung Nr. {project_number} - {receipt_number}.docx"
+  }
+}
