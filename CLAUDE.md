@@ -18,11 +18,11 @@ in Claude's memory for this project.
 
 - `config.json`
 - `RHI/`
-- `templates/Vordruck.docx` — use `templates/Vordruck_sample.docx` instead
+- `templates/Vordruck.docx` — use `tests/fixtures/Vordruck_sample.docx` instead
 
-Substitutes for customer data are named `_sample`: `Vordruck_sample.docx`,
-`heinrich_zeiterfassung_sample.csv`, later `config_sample.json` (not
-`config.example.json`).
+Substitutes for customer data are named `_sample` and live in `tests/fixtures/`:
+`Vordruck_sample.docx`, `heinrich_zeiterfassung_sample.csv`, `config_sample.json`
+(not `config.example.json`).
 
 `notes/` is gitignored too but holds no customer data — it's the user's own
 working notes and is always fine to read.
