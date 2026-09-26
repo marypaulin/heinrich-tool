@@ -110,7 +110,7 @@ Diese erhält der Nutzer des Tools per Mail. Für die korrekte Nutzung:
 
 1. `Vordruck.docx` → Ordner `templates`
 2. `config.json` → Heinrich App Projektordner (Root-Ebene)
-3. In `config.json` den Pfad zum Datenverzeichnis konfigurieren: `"DATA_ROOT": "/Pfad/zu/RHI/"`
+3. In `config.json` den Pfad zum Datenverzeichnis konfigurieren: `"DATA_ROOT": "/Pfad/zum/Datenordner/"`
 
 ---
 

@@ -10,7 +10,7 @@ st.markdown(
 
 # Dummy config values for demo
 config = {
-    "data_root": str(Path.home() / "development" / "heinrich-tool" / "RHI"),
+    "data_root": str(Path.home() / "development" / "heinrich-tool" / "Datenordner"),
     "templates_dir": str(Path.home() / "development" / "heinrich-tool" / "templates"),
     "default_hourly_rate": 55.00,
     "pdf_renderer": "LibreOffice",

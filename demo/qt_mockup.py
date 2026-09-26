@@ -685,7 +685,7 @@ class DocumentsPage(QWidget):
         self.output.setPlainText(
             "\n".join(
                 [
-                    f"Projektordner gefunden: RHI/{project} - Allgemein Juli",
+                    f"Projektordner gefunden: Datenordner/{project} - Allgemein Juli",
                     "CSV Datei gefunden: heinrich_zeiterfassung_2025-08-01.csv",
                     "Achtung: Überspringe Zeile 4 mit ungültiger Auftrags-Nr. 123",
                     f"{doc_type} erzeugt: {doc_type} Nr. {project}.docx",
@@ -797,15 +797,20 @@ class SettingsPage(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.data_root = QLineEdit("C:\\Users\\max\\OneDrive\\RHI", readOnly=True)
+        self.data_root = QLineEdit(
+            "C:\\Users\\max\\OneDrive\\Datenordner", readOnly=True
+        )
         browse = _button("Ordner wählen…", accent="blue")
         browse.clicked.connect(self._on_browse)
 
         form = _form(
             [
-                ("RHI-Ordner", _row(self.data_root, browse)),
-                ("Konfiguration", QLineEdit("RHI/heinrich_config.json", readOnly=True)),
-                ("Word-Vorlage", QLineEdit("RHI/Vordruck.docx", readOnly=True)),
+                ("Datenordner", _row(self.data_root, browse)),
+                (
+                    "Konfiguration",
+                    QLineEdit("Datenordner/heinrich_config.json", readOnly=True),
+                ),
+                ("Word-Vorlage", QLineEdit("Datenordner/Vordruck.docx", readOnly=True)),
             ]
         )
 
@@ -819,8 +824,8 @@ class SettingsPage(QWidget):
         layout.addWidget(card)
         layout.addWidget(
             _hint(
-                "Nur der RHI-Ordner wird auf diesem Rechner gespeichert. Konfiguration "
-                "und Word-Vorlage liegen im RHI-Ordner selbst und stehen dadurch über "
+                "Nur der Datenordner wird auf diesem Rechner gespeichert. Konfiguration "
+                "und Word-Vorlage liegen im Datenordner selbst und stehen dadurch über "
                 "OneDrive auf allen Rechnern zur Verfügung. Die Konfiguration wird im "
                 "Texteditor bearbeitet."
             )
@@ -828,7 +833,7 @@ class SettingsPage(QWidget):
         layout.addStretch()
 
     def _on_browse(self):
-        chosen = QFileDialog.getExistingDirectory(self, "RHI-Ordner wählen")
+        chosen = QFileDialog.getExistingDirectory(self, "Datenordner wählen")
         if chosen:
             self.data_root.setText(chosen)
 
@@ -863,10 +868,10 @@ def _dark_palette() -> QPalette:
 class MainWindow(QMainWindow):
     def __init__(self, timesheet_editable: bool = True):
         super().__init__()
-        self.setWindowTitle("Heinrich App — RHI Abrechnung")
+        self.setWindowTitle("Heinrich App")
         self.resize(1120, 760)
 
-        title = QLabel("RHI Abrechnung")
+        title = QLabel("Projektabrechnung")
         title.setObjectName("Title")
 
         badge = QLabel("Entwurf")
