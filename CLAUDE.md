@@ -84,6 +84,12 @@ working notes and is always fine to read.
 - Test data lives in `tests/fixtures/` and is invented: numbers with realistic
   digit counts (project 4, order number usually 8, receipt 10). Never real
   customer data; the repository is public.
+- Setup that every test in a module repeats (the sample template, the sample
+  config) is a pytest fixture, not a helper called at the top of each test.
+  A fixture used by one module lives there; one shared across modules goes
+  into `tests/conftest.py`.
+- Test data helpers take every value a test asserts on as an argument, so
+  the expected value is visible in the test itself.
 
 ## Git
 
