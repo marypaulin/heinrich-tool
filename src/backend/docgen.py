@@ -12,7 +12,7 @@ from docx.document import Document as DocxDocument  # Only for type hints
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.opc.exceptions import PackageNotFoundError
 from docx.shared import Pt
-from docx.table import _Row
+from docx.table import _Cell, _Row
 from docx.text.paragraph import Paragraph
 
 from .formatting import format_price, format_quantity
@@ -98,8 +98,9 @@ def replace_placeholders(doc: DocxDocument, mapping: dict[str, str]) -> None:
             _replace_in_paragraph(paragraph, placeholder, value)
 
 
-def _format_cell(cell, font_name="Calibri", font_size=9, bold=True):
-    """Set font for all text in a table cell."""
+def _format_cell(
+    cell: _Cell, font_name: str = "Calibri", font_size: int = 9, bold: bool = True
+) -> None:
     for paragraph in cell.paragraphs:
         for run in paragraph.runs:
             run.font.name = font_name
@@ -108,7 +109,6 @@ def _format_cell(cell, font_name="Calibri", font_size=9, bold=True):
 
 
 def _fill_row_cells(row: _Row, pos: int, item: LineItem) -> None:
-    """Fill and format the cells of a single table row."""
     cells = row.cells
     cells[0].text = str(pos)
     cells[1].text = format_quantity(item.quantity)
@@ -122,35 +122,22 @@ def _fill_row_cells(row: _Row, pos: int, item: LineItem) -> None:
 
 
 def fill_table_with_line_items(doc: DocxDocument, line_items: list[LineItem]) -> None:
-    """Fill the main table in the document with data.
+    """Fill the line item table, recognized by five columns and the header "Pos".
 
-    Note: This function is business-logic-specific."""
+    The template holds one empty row below the header. The first item goes
+    there; each further item gets a copy of that row, inserted after the
+    previous item so the sum rows stay below.
+    """
     for table in doc.tables:
         if len(table.columns) == 5 and table.cell(0, 0).text == "Pos":
-            # Fill the first table row (already present in template)
-            # 1) Get the first table row
-            row = table.rows[1]
-
-            # 2) Fill cells
-            _fill_row_cells(row, pos=1, item=line_items[0])
-
-            # For additional line items, insert new rows
+            first_row = table.rows[1]
+            _fill_row_cells(first_row, pos=1, item=line_items[0])
+            previous_tr = first_row._tr
             for pos, item in enumerate(line_items[1:], start=2):
-                # 1) Create a new row
-                tr = deepcopy(table.rows[1]._tr)
-                tbl = table._tbl
-
-                # 2) Compute insertion index
-                insert_at = pos + 2
-
-                # 3) Insert the row's XML node to the desired position
-                tbl.insert(insert_at, tr)
-
-                # 4) Rewrap so the proxy matches the new position
-                row = _Row(tr, table)
-
-                # 5) Fill cells
-                _fill_row_cells(row, pos=pos, item=item)
+                tr = deepcopy(first_row._tr)
+                previous_tr.addnext(tr)
+                _fill_row_cells(_Row(tr, table), pos=pos, item=item)
+                previous_tr = tr
             return
 
     raise ValueError("No matching table found in template document.")
