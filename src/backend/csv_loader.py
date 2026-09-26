@@ -29,7 +29,7 @@ REQUIRED_COLUMNS = [
     CSV_COL_TOTAL,
 ]
 
-# The customer records time in half hours only
+# The client records time in half hours only
 HOUR_STEP = Decimal("0.5")
 
 # Order number is left out on purpose: csv_transformer skips rows without one

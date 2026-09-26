@@ -44,7 +44,7 @@ def _material_item(csv_row: CsvRow) -> LineItem:
         kind="material",
         order_number=csv_row.order_number,
         quantity=Decimal(1),
-        # NOTE: Original CSV description currently not used upon customer request
+        # NOTE: Original CSV description currently not used upon client request
         description=f"Material zu Auftrag Nr. {csv_row.order_number}",
         unit_price=csv_row.material_cost,
         total_price=csv_row.material_cost,

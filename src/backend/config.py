@@ -27,12 +27,9 @@ class Config:
 def load_config(path: Path) -> Config:
     raw = json.loads(path.read_text(encoding="utf-8"), parse_float=Decimal)
 
-    data_root_raw = Path(raw["DATA_ROOT"])
-
-    if data_root_raw.is_absolute():
-        data_root = data_root_raw
-    else:
-        data_root = path.parent / data_root_raw
+    # The client's config holds an absolute path; a relative one resolves
+    # against the config file's folder.
+    data_root = path.parent / raw["DATA_ROOT"]
 
     mapping_raw = raw["HOURLY_RATE_MAPPING"]
     mapping_converted = {Decimal(k): v for k, v in mapping_raw.items()}
