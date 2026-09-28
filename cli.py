@@ -2,6 +2,7 @@
 
 import logging
 import sys
+from datetime import date
 
 from src.backend.cli_args_parser import parse_cli_args
 from src.backend.config import load_config
@@ -20,11 +21,11 @@ def main():
     config = load_config(CONFIG_PATH)
 
     if args.mode == "offer":
-        generate_offer(args, config)
+        generate_offer(args, date.today(), config)
     elif args.mode == "delivery":
-        generate_delivery(args, config)
+        generate_delivery(args, date.today(), config)
     elif args.mode == "invoice":
-        generate_invoice_and_order(args, config)
+        generate_invoice_and_order(args, date.today(), config)
     else:
         logging.error(f"Unknown mode: {args.mode}")
 

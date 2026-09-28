@@ -35,6 +35,7 @@ from .pdfgen import render_pdf
 def _build_meta(
     project_number: str,
     receipt_number: str | None,
+    document_date: date,
     doc_key: str,
     config: Config,
 ) -> DocxMeta:
@@ -44,14 +45,16 @@ def _build_meta(
         receipt_number=receipt_number,
         doctype=doc_config.doctype,
         header=doc_config.header,
-        date_today=date.today(),
+        document_date=document_date,
     )
 
 
-def _build_delivery_date(doc_key: str, config: Config) -> DocxDeliveryDate:
+def _build_delivery_date(
+    document_date: date, doc_key: str, config: Config
+) -> DocxDeliveryDate:
     doc_config = config.documents[doc_key]
     assert doc_config.delivery_days is not None  # always set for ANGEBOT/LIEFERSCHEIN
-    return DocxDeliveryDate(date.today() + timedelta(days=doc_config.delivery_days))
+    return DocxDeliveryDate(document_date + timedelta(days=doc_config.delivery_days))
 
 
 def _load_line_items(
@@ -93,6 +96,7 @@ def _generate_offer_or_delivery_docx(
     doc_key: str,
     project_number: str,
     receipt_number: str | None,
+    document_date: date,
     line_items: list[LineItem],
     target_path: Path,
     config: Config,
@@ -102,9 +106,9 @@ def _generate_offer_or_delivery_docx(
 ) -> None:
     """Fill Word template with CSV data and save as Angebot or Lieferschein DOCX."""
     doc = load_template()
-    meta = _build_meta(project_number, receipt_number, doc_key, config)
+    meta = _build_meta(project_number, receipt_number, document_date, doc_key, config)
     totals = Totals.calculate_sums_and_vat(line_items, config.vat_rate)
-    delivery_date = _build_delivery_date(doc_key, config)
+    delivery_date = _build_delivery_date(document_date, doc_key, config)
 
     fill_table_with_line_items(doc, line_items)
     replace_placeholders(doc, totals.to_mapping())
@@ -125,6 +129,7 @@ def _generate_offer_or_delivery_docx(
 def _generate_invoice_and_order_docx(
     project_number: str,
     receipt_number: str,
+    document_date: date,
     target_paths: dict[str, Path],
     config: Config,
     messages: Messages,
@@ -133,8 +138,12 @@ def _generate_invoice_and_order_docx(
     doc_invoice = load_intermediate_template(project_number)
     doc_order = deepcopy(doc_invoice)
 
-    meta_invoice = _build_meta(project_number, receipt_number, "RECHNUNG", config)
-    meta_order = _build_meta(project_number, receipt_number, "AUFTRAG", config)
+    meta_invoice = _build_meta(
+        project_number, receipt_number, document_date, "RECHNUNG", config
+    )
+    meta_order = _build_meta(
+        project_number, receipt_number, document_date, "AUFTRAG", config
+    )
 
     _fill_and_save_docx(
         doc_invoice,
@@ -159,7 +168,7 @@ def _generate_invoice_and_order_docx(
 # — Public API ————————————————————————————————————————————————————————————————
 
 
-def generate_offer(args: OfferArgs, config: Config) -> list[str]:
+def generate_offer(args: OfferArgs, document_date: date, config: Config) -> list[str]:
     """Full pipeline: find project → load CSV → generate Angebot DOCX + PDF."""
     messages = Messages()
     project_dir, dir_msgs = get_project_dir(config.data_root, args.project_number)
@@ -170,6 +179,7 @@ def generate_offer(args: OfferArgs, config: Config) -> list[str]:
         doc_key="ANGEBOT",
         project_number=args.project_number,
         receipt_number=None,
+        document_date=document_date,
         line_items=line_items,
         target_path=target_path,
         config=config,
@@ -181,7 +191,9 @@ def generate_offer(args: OfferArgs, config: Config) -> list[str]:
     return messages.items
 
 
-def generate_delivery(args: DeliveryArgs, config: Config) -> list[str]:
+def generate_delivery(
+    args: DeliveryArgs, document_date: date, config: Config
+) -> list[str]:
     """Full pipeline: find project → load CSV → generate Lieferschein DOCX + PDF."""
     messages = Messages()
     project_dir, dir_msgs = get_project_dir(config.data_root, args.project_number)
@@ -192,6 +204,7 @@ def generate_delivery(args: DeliveryArgs, config: Config) -> list[str]:
         doc_key="LIEFERSCHEIN",
         project_number=args.project_number,
         receipt_number=args.receipt_number,
+        document_date=document_date,
         line_items=line_items,
         target_path=target_path,
         config=config,
@@ -203,7 +216,9 @@ def generate_delivery(args: DeliveryArgs, config: Config) -> list[str]:
     return messages.items
 
 
-def generate_invoice_and_order(args: InvoiceArgs, config: Config) -> list[str]:
+def generate_invoice_and_order(
+    args: InvoiceArgs, document_date: date, config: Config
+) -> list[str]:
     """Full pipeline: find project → generate Rechnung + Auftragsbestätigung DOCX + PDF.
 
     Precondition: an Angebot or Lieferschein must have been generated for this
@@ -221,6 +236,7 @@ def generate_invoice_and_order(args: InvoiceArgs, config: Config) -> list[str]:
     _generate_invoice_and_order_docx(
         args.project_number,
         args.receipt_number,
+        document_date,
         {"invoice": invoice_path, "order": order_path},
         config,
         messages,

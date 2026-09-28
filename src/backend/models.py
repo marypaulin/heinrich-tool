@@ -79,11 +79,11 @@ class DocxMeta:
     receipt_number: str | None
     doctype: str
     header: str
-    date_today: date
+    document_date: date
 
     def to_mapping(self, date_format: str) -> dict[str, str]:
         return {
-            PH_DATE_TODAY: self.date_today.strftime(date_format),
+            PH_DATE_TODAY: self.document_date.strftime(date_format),
             PH_PROJECT_NO: self.project_number,
             PH_RECEIPT_NO: self.receipt_number or "",
             PH_DOCTYPE: self.doctype,
