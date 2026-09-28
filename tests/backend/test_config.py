@@ -41,7 +41,7 @@ def test_absolute_data_root_is_kept(tmp_path):
     assert load_config(config_path).data_root == data_root
 
 
-# — Money —————————————————————————————————————————————————————————————————————
+# — Rates —————————————————————————————————————————————————————————————————————
 
 
 def test_vat_rate_is_read_as_decimal():
