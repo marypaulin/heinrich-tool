@@ -65,7 +65,7 @@ def _load_line_items(
     line_items, transform_msgs = csv_rows_to_line_items(csv_rows, config)
     messages.items.extend(transform_msgs)
     if not line_items:
-        raise ValueError("Keine gültigen Zeilen in der CSV-Datei gefunden.")
+        raise ValueError(f"No valid rows found in {csv_path.name}")
     return line_items
 
 
