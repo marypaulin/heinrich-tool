@@ -46,7 +46,7 @@ def write_without_column(tmp_path: Path, column: str) -> Path:
 def test_fixture_rows_are_numbered_like_excel(sample_config):
     rows = load_csv_data(FIXTURE, sample_config)
 
-    assert [row.row_number for row in rows] == list(range(2, 11))
+    assert [row.row_number for row in rows] == list(range(2, 13))
 
 
 def test_first_row_is_read_completely(sample_config):
@@ -97,12 +97,10 @@ def test_file_with_bom_reads_like_file_without(tmp_path, sample_config):
     )
 
 
-def test_blank_order_number_becomes_empty(tmp_path, sample_config):
-    csv_path = write_variant(tmp_path, row=2, column="Auftrags-Nr.", value="   ")
+def test_blank_order_number_becomes_empty(sample_config):
+    rows = load_csv_data(FIXTURE, sample_config)
 
-    rows = load_csv_data(csv_path, sample_config)
-
-    assert rows[1].order_number == ""
+    assert rows[9].order_number == ""
 
 
 # — Errors ————————————————————————————————————————————————————————————————————
