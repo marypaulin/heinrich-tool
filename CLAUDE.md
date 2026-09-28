@@ -3,8 +3,8 @@
 ## Entry points & responsibilities
 
 `services.py` is the sole public entry point for document generation. The entry
-points (`app.py`, `cli.py`) call only `services.py` — never internal pipeline
-modules.
+points (`app.py`, `cli.py`) call only `services.py`, with arguments built by
+`input_args.py` — never internal pipeline modules.
 
 Input validation and formatting of user-supplied arguments belongs in `input_args.py`,
 not in `services.py`.

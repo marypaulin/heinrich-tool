@@ -16,7 +16,7 @@ from .docgen import (
     save_docx,
     save_intermediate_template,
 )
-from .input_args import create_delivery_args, create_invoice_args, create_offer_args
+from .input_args import DeliveryArgs, InvoiceArgs, OfferArgs
 from .messages import Messages
 from .models import DocxDeliveryDate, DocxMeta, LineItem, Totals
 from .paths import (
@@ -159,10 +159,9 @@ def _generate_invoice_and_order_docx(
 # — Public API ————————————————————————————————————————————————————————————————
 
 
-def generate_offer(project_number: str, config: Config) -> list[str]:
-    """Full pipeline: validate → find project → load CSV → generate Angebot DOCX + PDF."""
+def generate_offer(args: OfferArgs, config: Config) -> list[str]:
+    """Full pipeline: find project → load CSV → generate Angebot DOCX + PDF."""
     messages = Messages()
-    args = create_offer_args(project_number)
     project_dir, dir_msgs = get_project_dir(config.data_root, args.project_number)
     messages.items.extend(dir_msgs)
     line_items = _load_line_items(project_dir, config, messages)
@@ -182,14 +181,9 @@ def generate_offer(project_number: str, config: Config) -> list[str]:
     return messages.items
 
 
-def generate_delivery(
-    project_number: str,
-    receipt_number: str | None,
-    config: Config,
-) -> list[str]:
-    """Full pipeline: validate → find project → load CSV → generate Lieferschein DOCX + PDF."""
+def generate_delivery(args: DeliveryArgs, config: Config) -> list[str]:
+    """Full pipeline: find project → load CSV → generate Lieferschein DOCX + PDF."""
     messages = Messages()
-    args = create_delivery_args(project_number, receipt_number)
     project_dir, dir_msgs = get_project_dir(config.data_root, args.project_number)
     messages.items.extend(dir_msgs)
     line_items = _load_line_items(project_dir, config, messages)
@@ -209,18 +203,13 @@ def generate_delivery(
     return messages.items
 
 
-def generate_invoice_and_order(
-    project_number: str,
-    receipt_number: str,
-    config: Config,
-) -> list[str]:
-    """Full pipeline: validate → find project → generate Rechnung + Auftragsbestätigung DOCX + PDF.
+def generate_invoice_and_order(args: InvoiceArgs, config: Config) -> list[str]:
+    """Full pipeline: find project → generate Rechnung + Auftragsbestätigung DOCX + PDF.
 
     Precondition: an Angebot or Lieferschein must have been generated for this
     project first, as this step reads the intermediate template produced by
     those pipelines."""
     messages = Messages()
-    args = create_invoice_args(project_number, receipt_number)
     project_dir, dir_msgs = get_project_dir(config.data_root, args.project_number)
     messages.items.extend(dir_msgs)
     invoice_path = get_invoice_target_path(

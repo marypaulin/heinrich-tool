@@ -2,6 +2,11 @@
 
 import streamlit as st
 
+from src.backend.input_args import (
+    create_delivery_args,
+    create_invoice_args,
+    create_offer_args,
+)
 from src.backend.services import (
     generate_delivery,
     generate_invoice_and_order,
@@ -36,7 +41,8 @@ def run_offer(config):
     project_number = st.session_state.get("project_number_offer", "")
 
     try:
-        st.session_state.offer_info = generate_offer(project_number, config)
+        args = create_offer_args(project_number)
+        st.session_state.offer_info = generate_offer(args, config)
         st.toast("Angebot erzeugt", icon="✅")
     except (FileNotFoundError, ValueError) as e:
         st.session_state.offer_error = f"Error: {e!s}"
@@ -51,9 +57,8 @@ def run_delivery(config):
     receipt_number = st.session_state.get("receipt_number_delivery", "")
 
     try:
-        st.session_state.delivery_info = generate_delivery(
-            project_number, receipt_number, config
-        )
+        args = create_delivery_args(project_number, receipt_number)
+        st.session_state.delivery_info = generate_delivery(args, config)
         st.toast("Lieferschein erzeugt", icon="✅")
     except (FileNotFoundError, ValueError) as e:
         st.session_state.delivery_error = f"Error: {e!s}"
@@ -68,9 +73,8 @@ def run_invoice(config):
     receipt_number = st.session_state.get("receipt_number_invoice", "")
 
     try:
-        st.session_state.invoice_info = generate_invoice_and_order(
-            project_number, receipt_number, config
-        )
+        args = create_invoice_args(project_number, receipt_number)
+        st.session_state.invoice_info = generate_invoice_and_order(args, config)
         st.toast("Rechnung und Auftragsbestätigung erzeugt", icon="✅")
     except (FileNotFoundError, ValueError) as e:
         st.session_state.invoice_error = f"Error: {e!s}"

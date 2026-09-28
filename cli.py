@@ -20,11 +20,11 @@ def main():
     config = load_config(CONFIG_PATH)
 
     if args.mode == "offer":
-        generate_offer(args.project_number, config)
+        generate_offer(args, config)
     elif args.mode == "delivery":
-        generate_delivery(args.project_number, args.receipt_number, config)
+        generate_delivery(args, config)
     elif args.mode == "invoice":
-        generate_invoice_and_order(args.project_number, args.receipt_number, config)
+        generate_invoice_and_order(args, config)
     else:
         logging.error(f"Unknown mode: {args.mode}")
 
