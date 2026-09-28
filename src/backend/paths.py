@@ -11,7 +11,6 @@ from .messages import Messages
 HEINRICH_ROOT = Path(__file__).resolve().parent.parent.parent
 CONFIG_PATH = HEINRICH_ROOT / "config.json"
 
-CSV_NAME_RE = "heinrich_zeiterfassung_*.csv"
 TEMPLATES_DIR = HEINRICH_ROOT / "templates"
 VORDRUCK_PATH = TEMPLATES_DIR / "Vordruck.docx"
 INTERMEDIATE_ROOT = TEMPLATES_DIR / "intermediate"
