@@ -1,5 +1,5 @@
 [project]
-name = "heinrich-app"
+name = "heinrich-tool"
 version = "0.1.0"
 description = "Erzeugt Angebote, Lieferscheine und Rechnungen aus der Zeiterfassung"
 requires-python = ">=3.14"

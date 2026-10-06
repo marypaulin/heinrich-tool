@@ -203,7 +203,7 @@ wheels = [
 ]
 
 [[package]]
-name = "heinrich-app"
+name = "heinrich-tool"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
