@@ -50,8 +50,8 @@ class Totals:
 
     @staticmethod
     def calculate_sums_and_vat(
-        line_items: list["LineItem"], vat_rate: Decimal
-    ) -> "Totals":
+        line_items: list[LineItem], vat_rate: Decimal
+    ) -> Totals:
         """Calculate sum_net, vat, and sum_gross from LineItems.
 
         Each value is rounded to cents in order, and the VAT is calculated from

@@ -16,12 +16,12 @@ Die Benutzeroberfläche ist bisher bewusst einfach gehalten: Projektnummer einge
 
 ## 1. Python Installation (Windows)
 
-Das Tool wird aktuell über GitHub bereitgestellt und setzt Python 3.12.6 voraus. Empfohlen wird die Installation über den offiziellen Python-Installer. (Hinweis: Geplant ist ein Skript, das Installation und Updates übernimmt — siehe Abschnitt 8.)
+Das Tool wird aktuell über GitHub bereitgestellt und setzt Python 3.14 voraus. Empfohlen wird die Installation über den offiziellen Python-Installer. (Hinweis: Geplant ist ein Skript, das Installation und Updates übernimmt — siehe Abschnitt 8.)
 
 1. Öffne die offizielle Python-Website:
    [https://www.python.org](https://www.python.org)
 
-2. Klicke auf **Downloads** und lade die richtige Python-Version für Windows herunter (Python 3.12.6).
+2. Klicke auf **Downloads** und lade die richtige Python-Version für Windows herunter (Python 3.14).
 
 3. Starte den Installer.
    **Wichtig:** Aktiviere im ersten Dialog die Option
