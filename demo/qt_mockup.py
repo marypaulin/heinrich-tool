@@ -868,7 +868,7 @@ def _dark_palette() -> QPalette:
 class MainWindow(QMainWindow):
     def __init__(self, timesheet_editable: bool = True):
         super().__init__()
-        self.setWindowTitle("Heinrich App")
+        self.setWindowTitle("Heinrich Tool")
         self.resize(1120, 760)
 
         title = QLabel("Projektabrechnung")

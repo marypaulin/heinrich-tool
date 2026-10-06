@@ -17,7 +17,7 @@ from src.backend.services import (
 from src.ui.state import get_config, initialize_session_state
 
 st.set_page_config(
-    page_title="Heinrich App",
+    page_title="Heinrich Tool",
     page_icon="assets/icon.ico",
     layout="centered",
 )

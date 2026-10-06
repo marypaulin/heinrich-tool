@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=Heinrich App
+Name=Heinrich Tool
 Comment=Dokumente aus Zeiterfassung erzeugen
-Exec=/home/marypaulin/development/heinrich-app/scripts/run_linux.sh
-Icon=/home/marypaulin/development/heinrich-app/assets/icon.png
+Exec=/home/marypaulin/development/heinrich-tool/scripts/run_linux.sh
+Icon=/home/marypaulin/development/heinrich-tool/assets/icon.png
 Terminal=false
 Categories=Office;
