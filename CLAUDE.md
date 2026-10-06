@@ -1,4 +1,4 @@
-# Heinrich App — Claude Code Instructions
+# Heinrich Tool — Claude Code Instructions
 
 ## Entry points & responsibilities
 

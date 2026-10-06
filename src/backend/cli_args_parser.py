@@ -1,5 +1,5 @@
 """
-CLI Argument parsing and validation for heinrich-metallbau CLI.
+CLI Argument parsing and validation for heinrich-tool CLI.
 """
 
 import argparse

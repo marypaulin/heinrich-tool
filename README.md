@@ -79,11 +79,11 @@ cd path/to/folder/
 
 
 ```
-git clone https://github.com/USER/heinrich-app.git
+git clone https://github.com/USER/heinrich-tool.git
 ```
 
 
-Das Projekt befindet sich nun im neu erstellten Ordner `heinrich-app`.
+Das Projekt befindet sich nun im neu erstellten Ordner `heinrich-tool`.
 
 Hinweis:
 Für das reine Klonen eines öffentlichen Repositories ist kein GitHub-Account und kein SSH-Key erforderlich.
@@ -109,7 +109,7 @@ Für die Nutzung des Tools werden zwei weitere Dateien benötigt, die sich nicht
 Diese erhält der Nutzer des Tools per Mail. Für die korrekte Nutzung:
 
 1. `Vordruck.docx` → Ordner `templates`
-2. `config.json` → Heinrich App Projektordner (Root-Ebene)
+2. `config.json` → Heinrich Tool Projektordner (Root-Ebene)
 3. In `config.json` den Pfad zum Datenverzeichnis konfigurieren: `"DATA_ROOT": "/Pfad/zum/Datenordner/"`
 
 ---
@@ -128,7 +128,7 @@ Das Tool kann unter Windows als lokale Web-App genutzt werden, die per Doppelkli
 
 ### Nutzung
 
-* Ein Doppelklick auf die Desktopverknüpfung installiert bei erster Nutzung die notwendigen Packages in einer Virtuellen Umgebung. (Dies kann eine Weile dauern). Dann startet die Heinrich App.
+* Ein Doppelklick auf die Desktopverknüpfung installiert bei erster Nutzung die notwendigen Packages in einer Virtuellen Umgebung. (Dies kann eine Weile dauern). Dann startet das Heinrich Tool.
 * Die App öffnet sich automatisch im Standardbrowser.
 * Ist die App bereits geöffnet, wird lediglich ein weiterer Browser-Tab geöffnet.
 
