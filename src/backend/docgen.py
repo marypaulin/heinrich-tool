@@ -17,7 +17,7 @@ from docx.text.paragraph import Paragraph
 
 from .formatting import format_price, format_quantity
 from .models import LineItem
-from .paths import VORDRUCK_PATH, get_display_path, get_intermediate_template_path
+from .paths import VORDRUCK_PATH, get_display_path
 
 logger = logging.getLogger(__name__)
 
@@ -34,25 +34,6 @@ def load_template() -> DocxDocument:
 
 def save_docx(doc: DocxDocument, path: Path) -> None:
     doc.save(str(path))
-
-
-def save_intermediate_template(project_number: str, doc: DocxDocument) -> None:
-    path = get_intermediate_template_path(project_number)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    save_docx(doc, path)
-
-
-def load_intermediate_template(project_number: str) -> DocxDocument:
-    path = get_intermediate_template_path(project_number)
-    try:
-        doc = Document(str(path))
-        display_path = get_display_path(path)
-        logger.info(f"Using intermediate template: {display_path}")
-        return doc
-    except PackageNotFoundError:
-        raise ValueError(
-            "Intermediate template not found - generate Angebot or Lieferschein first."
-        )
 
 
 def _body_and_table_paragraphs(doc: DocxDocument) -> Iterator[Paragraph]:

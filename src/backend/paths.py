@@ -15,8 +15,6 @@ CONFIG_PATH = HEINRICH_ROOT / "config.json"
 
 TEMPLATES_DIR = HEINRICH_ROOT / "templates"
 VORDRUCK_PATH = TEMPLATES_DIR / "Vordruck.docx"
-INTERMEDIATE_ROOT = TEMPLATES_DIR / "intermediate"
-INTERMEDIATE_FILENAME = "Vordruck_Rechnung_{project_number}.docx"
 
 
 def _format_filename(template: str, **values: str) -> str:
@@ -53,22 +51,6 @@ def get_latest_csv_path(project_dir: Path, config: Config) -> tuple[Path, list[s
     logger.info(f"Using CSV file: {display_latest}")
     messages.info(f"CSV-Datei gefunden ({display_latest})")
     return latest, messages.items
-
-
-def get_intermediate_project_dir(project_number: str) -> Path:
-    """templates/intermediate/<project_number>/"""
-    path = INTERMEDIATE_ROOT / project_number
-    return path
-
-
-def get_intermediate_template_path(project_number: str) -> Path:
-    """templates/intermediate/<project_number>/Vordruck_Rechnung_<project_number>.docx"""
-    filename = _format_filename(
-        INTERMEDIATE_FILENAME,
-        project_number=project_number,
-    )
-    path = get_intermediate_project_dir(project_number) / filename
-    return path
 
 
 def get_offer_target_path(

@@ -10,7 +10,7 @@ from pathlib import Path
 class DocumentConfig:
     doctype: str
     header: str
-    delivery_days: int | None = None
+    delivery_days: int
 
 
 @dataclass(frozen=True)
@@ -44,7 +44,7 @@ def load_config(path: Path) -> Config:
         if key in ["ANGEBOT", "LIEFERSCHEIN"]:
             delivery_days = value.get("DELIVERY_DAYS", 21)
         else:
-            delivery_days = None
+            delivery_days = 0
         documents[key] = DocumentConfig(
             doctype=value["DOCTYPE"],
             header=value["HEADER"],

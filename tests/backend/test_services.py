@@ -10,7 +10,7 @@ from docx import Document
 from docx.document import Document as DocxDocument
 from docx.table import Table, _Cell
 
-from src.backend import docgen, paths, services
+from src.backend import docgen, services
 from src.backend.config import Config
 from src.backend.input_args import (
     create_delivery_args,
@@ -51,10 +51,9 @@ SUM_ROWS = [
 
 
 @pytest.fixture(autouse=True)
-def patch_template_paths(tmp_path, monkeypatch):
-    """The template paths are fixed in the code until the path resolution is rebuilt."""
+def patch_template_path(monkeypatch):
+    """The template path is fixed in the code until the path resolution is rebuilt."""
     monkeypatch.setattr(docgen, "VORDRUCK_PATH", FIXTURES_DIR / "Vordruck_sample.docx")
-    monkeypatch.setattr(paths, "INTERMEDIATE_ROOT", tmp_path / "intermediate")
 
 
 @pytest.fixture(autouse=True)
@@ -162,13 +161,9 @@ def test_delivery_note(sample_config_with_data_root, sample_data_root):
         ),
     ],
 )
-def test_invoice_and_order_confirmation_after_offer(
+def test_invoice_and_order_confirmation(
     sample_config_with_data_root, sample_data_root, filename, doctype, header
 ):
-    """The delivery date is inherited from the offer via the intermediate template."""
-    generate_offer(
-        create_offer_args("1234"), date(2025, 8, 1), sample_config_with_data_root
-    )
     args = create_invoice_args("1234", "4100012345")
     generate_invoice_and_order(args, date(2025, 8, 20), sample_config_with_data_root)
 
@@ -181,4 +176,4 @@ def test_invoice_and_order_confirmation_after_offer(
     assert (
         f"Vielen Dank für ihr Vertrauen in Heinrich Metallbau. {header} "
     ) in doc_texts
-    assert "Liefertermin: 15.08.2025" in doc_texts
+    assert "Liefertermin: 20.08.2025" in doc_texts
