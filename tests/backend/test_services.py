@@ -1,5 +1,6 @@
 """End-to-end tests: sample CSV in, finished Word documents out."""
 
+import re
 import shutil
 from dataclasses import replace
 from datetime import date
@@ -102,6 +103,20 @@ def assert_items_and_sums(doc: DocxDocument) -> None:
     assert item_table_rows(doc) == ITEM_ROWS + SUM_ROWS
 
 
+def assert_no_placeholders_left(doc: DocxDocument) -> None:
+    """Catches placeholders the code does not know, too, not only the known ones."""
+    paragraphs = list(doc.paragraphs)
+    for table in doc.tables:
+        for row in table.rows:
+            for cell in row.cells:
+                paragraphs.extend(cell.paragraphs)
+    for section in doc.sections:
+        paragraphs.extend(section.header.paragraphs)
+        paragraphs.extend(section.footer.paragraphs)
+    leftovers = [m for p in paragraphs for m in re.findall(r"<[^<>]+>", p.text)]
+    assert leftovers == []
+
+
 # — Angebot ———————————————————————————————————————————————————————————————————
 
 
@@ -113,6 +128,7 @@ def test_offer(sample_config_with_data_root, sample_data_root):
     doc = open_document(sample_data_root, "Angebot Nr. 1234.docx")
     doc_texts = texts(doc)
     assert_items_and_sums(doc)
+    assert_no_placeholders_left(doc)
     assert "Datum:\t01.08.2025" in doc_texts
     assert "Angebot Nr. 1234 – " in doc_texts
     assert "Auftragsnummer:\t1234 / " in doc_texts
@@ -133,6 +149,7 @@ def test_delivery_note(sample_config_with_data_root, sample_data_root):
     doc = open_document(sample_data_root, "Lieferschein Nr. 1234.docx")
     doc_texts = texts(doc)
     assert_items_and_sums(doc)
+    assert_no_placeholders_left(doc)
     assert "Datum:\t15.08.2025" in doc_texts
     assert "Lieferschein Nr. 1234 – 4100012345" in doc_texts
     assert "Auftragsnummer:\t1234 / 4100012345" in doc_texts
@@ -170,6 +187,7 @@ def test_invoice_and_order_confirmation(
     doc = open_document(sample_data_root, filename)
     doc_texts = texts(doc)
     assert_items_and_sums(doc)
+    assert_no_placeholders_left(doc)
     assert "Datum:\t20.08.2025" in doc_texts
     assert f"{doctype} Nr. 1234 – 4100012345" in doc_texts
     assert "Auftragsnummer:\t1234 / 4100012345" in doc_texts
