@@ -117,12 +117,17 @@ uv run python cli.py -m invoice -p 1408 -r 8100045372
 
 ## 5. Dokumenten-Workflows
 
-Das Tool arbeitet mit klar getrennten Modi. Jeder Modus entspricht einem eigenen Verarbeitungspfad und einem definierten Ergebnis.
+Das Tool arbeitet mit klar getrennten Modi. Jeder Modus erzeugt seine Dokumente direkt aus der Zeiterfassungs-CSV des Projekts, unabhängig davon, ob für das Projekt schon andere Dokumente erzeugt wurden.
 
-Zentral ist ein **zweistufiger Prozess**:
+**Gemeinsamer Ablauf je Dokument**
 
-1. Erzeugung eines Angebots oder Lieferscheins inklusive Tabellenbefüllung und Berechnung
-2. Ableitung von Rechnung und Auftragsbestätigung aus einem gespeicherten Zwischenstand
+1. Die CSV-Datei des Projekts wird eingelesen (neueste Datei).
+2. Die CSV-Zeilen werden in strukturierte Positionen (Line Items) umgewandelt.
+3. Die originale Word-Vorlage (`Vordruck.docx`) wird geladen.
+4. Die Positionstabelle wird mit den Line Items befüllt.
+5. Die Platzhalter werden gesetzt (Summen, Liefertermin, Datum, Nummern, Dokumenttyp).
+6. Das Dokument wird als DOCX gespeichert.
+7. Zusätzlich wird eine PDF-Version erzeugt.
 
 ---
 
@@ -134,23 +139,10 @@ Zentral ist ein **zweistufiger Prozess**:
 * Optional: `receipt_number` (für delivery mode)
 * Zeiterfassungs-CSV im Projektordner (automatisch erkannt anhand `project_number`)
 
-**Ablauf**
-
-1. Die CSV-Datei des Projekts wird eingelesen (neueste Datei).
-2. Die CSV-Zeilen werden in strukturierte Positionen (Line Items) umgewandelt.
-3. Die originale Word-Vorlage (`Vordruck.docx`) wird geladen.
-4. Die Positionstabelle wird mit den Line Items befüllt.
-5. Ein Teil der Platzhalter wird gesetzt (z. B. Summen, Termine).
-6. Ein **Intermediate Template** wird gespeichert.
-7. Die restlichen Angebots- oder Lieferschein-Platzhalter werden gesetzt.
-8. Das finale Dokument wird als DOCX gespeichert.
-9. Zusätzlich wird eine PDF-Version erzeugt.
-
 **Ergebnisse**
 
 * `Angebot/Lieferschein Nr. <project_number>.docx`
 * `Angebot/Lieferschein Nr. <project_number>.pdf`
-* Intermediate Template (intern, Grundlage für weitere Dokumente)
 
 ---
 
@@ -160,16 +152,9 @@ Zentral ist ein **zweistufiger Prozess**:
 
 * `project_number`
 * `receipt_number`
-* zuvor erzeugtes Intermediate Template (automatisch erkannt anhand `project_number`)
+* Zeiterfassungs-CSV im Projektordner (automatisch erkannt anhand `project_number`)
 
-**Ablauf**
-
-1. Das Intermediate Template wird geladen.
-2. Es werden zwei unabhängige Kopien des Dokuments erzeugt.
-3. In Kopie A werden die Rechnung-Platzhalter gesetzt.
-4. In Kopie B werden die Auftragsbestätigungs-Platzhalter gesetzt.
-5. Beide Dokumente werden als DOCX gespeichert.
-6. Beide Dokumente werden zusätzlich als PDF erzeugt.
+Der gemeinsame Ablauf läuft zweimal, einmal für die Rechnung und einmal für die Auftragsbestätigung.
 
 **Ergebnisse**
 
