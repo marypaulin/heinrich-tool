@@ -14,91 +14,38 @@ Die Benutzeroberfläche ist bisher bewusst einfach gehalten: Projektnummer einge
 
 ---
 
-## 1. Python Installation (Windows)
+## 1. Installation und Updates (Windows)
 
-Das Tool wird aktuell über GitHub bereitgestellt und setzt Python 3.14 voraus. Empfohlen wird die Installation über den offiziellen Python-Installer. (Hinweis: Geplant ist ein Skript, das Installation und Updates übernimmt — siehe Abschnitt 8.)
+Installation und Updates übernimmt ein Skript. Vorkenntnisse oder vorinstallierte Programme sind nicht nötig.
 
-1. Öffne die offizielle Python-Website:
-   [https://www.python.org](https://www.python.org)
+### Ersteinrichtung
 
-2. Klicke auf **Downloads** und lade die richtige Python-Version für Windows herunter (Python 3.14).
+1. **PowerShell** öffnen (Startmenü → „PowerShell“ eingeben).
+2. Folgende Zeile einfügen und mit Enter bestätigen:
 
-3. Starte den Installer.
-   **Wichtig:** Aktiviere im ersten Dialog die Option
-   **“Add Python to PATH”**.
+```
+irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1 | iex
+```
 
-4. Klicke auf **Install Now** und schließe die Installation ab.
+> **Wichtig:** Als Installationsort einen lokalen Ordner wählen, nicht in OneDrive.
 
-5. Öffne anschließend eine neue PowerShell.
+Das Skript
 
-6. Installation prüfen:
-   `python --version`
-   oder alternativ:
-   `py --version`
+* installiert Git und uv, falls sie fehlen,
+* fragt per Dialog nach dem Installationsort und legt dort den Ordner `heinrich-tool` an,
+* lädt das Tool herunter und richtet Python samt Bibliotheken ein,
+* legt die Verknüpfungen **Heinrich Tool** (Desktop und Startmenü) und **Heinrich Tool aktualisieren** (Startmenü) an.
 
-Wenn eine Versionsnummer angezeigt wird, ist Python korrekt installiert.
+### Updates
+
+1. Startmenü → **Heinrich Tool aktualisieren** öffnen (alternativ `update.bat` im Projektordner).
+2. Das Fenster zeigt den Fortschritt und wartet am Ende auf einen Tastendruck.
+
+Wurden Dateien im Ordner `heinrich-tool` von Hand bearbeitet, bricht das Update ab und lässt alles unverändert.
 
 ---
 
-## 2. Git Installation (Windows)
-
-Git wird benötigt, um das Tool herunterzuladen und Updates zu beziehen.
-
-1. Öffne die offizielle Git-Website:
-   [https://git-scm.com](https://git-scm.com)
-
-2. Klicke auf **Download for Windows** und lade den Installer herunter.
-
-3. Starte den Installer und bestätige die Standardeinstellungen.
-   Es sind keine speziellen Anpassungen erforderlich.
-
-4. Nach der Installation ein neues Terminal öffnen (PowerShell oder Eingabeaufforderung).
-
-5. Installation prüfen:
-   `git --version`
-
-Wenn eine Versionsnummer angezeigt wird, ist Git korrekt installiert und einsatzbereit.
-
----
-
-## 3. Download der App via Git
-
-1. Klicke oben rechts auf den grünen Button **Code** und kopiere die **HTTPS-URL** des Repos.
-
-2. Öffne ein Terminal
-   (z. B. PowerShell unter Windows).
-
-3. Navigiere in den Ordner, in dem das Tool gespeichert werden soll:
-
-
-```
-cd path/to/folder/
-```
-
-4. Repo klonen:
-
-
-```
-git clone https://github.com/USER/heinrich-tool.git
-```
-
-
-Das Projekt befindet sich nun im neu erstellten Ordner `heinrich-tool`.
-
-Hinweis:
-Für das reine Klonen eines öffentlichen Repositories ist kein GitHub-Account und kein SSH-Key erforderlich.
-
-5. Updates abrufen
-
-Mit folgendem Befehl werden Änderungen aus dem GitHub-Repository in den lokalen Projektordner übernommen:
-
-```
-git pull
-```
-
----
-
-## 4. Konfiguration
+## 2. Konfiguration
 
 
 Für die Nutzung des Tools werden zwei weitere Dateien benötigt, die sich nicht im Repository befinden:
@@ -114,40 +61,25 @@ Diese erhält der Nutzer des Tools per Mail. Für die korrekte Nutzung:
 
 ---
 
-## 5. Nutzung als App (Windows)
+## 3. Nutzung als App (Windows)
 
-Das Tool kann unter Windows als lokale Web-App genutzt werden, die per Doppelklick gestartet wird.
+Das Tool läuft als lokale Web-App und wird per Doppelklick auf die Verknüpfung **Heinrich Tool** gestartet.
 
-### Einrichtung
-
-1. Erstelle eine **Desktopverknüpfung** der Datei `scripts/app_windows.vbs`
-2. Rechtsklick auf die Verknüpfung → **Eigenschaften**
-3. Reiter **Verknüpfung** → **Anderes Symbol…**
-4. Wähle die Datei `assets/icon.ico`
-5. Fertig
-
-### Nutzung
-
-* Ein Doppelklick auf die Desktopverknüpfung installiert bei erster Nutzung die notwendigen Packages in einer Virtuellen Umgebung. (Dies kann eine Weile dauern). Dann startet das Heinrich Tool.
 * Die App öffnet sich automatisch im Standardbrowser.
 * Ist die App bereits geöffnet, wird lediglich ein weiterer Browser-Tab geöffnet.
 
 ---
 
-## 6. Nutzung als CLI-Tool
+## 4. Nutzung als CLI-Tool
 
-Als CLI-Tool wird das Programm im Projektordner über die Kommandozeile gestartet.
-
-Voraussetzungen:
-* `uv` ist installiert
-* Einmalig im Projektordner: `uv sync`
+Als CLI-Tool wird das Programm im Projektordner über die Kommandozeile gestartet. Es braucht [uv](https://docs.astral.sh/uv/) — nach der Installation aus Abschnitt 1 ist alles eingerichtet. Ansonsten das Repository klonen und einmalig im Projektordner `uv sync` ausführen.
 
 ### Angebot erzeugen
 
 ```
 uv run python cli.py --mode offer --project-number 1408
 ```
-or short
+oder kurz
 ```
 uv run python cli.py -m offer -p 1408
 ```
@@ -183,7 +115,7 @@ uv run python cli.py -m invoice -p 1408 -r 8100045372
 
 ---
 
-## 7. Dokumenten-Workflows
+## 5. Dokumenten-Workflows
 
 Das Tool arbeitet mit klar getrennten Modi. Jeder Modus entspricht einem eigenen Verarbeitungspfad und einem definierten Ergebnis.
 
@@ -248,18 +180,17 @@ Zentral ist ein **zweistufiger Prozess**:
 
 ---
 
-## 8. Geplante Erweiterungen
+## 6. Geplante Erweiterungen
 
 Folgende Erweiterungen sind geplant:
 
-* Einrichtung und Updates über ein Skript statt der manuellen Schritte aus den Abschnitten 1 bis 3
 * Zeiterfassung in der App ansehen und korrigieren, ohne Umweg über Excel
 * Übersicht aller erfassten Stunden über alle Projekte hinweg, als CSV exportierbar
 * Erzeugung von E-Rechnungen im Format ZUGFeRD
 
 ---
 
-## 9. Testing
+## 7. Testing
 
 Die Tests liegen unter `tests/` und laufen mit pytest:
 
