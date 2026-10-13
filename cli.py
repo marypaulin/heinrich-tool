@@ -13,7 +13,11 @@ from src.backend.services import (
     generate_offer,
 )
 
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logging.basicConfig(
+    level=logging.WARNING, format="%(levelname)s (%(name)s): %(message)s"
+)
+logging.getLogger("src").setLevel(logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def main():
@@ -26,13 +30,11 @@ def main():
         generate_delivery(args, date.today(), config)
     elif args.mode == "invoice":
         generate_invoice_and_order(args, date.today(), config)
-    else:
-        logging.error(f"Unknown mode: {args.mode}")
 
 
 if __name__ == "__main__":
     try:
         main()
     except (FileNotFoundError, ValueError) as e:
-        logging.error(e)
+        logger.error(e)
         sys.exit(1)

@@ -9,12 +9,14 @@ from .messages import Messages
 from .models import CsvRow, LineItem
 from .money import round_cents
 
+logger = logging.getLogger(__name__)
+
 
 def _get_hourly_description(csv_row: CsvRow, config: Config, messages: Messages) -> str:
     """Get description based on hourly rate"""
     if csv_row.hourly_rate in config.hourly_rate_mapping:
         return config.hourly_rate_mapping[csv_row.hourly_rate]
-    logging.warning(
+    logger.warning(
         f"Unknown hourly rate {csv_row.hourly_rate} in row {csv_row.row_number}, "
         f"using default description '{config.hourly_rate_default}'"
     )
@@ -26,7 +28,7 @@ def _get_hourly_description(csv_row: CsvRow, config: Config, messages: Messages)
 
 
 def _hours_item(csv_row: CsvRow, config: Config, messages: Messages) -> LineItem:
-    logging.info(f"Creating hours item for order number: {csv_row.order_number}")
+    logger.info(f"Creating hours item for order number: {csv_row.order_number}")
     hourly_description = _get_hourly_description(csv_row, config, messages)
     return LineItem(
         kind="hours",
@@ -39,7 +41,7 @@ def _hours_item(csv_row: CsvRow, config: Config, messages: Messages) -> LineItem
 
 
 def _material_item(csv_row: CsvRow) -> LineItem:
-    logging.info(f"Creating material item for order number: {csv_row.order_number}")
+    logger.info(f"Creating material item for order number: {csv_row.order_number}")
     return LineItem(
         kind="material",
         order_number=csv_row.order_number,
@@ -94,14 +96,14 @@ def csv_rows_to_line_items(
     result = []
     for csv_row in csv_rows:
         if not csv_row.order_number:
-            logging.info(f"Skipping csv_row {csv_row.row_number} without order number")
+            logger.info(f"Skipping csv_row {csv_row.row_number} without order number")
             messages.warning(
                 f"Zeile {csv_row.row_number} übersprungen, keine Auftrags-Nr. angegeben"
             )
             continue
 
         if csv_row.duration_hours == 0 and csv_row.material_cost == 0:
-            logging.info(
+            logger.info(
                 f"Skipping csv_row {csv_row.row_number} without hours or material"
             )
             messages.warning(

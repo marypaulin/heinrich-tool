@@ -19,12 +19,14 @@ from .formatting import format_price, format_quantity
 from .models import LineItem
 from .paths import VORDRUCK_PATH, get_display_path, get_intermediate_template_path
 
+logger = logging.getLogger(__name__)
+
 
 def load_template() -> DocxDocument:
     try:
         doc = Document(str(VORDRUCK_PATH))
         display_path = get_display_path(VORDRUCK_PATH)
-        logging.info(f"Using template: {display_path}")
+        logger.info(f"Using template: {display_path}")
         return doc
     except PackageNotFoundError:
         raise ValueError(f"Template not found: {VORDRUCK_PATH}")
@@ -45,7 +47,7 @@ def load_intermediate_template(project_number: str) -> DocxDocument:
     try:
         doc = Document(str(path))
         display_path = get_display_path(path)
-        logging.info(f"Using intermediate template: {display_path}")
+        logger.info(f"Using intermediate template: {display_path}")
         return doc
     except PackageNotFoundError:
         raise ValueError(

@@ -1,5 +1,6 @@
 """Streamlit web app entry point."""
 
+import logging
 from datetime import date
 
 import streamlit as st
@@ -15,6 +16,11 @@ from src.backend.services import (
     generate_offer,
 )
 from src.ui.state import get_config, initialize_session_state
+
+logging.basicConfig(
+    level=logging.WARNING, format="%(levelname)s (%(name)s): %(message)s"
+)
+logging.getLogger("src").setLevel(logging.INFO)
 
 st.set_page_config(
     page_title="Heinrich Tool",

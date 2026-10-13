@@ -8,6 +8,8 @@ from pathlib import Path
 from .config import Config
 from .messages import Messages
 
+logger = logging.getLogger(__name__)
+
 HEINRICH_ROOT = Path(__file__).resolve().parent.parent.parent
 CONFIG_PATH = HEINRICH_ROOT / "config.json"
 
@@ -34,7 +36,7 @@ def get_project_dir(data_root: Path, project_number: str) -> tuple[Path, list[st
     for folder in data_root.iterdir():
         if folder.is_dir() and folder.name.startswith(f"{project_number} "):
             display_folder = get_display_path(folder)
-            logging.info(f"Found project folder: {display_folder}")
+            logger.info(f"Found project folder: {display_folder}")
             messages.info(f"Projektordner gefunden ({display_folder})")
             return folder, messages.items
     raise FileNotFoundError(f"No folder found for project number {project_number}")
@@ -48,7 +50,7 @@ def get_latest_csv_path(project_dir: Path, config: Config) -> tuple[Path, list[s
         raise FileNotFoundError(f"No CSV files found in {project_dir}")
     latest = max(csv_files, key=lambda p: p.stat().st_mtime)
     display_latest = latest.name
-    logging.info(f"Using CSV file: {display_latest}")
+    logger.info(f"Using CSV file: {display_latest}")
     messages.info(f"CSV-Datei gefunden ({display_latest})")
     return latest, messages.items
 
