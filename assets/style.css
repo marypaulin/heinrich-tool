@@ -1,0 +1,41 @@
+/*
+ * Styling the Streamlit theme (.streamlit/config.toml) cannot express: page
+ * width and spacing, filled cards for forms, card headings with a rule, small
+ * uppercase labels. The look follows Max' Zeiterfassung app; sizes and colors
+ * are its Tailwind values (max-w-4xl, p-8, p-6, gray-200/700 and so on).
+ *
+ * Colors use light-dark() instead of being chosen in Python: Streamlit sets
+ * color-scheme on its app root, so the browser swaps them the moment the user
+ * switches theme. st.context.theme only learns about the switch on the next
+ * rerun, which left the cards in the old colors until a reload.
+ *
+ * The data-testid selectors are Streamlit internals, not a public API — check
+ * this page after every Streamlit upgrade.
+ */
+
+[data-testid="stMainBlockContainer"] {
+    max-width: 56rem;
+    padding-top: 2rem;
+    padding-inline: 2rem;
+}
+
+[data-testid="stForm"] {
+    background-color: light-dark(#ffffff, #111827);
+    border-color: light-dark(#e5e7eb, #374151);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+    padding: 1.5rem;
+}
+
+[data-testid="stForm"] [data-testid="stHeading"] {
+    border-bottom: 1px solid light-dark(#e5e7eb, #374151);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+[data-testid="stForm"] [data-testid="stWidgetLabel"] p {
+    color: light-dark(#6b7280, #9ca3af);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}

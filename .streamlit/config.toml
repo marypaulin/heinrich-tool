@@ -1,0 +1,36 @@
+# Look follows Max' Zeiterfassung app (notes/zeiterfassung/Zeiterfassung.html),
+# colors taken from its Tailwind classes.
+
+[server]
+# Serves static/ so the font ships with the app instead of loading from Google
+# Fonts — the customer's machines must not depend on internet access.
+enableStaticServing = true
+
+[theme]
+font = "Roboto Mono, monospace"
+headingFont = "Roboto Mono, monospace"
+codeFont = "Roboto Mono, monospace"
+baseRadius = "6px"
+showWidgetBorder = true
+# h1 is the page title, h3 the card headings (st.subheader).
+headingFontSizes = ["1.875rem", "1.5rem", "1.25rem"]
+headingFontWeights = [700, 600, 600]
+
+[theme.light]
+primaryColor = "#0d9488"
+backgroundColor = "#f3f4f6"
+secondaryBackgroundColor = "#f9fafb"
+textColor = "#111827"
+borderColor = "#d1d5db"
+
+[theme.dark]
+primaryColor = "#0d9488"
+backgroundColor = "#000000"
+secondaryBackgroundColor = "#1f2937"
+textColor = "#e5e7eb"
+borderColor = "#374151"
+
+[[theme.fontFaces]]
+family = "Roboto Mono"
+url = "app/static/RobotoMono-Variable.ttf"
+weight = "100 700"

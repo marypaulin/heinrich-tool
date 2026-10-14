@@ -2,6 +2,7 @@
 
 import logging
 from datetime import date
+from pathlib import Path
 
 import streamlit as st
 
@@ -27,19 +28,6 @@ st.set_page_config(
     page_icon="assets/icon.ico",
     layout="centered",
 )
-
-
-def suppress_round_corners():
-    st.markdown(
-        """
-        <style>
-        img {
-            border-radius: 0 !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
 
 
 def run_offer(config):
@@ -92,41 +80,25 @@ def run_invoice(config):
 
 
 def app():
-    suppress_round_corners()
+    st.html(Path("assets/style.css"))
     config = get_config()
     initialize_session_state()
 
-    # Logo
-    col1, _, col2 = st.columns(3)
-    with col2:
-        st.image("assets/logo.png")
-
-    # Title
-    st.title("Projektabrechnung")
-
-    # Introduction
-    st.markdown(
-        "Erstelle **Angebote**, **Lieferscheine**, **Rechnungen** und **Auftragsbestätigungen** "
-        "direkt aus deinen Zeiterfassungsdaten."
-    )
-
-    # Angebot
-    st.subheader("Angebot")
+    with st.container(gap="xxsmall"):
+        st.title("Heinrich Abrechnung")
+        st.caption("CSV rein, PDF raus")
 
     with st.form("offer_form"):
-        col1, _ = st.columns(2)
+        st.subheader("Angebot")
+        st.text_input("Projektnummer", key="project_number_offer")
 
-        with col1:
-            st.text_input(
-                "Bitte Projektnummer eingeben",
-                key="project_number_offer",
+        with st.container(horizontal=True, horizontal_alignment="right"):
+            st.form_submit_button(
+                "Angebot erzeugen",
+                on_click=run_offer,
+                args=(config,),
+                type="primary",
             )
-
-        st.form_submit_button(
-            "Angebot erzeugen",
-            on_click=run_offer,
-            args=(config,),
-        )
 
         if st.session_state.offer_info:
             st.code(
@@ -137,29 +109,23 @@ def app():
         if st.session_state.offer_error:
             st.error(st.session_state.offer_error)
 
-    # Lieferschein
-    st.subheader("Lieferschein")
-
     with st.form("delivery_form"):
+        st.subheader("Lieferschein")
         col1, col2 = st.columns(2)
 
         with col1:
-            st.text_input(
-                "Bitte Projektnummer eingeben",
-                key="project_number_delivery",
-            )
+            st.text_input("Projektnummer", key="project_number_delivery")
 
         with col2:
-            st.text_input(
-                "Optional Belegnummer eingeben",
-                key="receipt_number_delivery",
-            )
+            st.text_input("Belegnummer (optional)", key="receipt_number_delivery")
 
-        st.form_submit_button(
-            "Lieferschein erzeugen",
-            on_click=run_delivery,
-            args=(config,),
-        )
+        with st.container(horizontal=True, horizontal_alignment="right"):
+            st.form_submit_button(
+                "Lieferschein erzeugen",
+                on_click=run_delivery,
+                args=(config,),
+                type="primary",
+            )
 
         if st.session_state.delivery_info:
             st.code(
@@ -170,29 +136,23 @@ def app():
         if st.session_state.delivery_error:
             st.error(st.session_state.delivery_error)
 
-    # Rechnung / Auftragsbestätigung
-    st.subheader("Rechnung & Auftragsbestätigung")
-
     with st.form("invoice_form"):
+        st.subheader("Rechnung & Auftragsbestätigung")
         col1, col2 = st.columns(2)
 
         with col1:
-            st.text_input(
-                "Bitte Projektnummer eingeben",
-                key="project_number_invoice",
-            )
+            st.text_input("Projektnummer", key="project_number_invoice")
 
         with col2:
-            st.text_input(
-                "Bitte Belegnummer eingeben",
-                key="receipt_number_invoice",
-            )
+            st.text_input("Belegnummer", key="receipt_number_invoice")
 
-        st.form_submit_button(
-            "Rechnung und Auftragsbestätigung erzeugen",
-            on_click=run_invoice,
-            args=(config,),
-        )
+        with st.container(horizontal=True, horizontal_alignment="right"):
+            st.form_submit_button(
+                "Rechnung und Auftragsbestätigung erzeugen",
+                on_click=run_invoice,
+                args=(config,),
+                type="primary",
+            )
 
         if st.session_state.invoice_info:
             st.code(
