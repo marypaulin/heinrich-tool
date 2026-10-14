@@ -169,7 +169,6 @@ Der gemeinsame Ablauf läuft zweimal, einmal für die Rechnung und einmal für d
 
 Folgende Erweiterungen sind geplant:
 
-* Zeiterfassung in der App ansehen und korrigieren, ohne Umweg über Excel
 * Übersicht aller erfassten Stunden über alle Projekte hinweg, als CSV exportierbar
 * Erzeugung von E-Rechnungen im Format ZUGFeRD
 
