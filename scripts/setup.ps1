@@ -58,7 +58,7 @@ function Install-HeinrichTool {
     }
 
     # .venv and .git break when OneDrive syncs them between machines. The data
-    # (RHI folder, config, template) stays in OneDrive; only the program is local.
+    # (data folder, config, template) stays in OneDrive; only the program is local.
     function Test-InOneDrive([string]$Path) {
         $full = [IO.Path]::GetFullPath($Path).TrimEnd('\') + '\'
         foreach ($root in @($env:OneDrive, $env:OneDriveCommercial, $env:OneDriveConsumer)) {

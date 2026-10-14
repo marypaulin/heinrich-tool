@@ -22,7 +22,7 @@ enthalten.
 
 **Bewusst in Kauf genommen**, vom Kunden ausdrücklich bestätigt:
 
-- kein nativer Ordner-Dialog — der Pfad zum RHI-Ordner wird als Text eingetragen
+- kein nativer Ordner-Dialog — der Pfad zum Datenordner wird als Text eingetragen
 - die Anwendung öffnet sich im Browser
 - beim ersten Start ist eine einmalige Firewall-Abfrage möglich
 - die Einrichtung läuft über ein Skript statt über ein Installationsprogramm.
@@ -38,7 +38,7 @@ Umstands getroffen.
 gegen Streamlit an, `st.file_uploader` liefere nie den Pfad einer Datei, weshalb
 das Zurückschreiben der bearbeiteten CSV prinzipiell unmöglich sei. Das trifft
 für eine Upload-Architektur zu, nicht für diese Anwendung: Sie lädt nichts hoch,
-sondern liest über `DATA_ROOT` aus dem RHI-Ordner und schreibt dorthin zurück.
+sondern liest über `DATA_ROOT` aus dem Datenordner und schreibt dorthin zurück.
 Der Pfad ist bekannt. Tatsächlich fehlt nur der native Dialog zum einmaligen
 Festlegen dieses Ordners.
 
@@ -56,7 +56,7 @@ akzeptiert hat.
   Tabellenmodell. Weil dieser Weg über pandas läuft, muss beim Laden und
   Zurückschreiben die Typumwandlung unterbunden werden; der Round-Trip-Test aus
   Planung 2 sichert genau das ab.
-- Der Ort für den Pfad zum RHI-Ordner bleibt unverändert nötig: eine
+- Der Ort für den Pfad zum Datenordner bleibt unverändert nötig: eine
   maschinenlokale Datei unter `%LOCALAPPDATA%` (nicht im Roaming-Zweig
   `%APPDATA%` — der Pfad ist je Rechner verschieden und darf nicht mitwandern),
   außerhalb des Repos, damit ein `git pull` sie nicht berührt.

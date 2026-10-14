@@ -74,5 +74,5 @@ trotzdem zuerst.
   die über Jahre gewachsene Optik der PDFs an den Endkunden ist das Versprechen,
   das nicht gebrochen werden darf. Bleibt als Rückfallebene für einzelne Rechner
   ohne Word, dann aber erst nach belegtem Vergleich.
-- Konfiguration und Word-Vorlage ziehen in den RHI-Ordner; maschinenlokal
+- Konfiguration und Word-Vorlage ziehen in den Datenordner; maschinenlokal
   gespeichert wird nur, wo dieser Ordner liegt.

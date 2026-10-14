@@ -12,12 +12,11 @@ not in `services.py`.
 ## Data protection
 
 These paths are gitignored because they hold real customer data (Heinrich
-Metallbau / RHI — master data, invoices, timesheets). Never read their contents
-into context; use the listed substitute where one exists. This is also recorded
-in Claude's memory for this project.
+Metallbau — master data and rates). Never read their contents into context; use
+the listed substitute where one exists. This is also recorded in Claude's memory
+for this project.
 
 - `config.json`
-- `RHI/`
 - `templates/Vordruck.docx` — use `tests/fixtures/Vordruck_sample.docx` instead
 
 Substitutes for customer data are named `_sample` and live in `tests/fixtures/`:
