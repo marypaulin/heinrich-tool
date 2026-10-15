@@ -11,7 +11,7 @@ not in `services.py`.
 
 ## Data protection
 
-These paths are gitignored because they hold real customer data (Heinrich
+These paths are gitignored because they hold real client data (Heinrich
 Metallbau — master data and rates). Never read their contents into context; use
 the listed substitute where one exists. This is also recorded in Claude's memory
 for this project.
@@ -24,11 +24,11 @@ for direct access. Indirect reads — wildcards, scripts that open these files �
 are not caught; this rule covers them. A blocked call is intentional, never work
 around it.
 
-Substitutes for customer data are named `_sample` and live in `tests/fixtures/`:
+Substitutes for client data are named `_sample` and live in `tests/fixtures/`:
 `Vordruck_sample.docx`, `heinrich_zeiterfassung_sample.csv`, `config_sample.json`
 (not `config.example.json`).
 
-`notes/` is gitignored too but holds no customer data — it's the user's own
+`notes/` is gitignored too but holds no client data — it's the user's own
 working notes and is always fine to read.
 
 ## Error handling
@@ -78,6 +78,8 @@ working notes and is always fine to read.
   handling above.)
 - Long files are divided by section separators: `# — Section name ————————————————`.
 - Use relative imports within `src/backend/`.
+- Terms: *client* is Heinrich Metallbau, the business this tool is built for;
+  *customer* is Heinrich Metallbau's customer, who receives the offer or invoice.
 
 ## Testing
 
@@ -87,7 +89,7 @@ working notes and is always fine to read.
 - Error tests check the exception type, never the message text.
 - Test data lives in `tests/fixtures/` and is invented: numbers with realistic
   digit counts (project 4, order number usually 8, receipt 10). Never real
-  customer data; the repository is public.
+  client or customer data; the repository is public.
 - Setup that every test in a module repeats (the sample template, the sample
   config) is a pytest fixture, not a helper called at the top of each test.
   A fixture used by one module lives there; one shared across modules goes

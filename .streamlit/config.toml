@@ -3,7 +3,7 @@
 
 [server]
 # Serves static/ so the font ships with the app instead of loading from Google
-# Fonts — the customer's machines must not depend on internet access.
+# Fonts — the client's machines must not depend on internet access.
 enableStaticServing = true
 
 [theme]
