@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./config.json)",
+      "Edit(./config.json)",
+      "Read(./templates/Vordruck.docx)",
+      "Edit(./templates/Vordruck.docx)"
+    ]
+  }
+}

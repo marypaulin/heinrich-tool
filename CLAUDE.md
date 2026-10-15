@@ -19,6 +19,11 @@ for this project.
 - `config.json`
 - `templates/Vordruck.docx` — use `tests/fixtures/Vordruck_sample.docx` instead
 
+Deny rules in `.claude/settings.json` and a global PreToolUse hook enforce this
+for direct access. Indirect reads — wildcards, scripts that open these files —
+are not caught; this rule covers them. A blocked call is intentional, never work
+around it.
+
 Substitutes for customer data are named `_sample` and live in `tests/fixtures/`:
 `Vordruck_sample.docx`, `heinrich_zeiterfassung_sample.csv`, `config_sample.json`
 (not `config.example.json`).
