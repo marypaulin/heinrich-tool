@@ -95,8 +95,8 @@ working notes and is always fine to read.
 
 - Conventional Commits, one line of at most 50 characters, imperative mood,
   no body.
-- Scopes: `backend`, `ui`, `cli`, `docs`, `build`. Leave the scope out when none
-  of them fits.
+- Scopes: `backend`, `ui`, `cli`, `docs`, `build`, `ai`. Leave the scope out
+  when none of them fits.
 - Behavior changes get their own commit, separate from refactors and tests, so
   `git log` explains why an old invoice shows a different number.
 - Verification: `ruff check .` and `uv run pytest -q`, for commits that touch
