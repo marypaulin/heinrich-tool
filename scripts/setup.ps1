@@ -127,6 +127,8 @@ function Install-HeinrichTool {
     # have moved, and run_windows.bat only reopens the browser on a busy port.
     # The port is reserved for this app, so whatever listens on it is ours.
     function Stop-RunningApp {
+        # Missing in pwsh on Linux, where the update path is tested.
+        if (-not (Test-Command 'Get-NetTCPConnection')) { return }
         $listeners = Get-NetTCPConnection -LocalPort $appPort -State Listen -ErrorAction SilentlyContinue
         if (-not $listeners) { return }
         Write-Step 'Heinrich Tool wird beendet'
