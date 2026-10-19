@@ -16,23 +16,24 @@ dev = [
     "pytest>=9.1.1",
 ]
 
-[tool.uv]
-package = false
+[build-system]
+requires = ["uv_build>=0.11.28,<0.12"]
+build-backend = "uv_build"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
 
 [tool.ruff.lint]
+extend-select = ["TID252"]
 ignore = [
     "DTZ",     # naive local dates are intentional (German invoicing, no timezones)
 ]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
 
 [tool.ruff.lint.per-file-ignores]
 "demo/**" = [
     "BLE001",  # prototypes catch broadly on purpose
     "B008",    # Qt APIs require QModelIndex() as a default argument
-]
-"src/backend/pdfgen.py" = [
-    "BLE001",  # catch-all around Word/LibreOffice subprocess failures is intentional
 ]

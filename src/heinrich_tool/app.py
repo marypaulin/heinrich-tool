@@ -6,26 +6,28 @@ from pathlib import Path
 
 import streamlit as st
 
-from src.backend.input_args import (
+from heinrich_tool.backend.input_args import (
     create_delivery_args,
     create_invoice_args,
     create_offer_args,
 )
-from src.backend.services import (
+from heinrich_tool.backend.services import (
     generate_delivery,
     generate_invoice_and_order,
     generate_offer,
 )
-from src.ui.state import get_config, initialize_session_state
+from heinrich_tool.ui.state import get_config, initialize_session_state
 
 logging.basicConfig(
     level=logging.WARNING, format="%(levelname)s (%(name)s): %(message)s"
 )
-logging.getLogger("src").setLevel(logging.INFO)
+logging.getLogger("heinrich_tool").setLevel(logging.INFO)
+
+ASSETS_DIR = Path(__file__).parent / "assets"
 
 st.set_page_config(
     page_title="Heinrich Tool",
-    page_icon="assets/icon.ico",
+    page_icon=ASSETS_DIR / "icon.ico",
     layout="centered",
 )
 
@@ -80,7 +82,7 @@ def run_invoice(config):
 
 
 def app():
-    st.html(Path("assets/style.css"))
+    st.html(ASSETS_DIR / "style.css")
     config = get_config()
     initialize_session_state()
 

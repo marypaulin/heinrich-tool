@@ -4,8 +4,8 @@ from decimal import Decimal
 
 import pytest
 
-from src.backend.models import LineItem, Totals
-from src.backend.placeholders import PH_SUM_GROSS, PH_SUM_NET, PH_VAT
+from heinrich_tool.backend.models import LineItem, Totals
+from heinrich_tool.backend.placeholders import PH_SUM_GROSS, PH_SUM_NET, PH_VAT
 
 VAT_RATE = Decimal("0.19")
 

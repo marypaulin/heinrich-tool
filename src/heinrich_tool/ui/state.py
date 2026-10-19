@@ -2,8 +2,8 @@
 
 import streamlit as st
 
-from src.backend.config import Config, load_config
-from src.backend.paths import CONFIG_PATH
+from heinrich_tool.backend.config import Config, load_config
+from heinrich_tool.backend.paths import CONFIG_PATH
 
 
 def get_config() -> Config:

@@ -4,10 +4,10 @@ import logging
 from collections.abc import Iterable
 from decimal import Decimal
 
-from .config import Config
-from .messages import Messages
-from .models import CsvRow, LineItem
-from .money import round_cents
+from heinrich_tool.backend.config import Config
+from heinrich_tool.backend.messages import Messages
+from heinrich_tool.backend.models import CsvRow, LineItem
+from heinrich_tool.backend.money import round_cents
 
 logger = logging.getLogger(__name__)
 

@@ -10,7 +10,7 @@ from pathlib import Path
 
 from docx2pdf import convert
 
-from .messages import Messages
+from heinrich_tool.backend.messages import Messages
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ def render_pdf(docx_path: Path, messages: Messages) -> None:
         # COM init is required per-thread on Windows. Streamlit may execute in a thread without COM initialized.
         try:
             import pythoncom  # type: ignore  # provided by pywin32
-        except Exception:
+        except Exception:  # noqa: BLE001 — any import failure just skips COM init
             pythoncom = None
 
         try:

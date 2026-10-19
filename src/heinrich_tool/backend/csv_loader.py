@@ -7,9 +7,9 @@ from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
-from .config import Config
-from .models import CsvRow
-from .money import round_cents
+from heinrich_tool.backend.config import Config
+from heinrich_tool.backend.models import CsvRow
+from heinrich_tool.backend.money import round_cents
 
 CSV_COL_DATE = "Datum"
 CSV_COL_ORDER_NUMBER = "Auftrags-Nr."

@@ -19,7 +19,7 @@ fi
 UV="$(command -v uv || echo "${HOME}/.local/bin/uv")"
 
 # Start Streamlit detached and silent (no log file)
-nohup "$UV" run streamlit run app.py \
+nohup "$UV" run streamlit run src/heinrich_tool/app.py \
   --server.port "${PORT}" \
   --server.headless true \
   --browser.gatherUsageStats false \

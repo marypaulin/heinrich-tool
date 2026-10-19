@@ -10,12 +10,12 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt
 from docx.table import Table
 
-from src.backend.docgen import (
+from heinrich_tool.backend.docgen import (
     fill_table_with_line_items,
     replace_placeholders,
 )
-from src.backend.models import LineItem
-from src.backend.placeholders import (
+from heinrich_tool.backend.models import LineItem
+from heinrich_tool.backend.placeholders import (
     PH_DATE_TODAY,
     PH_DELIVERY_DATE,
     PH_DOCTYPE,

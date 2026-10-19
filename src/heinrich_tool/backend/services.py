@@ -4,19 +4,19 @@ import logging
 from datetime import date, timedelta
 from pathlib import Path
 
-from .config import Config
-from .csv_loader import load_csv_data
-from .csv_transformer import csv_rows_to_line_items
-from .docgen import (
+from heinrich_tool.backend.config import Config
+from heinrich_tool.backend.csv_loader import load_csv_data
+from heinrich_tool.backend.csv_transformer import csv_rows_to_line_items
+from heinrich_tool.backend.docgen import (
     fill_table_with_line_items,
     load_template,
     replace_placeholders,
     save_docx,
 )
-from .input_args import DeliveryArgs, InvoiceArgs, OfferArgs
-from .messages import Messages
-from .models import DocxDeliveryDate, DocxMeta, LineItem, Totals
-from .paths import (
+from heinrich_tool.backend.input_args import DeliveryArgs, InvoiceArgs, OfferArgs
+from heinrich_tool.backend.messages import Messages
+from heinrich_tool.backend.models import DocxDeliveryDate, DocxMeta, LineItem, Totals
+from heinrich_tool.backend.paths import (
     get_delivery_target_path,
     get_invoice_target_path,
     get_latest_csv_path,
@@ -24,7 +24,7 @@ from .paths import (
     get_order_target_path,
     get_project_dir,
 )
-from .pdfgen import render_pdf
+from heinrich_tool.backend.pdfgen import render_pdf
 
 logger = logging.getLogger(__name__)
 

@@ -5,12 +5,12 @@ Path and file discovery utilities for heinrich-tool.
 import logging
 from pathlib import Path
 
-from .config import Config
-from .messages import Messages
+from heinrich_tool.backend.config import Config
+from heinrich_tool.backend.messages import Messages
 
 logger = logging.getLogger(__name__)
 
-HEINRICH_ROOT = Path(__file__).resolve().parent.parent.parent
+HEINRICH_ROOT = Path(__file__).resolve().parents[3]
 CONFIG_PATH = HEINRICH_ROOT / "config.json"
 
 TEMPLATES_DIR = HEINRICH_ROOT / "templates"

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from src.backend.config import Config, load_config
+from heinrich_tool.backend.config import Config, load_config
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 SAMPLE_CONFIG_PATH = FIXTURES_DIR / "config_sample.json"

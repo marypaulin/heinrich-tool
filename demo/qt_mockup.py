@@ -36,7 +36,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-ASSETS_DIR = Path(__file__).resolve().parent.parent / "assets"
+ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 
 # Dokumenttyp -> (Belegnummer-Regel, Liefertermin-Vorbelegung in Tagen)
 DOC_TYPES = {

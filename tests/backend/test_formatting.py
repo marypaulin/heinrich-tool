@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import pytest
 
-from src.backend.formatting import format_price, format_quantity
+from heinrich_tool.backend.formatting import format_price, format_quantity
 
 
 @pytest.mark.parametrize(

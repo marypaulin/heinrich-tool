@@ -3,8 +3,8 @@
 from datetime import date
 from decimal import Decimal
 
-from src.backend.csv_transformer import csv_rows_to_line_items
-from src.backend.models import CsvRow, LineItem
+from heinrich_tool.backend.csv_transformer import csv_rows_to_line_items
+from heinrich_tool.backend.models import CsvRow, LineItem
 
 
 def csv_row(

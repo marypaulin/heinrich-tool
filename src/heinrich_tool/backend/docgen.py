@@ -15,9 +15,9 @@ from docx.shared import Pt
 from docx.table import _Cell, _Row
 from docx.text.paragraph import Paragraph
 
-from .formatting import format_price, format_quantity
-from .models import LineItem
-from .paths import VORDRUCK_PATH, get_display_path
+from heinrich_tool.backend.formatting import format_price, format_quantity
+from heinrich_tool.backend.models import LineItem
+from heinrich_tool.backend.paths import VORDRUCK_PATH, get_display_path
 
 logger = logging.getLogger(__name__)
 

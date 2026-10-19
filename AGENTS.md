@@ -71,7 +71,8 @@ working notes and is always fine to read.
   `notes/` and the README are in German. (For `Messages` and logging see Error
   handling above.)
 - Long files are divided by section separators: `# — Section name ————————————————`.
-- Use relative imports within `src/backend/`.
+- Absolute imports only (`from heinrich_tool.backend.config import ...`), enforced
+  by ruff (TID252). Streamlit runs `app.py` as a script, where relative imports fail.
 - Terms: *client* is Heinrich Metallbau, the business this tool is built for;
   *customer* is Heinrich Metallbau's customer, who receives the offer or invoice.
 

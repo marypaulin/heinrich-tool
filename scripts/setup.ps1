@@ -154,7 +154,7 @@ function Install-HeinrichTool {
     # Rewritten on every run so that changed paths or icons arrive with an update.
     function Write-Shortcuts([string]$Root) {
         Write-Step 'Verknüpfungen werden angelegt'
-        $icon = Join-Path $Root 'assets\icon.ico'
+        $icon = Join-Path $Root 'src\heinrich_tool\assets\icon.ico'
         $wscript = Join-Path $env:WINDIR 'System32\wscript.exe'
         $launcher = '"' + (Join-Path $Root 'scripts\app_windows.vbs') + '"'
         $update = Join-Path $Root 'update.bat'

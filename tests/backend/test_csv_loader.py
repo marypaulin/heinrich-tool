@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from src.backend.csv_loader import load_csv_data
-from src.backend.models import CsvRow
+from heinrich_tool.backend.csv_loader import load_csv_data
+from heinrich_tool.backend.models import CsvRow
 
 FIXTURE = Path(__file__).parents[1] / "fixtures" / "heinrich_zeiterfassung_sample.csv"
 FIXTURE_DELIMITER = ";"

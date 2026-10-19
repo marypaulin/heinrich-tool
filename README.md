@@ -8,7 +8,7 @@ Dieses Tool wird für Heinrich Metallbau entwickelt, um die manuelle Erstellung 
 
 Die Benutzeroberfläche ist bisher bewusst einfach gehalten: Projektnummer eingeben, Dokument erzeugen.
 
-![Hauptansicht der Webapp](assets/webapp_screenshot.png)
+![Hauptansicht der Webapp](docs/images/webapp_screenshot.png)
 
 
 
@@ -77,11 +77,11 @@ Als CLI-Tool wird das Programm im Projektordner über die Kommandozeile gestarte
 ### Angebot erzeugen
 
 ```
-uv run python cli.py --mode offer --project-number 1408
+uv run python -m heinrich_tool.cli --mode offer --project-number 1408
 ```
 oder kurz
 ```
-uv run python cli.py -m offer -p 1408
+uv run python -m heinrich_tool.cli -m offer -p 1408
 ```
 
 ---
@@ -89,15 +89,15 @@ uv run python cli.py -m offer -p 1408
 ### Lieferschein erzeugen
 
 ```
-uv run python cli.py --mode delivery --project-number 1408
+uv run python -m heinrich_tool.cli --mode delivery --project-number 1408
 ```
 oder kurz
 ```
-uv run python cli.py -m delivery -p 1408
+uv run python -m heinrich_tool.cli -m delivery -p 1408
 ```
 oder mit optionaler Belegnummer
 ```
-uv run python cli.py -m delivery -p 1408 -r 8100045372
+uv run python -m heinrich_tool.cli -m delivery -p 1408 -r 8100045372
 ```
 
 
@@ -106,11 +106,11 @@ uv run python cli.py -m delivery -p 1408 -r 8100045372
 ### Rechnung & Auftragsbestätigung erzeugen
 
 ```
-uv run python cli.py --mode invoice --project-number 1408 --receipt-number 8100045372
+uv run python -m heinrich_tool.cli --mode invoice --project-number 1408 --receipt-number 8100045372
 ```
 oder kurz
 ```
-uv run python cli.py -m invoice -p 1408 -r 8100045372
+uv run python -m heinrich_tool.cli -m invoice -p 1408 -r 8100045372
 ```
 
 ---

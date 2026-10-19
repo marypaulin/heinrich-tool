@@ -2,7 +2,7 @@
 
 from decimal import Decimal
 
-from src.backend.money import round_cents
+from heinrich_tool.backend.money import round_cents
 
 
 def test_half_cent_is_rounded_up():

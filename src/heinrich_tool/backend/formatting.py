@@ -2,7 +2,7 @@
 
 from decimal import Decimal
 
-from .money import round_cents
+from heinrich_tool.backend.money import round_cents
 
 
 def format_quantity(value: Decimal) -> str:

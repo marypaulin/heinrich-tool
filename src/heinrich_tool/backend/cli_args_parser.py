@@ -5,7 +5,7 @@ CLI Argument parsing and validation for heinrich-tool CLI.
 import argparse
 from collections.abc import Iterable
 
-from .input_args import (
+from heinrich_tool.backend.input_args import (
     InputArgs,
     create_delivery_args,
     create_invoice_args,

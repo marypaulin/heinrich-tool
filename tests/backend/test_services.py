@@ -11,14 +11,14 @@ from docx import Document
 from docx.document import Document as DocxDocument
 from docx.table import Table, _Cell
 
-from src.backend import docgen, services
-from src.backend.config import Config
-from src.backend.input_args import (
+from heinrich_tool.backend import docgen, services
+from heinrich_tool.backend.config import Config
+from heinrich_tool.backend.input_args import (
     create_delivery_args,
     create_invoice_args,
     create_offer_args,
 )
-from src.backend.services import (
+from heinrich_tool.backend.services import (
     generate_delivery,
     generate_invoice_and_order,
     generate_offer,

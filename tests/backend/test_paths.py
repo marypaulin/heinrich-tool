@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from src.backend.paths import get_latest_csv_path, get_project_dir
+from heinrich_tool.backend.paths import get_latest_csv_path, get_project_dir
 
 
 def write_csv(project_dir: Path, name: str, mtime: int) -> Path:

@@ -2,8 +2,8 @@
 
 import pytest
 
-from src.backend.cli_args_parser import parse_cli_args
-from src.backend.input_args import DeliveryArgs, InvoiceArgs, OfferArgs
+from heinrich_tool.backend.cli_args_parser import parse_cli_args
+from heinrich_tool.backend.input_args import DeliveryArgs, InvoiceArgs, OfferArgs
 
 PROJECT_NUMBER = "1408"
 RECEIPT_NUMBER = "8100045372"

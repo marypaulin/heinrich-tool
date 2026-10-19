@@ -4,10 +4,10 @@ import logging
 import sys
 from datetime import date
 
-from src.backend.cli_args_parser import parse_cli_args
-from src.backend.config import load_config
-from src.backend.paths import CONFIG_PATH
-from src.backend.services import (
+from heinrich_tool.backend.cli_args_parser import parse_cli_args
+from heinrich_tool.backend.config import load_config
+from heinrich_tool.backend.paths import CONFIG_PATH
+from heinrich_tool.backend.services import (
     generate_delivery,
     generate_invoice_and_order,
     generate_offer,
@@ -16,7 +16,7 @@ from src.backend.services import (
 logging.basicConfig(
     level=logging.WARNING, format="%(levelname)s (%(name)s): %(message)s"
 )
-logging.getLogger("src").setLevel(logging.INFO)
+logging.getLogger("heinrich_tool").setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 
