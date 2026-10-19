@@ -42,7 +42,7 @@ def render_pdf(docx_path: Path, messages: Messages) -> None:
         # COM init is required per-thread on Windows. Streamlit may execute in a thread without COM initialized.
         try:
             import pythoncom  # type: ignore  # provided by pywin32
-        except Exception:  # noqa: BLE001 — any import failure just skips COM init
+        except ImportError:
             pythoncom = None
 
         try:
