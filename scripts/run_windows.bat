@@ -4,6 +4,7 @@ setlocal EnableExtensions EnableDelayedExpansion
 REM Jump to project root (parent of this scripts/ folder)
 cd /d "%~dp0\.."
 
+REM Must match $appPort in setup.ps1
 set PORT=8502
 set URL=http://localhost:%PORT%
 

@@ -15,6 +15,8 @@ function Install-HeinrichTool {
 
     $repoUrl = 'https://github.com/marypaulin/heinrich-tool.git'
     $folderName = 'heinrich-tool'
+    # Must match PORT in run_windows.bat.
+    $appPort = 8502
 
     # — Helpers ————————————————————————————————————————————————
 
@@ -121,6 +123,22 @@ function Install-HeinrichTool {
         return Join-Path $parent $folderName
     }
 
+    # A server left running would keep serving the old code, or fail once files
+    # have moved, and run_windows.bat only reopens the browser on a busy port.
+    # The port is reserved for this app, so whatever listens on it is ours.
+    function Stop-RunningApp {
+        $listeners = Get-NetTCPConnection -LocalPort $appPort -State Listen -ErrorAction SilentlyContinue
+        if (-not $listeners) { return }
+        Write-Step 'Heinrich Tool wird beendet'
+        foreach ($id in ($listeners.OwningProcess | Sort-Object -Unique)) {
+            Stop-Process -Id $id -Force -ErrorAction SilentlyContinue
+            Wait-Process -Id $id -Timeout 10 -ErrorAction SilentlyContinue
+        }
+        if (Get-NetTCPConnection -LocalPort $appPort -State Listen -ErrorAction SilentlyContinue) {
+            throw 'Heinrich Tool läuft noch und konnte nicht beendet werden. Bitte den Rechner neu starten und das Update erneut ausführen. Es wurde nichts verändert.'
+        }
+    }
+
     function Sync-Repository([string]$Root) {
         if (Test-Path (Join-Path $Root '.git')) {
             Write-Step 'Neueste Version wird geholt'
@@ -173,6 +191,7 @@ function Install-HeinrichTool {
         Install-WithWinget 'git' 'Git.Git' 'Git'
         Install-WithWinget 'uv' 'astral-sh.uv' 'uv'
         $root = Get-ProjectRoot
+        Stop-RunningApp
         Sync-Repository $root
         Sync-Environment $root
         Write-Shortcuts $root
