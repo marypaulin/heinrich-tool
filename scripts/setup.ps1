@@ -1,11 +1,13 @@
 ﻿# Installs or updates Heinrich Tool on Windows: git, uv, repository, environment, shortcuts.
 #
 # First run (nothing on the machine yet), pasted into PowerShell:
-#   irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1 | iex
+#   (irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1).TrimStart([char]0xFEFF) | iex
 # Every later run: update.bat in the project root.
 #
 # Written for Windows PowerShell 5.1, which every Windows machine has. Saved as
 # UTF-8 with BOM: without it, 5.1 reads the file as ANSI and garbles the umlauts.
+# irm keeps the BOM as a character in front of the first line, and iex would run
+# that line as an unknown command instead of a comment; hence the TrimStart.
 
 # Everything runs inside a function because `irm | iex` executes in Max's own
 # session: `exit` would close his window, and script-level variables and

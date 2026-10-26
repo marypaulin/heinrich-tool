@@ -24,7 +24,7 @@ Installation und Updates übernimmt ein Skript. Vorkenntnisse oder vorinstallier
 2. Folgende Zeile einfügen und mit Enter bestätigen:
 
 ```
-irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1 | iex
+(irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1).TrimStart([char]0xFEFF) | iex
 ```
 
 > **Wichtig:** Als Installationsort einen lokalen Ordner wählen, nicht in OneDrive.

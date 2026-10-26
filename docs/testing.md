@@ -205,8 +205,11 @@ aufeinander auf.
 
 - **Aktion:** „Windows PowerShell“ aus dem Startmenü öffnen (nicht als
   Administrator), einfügen:
-  `irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1 | iex`
+  `(irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1).TrimStart([char]0xFEFF) | iex`
 - **Erwartet:**
+  - Kein roter Fehler vor dem ersten Schritt. Ohne `TrimStart` erscheint dort
+    „Die Benennung "#" wurde nicht … erkannt“: `irm` behält den BOM als
+    Zeichen vor der ersten Zeile.
   - Git wird per winget installiert (UAC-Abfrage), danach uv.
   - Ordner-Dialog öffnet **vor** dem PowerShell-Fenster.
   - Nach Wahl von z. B. `C:\Users\<Name>`: Klon nach
@@ -214,10 +217,6 @@ aufeinander auf.
   - „Fertig. Heinrich Tool startet …“ in Grün.
   - Das PowerShell-Fenster bleibt offen.
   - **Umlaute** in allen Meldungen richtig („wählen“, „Verknüpfungen“).
-    `setup.ps1` ist UTF-8 mit BOM, weil Windows PowerShell 5.1 eine Datei ohne
-    BOM als ANSI liest. Beim Einzeiler liest aber `irm` den Text von GitHub,
-    nicht PowerShell eine Datei. Falls die Umlaute hier kaputt sind: Skript
-    rein ASCII halten, Umlaute in den Meldungen per `[char]` erzeugen.
 
 #### W2 — Verknüpfungen
 
