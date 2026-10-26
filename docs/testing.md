@@ -193,13 +193,27 @@ EOF
 ```
 
 **Netz trennen (W8):** in virt-manager bei der Netzwerkkarte den Haken
-„Link state: active“ entfernen.
+„Link state: active“ entfernen, oder ohne Oberfläche (Schnittstelle aus
+`virsh -c qemu:///system domiflist win11`):
+
+```bash
+virsh -c qemu:///system domif-setlink win11 vnet0 down   # danach: up
+```
 
 ### Windows-VM
 
 Ausgangszustand für W1: Basiszustand, also frisches Windows-Konto ohne Git,
 ohne uv, ohne Installation von Heinrich Tool. Danach bauen die Fälle
 aufeinander auf.
+
+**Ablauf mit Agent:** Der Agent sagt die Fälle einzeln an — Aktion und
+erwartetes Ergebnis — und wertet die Ausgaben aus, die per Kopieren und
+Einfügen oder als Screenshot zurückkommen. `virsh`-Befehle ohne `sudo`
+(Starten mit `virsh -c qemu:///system start win11`, Herunterfahren, Netz
+trennen) führt er selbst aus. Blöcke mit `sudo` (Zurücksetzen) gibt er zum
+Einfügen in ein separates Terminal aus, weil `sudo` interaktiv nach dem
+Passwort fragt. Abweichungen werden festgehalten und nach dem Testlauf als
+eigene Fixes behoben.
 
 #### W1 — Erstlauf per Einzeiler
 
@@ -220,11 +234,21 @@ aufeinander auf.
 
 #### W2 — Verknüpfungen
 
-- **Erwartet nach W1:**
+- **Vorbereitung:** Konfiguration und Vorlage fehlen nach W1, sie sind
+  gitignored. Im Projektordner die Beispieldateien einsetzen:
+  ```powershell
+  Copy-Item tests\fixtures\config_sample.json config.json
+  New-Item -ItemType Directory templates
+  Copy-Item tests\fixtures\Vordruck_sample.docx templates\Vordruck.docx
+  ```
+- **Erwartet:**
   - Desktop: „Heinrich Tool“ mit App-Icon.
   - Startmenü: „Heinrich Tool“ und „Heinrich Tool aktualisieren“.
   - „Heinrich Tool“ startet die App (`scripts/run_windows.bat`), der Browser
-    öffnet genau einen Tab.
+    öffnet genau einen Tab. Keine Abfrage der Windows-Firewall: Streamlit
+    lauscht nur auf `127.0.0.1`.
+  - Der erste Start nach der Installation dauert über eine Minute (Python
+    kompiliert, Defender prüft jede neue Datei), spätere um 10 Sekunden.
   - Zweiter Klick bei laufender App: nur der Browser öffnet.
 
 #### W3 — Update per `update.bat`
