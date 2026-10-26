@@ -169,7 +169,7 @@ function Install-HeinrichTool {
     function Sync-Environment([string]$Root) {
         Write-Step 'Python und Bibliotheken werden eingerichtet'
         Invoke-Native 'Python und Bibliotheken konnten nicht eingerichtet werden.' {
-            uv --directory $Root sync
+            uv --directory $Root sync --no-dev
         }
     }
 

@@ -18,10 +18,10 @@ if %errorlevel%==0 (
 
 REM Bring the environment in line with uv.lock (creates it on first run,
 REM fast once it matches; uv also fetches the pinned Python if missing)
-uv sync --quiet
+uv sync --quiet --no-dev
 
 REM Start Streamlit detached + quiet (so this .bat can finish)
-start "" /b cmd /c uv run streamlit run src/heinrich_tool/app.py --server.port %PORT% --server.headless true --browser.gatherUsageStats false ^>nul 2^>nul
+start "" /b cmd /c uv run --no-dev streamlit run src/heinrich_tool/app.py --server.port %PORT% --server.headless true --browser.gatherUsageStats false ^>nul 2^>nul
 
 REM Wait until the port is listening (at most 20 checks)
 set /a ATTEMPTS=0
