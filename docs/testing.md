@@ -253,7 +253,7 @@ aufeinander auf.
 #### W6 — Erneuter Einzeiler auf bestehende Installation
 
 - **Aktion:** Einzeiler, im Dialog denselben Ort wie in W1 wählen.
-- **Erwartet:** Kein neuer Klon, sondern Update wie W3.
+- **Erwartet:** Kein Git-/uv-Schritt, kein neuer Klon, sondern Update wie W3.
 
 #### W7 — Fremder Ordner mit dem Namen `heinrich-tool`
 
