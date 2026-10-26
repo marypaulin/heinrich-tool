@@ -141,6 +141,7 @@ function Install-HeinrichTool {
         if (Get-NetTCPConnection -LocalPort $appPort -State Listen -ErrorAction SilentlyContinue) {
             throw 'Heinrich Tool läuft noch und konnte nicht beendet werden. Bitte den Rechner neu starten und das Update erneut ausführen. Es wurde nichts verändert.'
         }
+        Write-Host 'Bitte den alten Heinrich-Tool-Tab im Browser schließen.'
     }
 
     function Sync-Repository([string]$Root) {
