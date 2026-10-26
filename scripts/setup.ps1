@@ -138,10 +138,16 @@ function Install-HeinrichTool {
             Stop-Process -Id $id -Force -ErrorAction SilentlyContinue
             Wait-Process -Id $id -Timeout 10 -ErrorAction SilentlyContinue
         }
-        if (Get-NetTCPConnection -LocalPort $appPort -State Listen -ErrorAction SilentlyContinue) {
-            throw 'Heinrich Tool läuft noch und konnte nicht beendet werden. Bitte den Rechner neu starten und das Update erneut ausführen. Es wurde nichts verändert.'
+        # The port can still show as listening for a moment after the process
+        # has ended, so a single check right away may fail.
+        $deadline = (Get-Date).AddSeconds(10)
+        while (Get-NetTCPConnection -LocalPort $appPort -State Listen -ErrorAction SilentlyContinue) {
+            if ((Get-Date) -gt $deadline) {
+                throw 'Heinrich Tool läuft noch und konnte nicht beendet werden. Bitte den Rechner neu starten und das Update erneut ausführen. Es wurde nichts verändert.'
+            }
+            Start-Sleep -Milliseconds 500
         }
-        Write-Host 'Bitte den alten Heinrich-Tool-Tab im Browser schließen.'
+        Write-Host 'Bitte den alten Heinrich-Tab im Browser schließen.'
     }
 
     function Sync-Repository([string]$Root) {
