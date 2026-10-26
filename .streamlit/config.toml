@@ -5,6 +5,9 @@
 # Serves static/ so the font ships with the app instead of loading from Google
 # Fonts — the client's machines must not depend on internet access.
 enableStaticServing = true
+# Streamlit listens on all network interfaces by default, which would let
+# anyone on the local network open the app and see customer data.
+address = "127.0.0.1"
 
 [theme]
 font = "Roboto Mono, monospace"
