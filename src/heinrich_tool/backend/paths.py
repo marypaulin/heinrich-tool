@@ -43,7 +43,7 @@ def get_project_dir(data_root: Path, project_number: str) -> tuple[Path, list[st
 def get_latest_csv_path(project_dir: Path, config: Config) -> tuple[Path, list[str]]:
     """Find the latest CSV file in the order folder."""
     messages = Messages()
-    csv_files = list(project_dir.glob(config.filenames["CSV_NAME_RE"]))
+    csv_files = list(project_dir.glob(config.filenames["CSV_GLOB"]))
     if not csv_files:
         raise FileNotFoundError(f"No CSV files found in {project_dir}")
     latest = max(csv_files, key=lambda p: p.stat().st_mtime)
