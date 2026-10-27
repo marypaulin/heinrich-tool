@@ -4,6 +4,8 @@ import streamlit as st
 
 
 def initialize_session_state() -> None:
+    if "settings_error" not in st.session_state:
+        st.session_state.settings_error = None
     if "offer_info" not in st.session_state:
         st.session_state.offer_info = []
     if "offer_error" not in st.session_state:
