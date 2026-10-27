@@ -2,7 +2,10 @@
 
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Literal
+
+from heinrich_tool.backend.settings import Settings
 
 # Project number should be exactly four digits
 PROJECT_NUMBER_RE = re.compile(r"\d{4}")
@@ -69,4 +72,34 @@ def create_invoice_args(project_number: str, receipt_number: str) -> InvoiceArgs
     receipt_number = _format_receipt_number_required(receipt_number)
     return InvoiceArgs(
         mode="invoice", project_number=project_number, receipt_number=receipt_number
+    )
+
+
+def _format_path(path: str, name: str) -> Path:
+    # Windows' "Copy as path" wraps the path in double quotes.
+    path = path.strip().strip('"')
+    if not path:
+        raise ValueError(f"{name} is required")
+    return Path(path)
+
+
+def _format_dir(path: str, name: str) -> Path:
+    dir_path = _format_path(path, name)
+    if not dir_path.is_dir():
+        raise FileNotFoundError(f"{name} not found: {dir_path}")
+    return dir_path
+
+
+def _format_file(path: str, name: str) -> Path:
+    file_path = _format_path(path, name)
+    if not file_path.is_file():
+        raise FileNotFoundError(f"{name} not found: {file_path}")
+    return file_path
+
+
+def create_settings(data_root: str, config_path: str, template_path: str) -> Settings:
+    return Settings(
+        data_root=_format_dir(data_root, "DATA_ROOT"),
+        config_path=_format_file(config_path, "CONFIG_PATH"),
+        template_path=_format_file(template_path, "TEMPLATE_PATH"),
     )

@@ -25,7 +25,12 @@ from heinrich_tool.backend.paths import (
     get_project_dir,
 )
 from heinrich_tool.backend.pdfgen import render_pdf
-from heinrich_tool.backend.settings import SETTINGS_PATH, Settings, read_settings
+from heinrich_tool.backend.settings import (
+    SETTINGS_PATH,
+    Settings,
+    read_settings,
+    write_settings,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -109,6 +114,10 @@ def _generate_document(
 
 def load_settings() -> Settings | None:
     return read_settings(SETTINGS_PATH)
+
+
+def save_settings(settings: Settings) -> None:
+    write_settings(SETTINGS_PATH, settings)
 
 
 def generate_offer(
