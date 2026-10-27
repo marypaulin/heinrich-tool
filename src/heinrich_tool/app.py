@@ -15,8 +15,9 @@ from heinrich_tool.backend.services import (
     generate_delivery,
     generate_invoice_and_order,
     generate_offer,
+    load_settings,
 )
-from heinrich_tool.ui.state import get_config, initialize_session_state
+from heinrich_tool.ui.state import initialize_session_state
 
 logging.basicConfig(
     level=logging.WARNING, format="%(levelname)s (%(name)s): %(message)s"
@@ -32,7 +33,7 @@ st.set_page_config(
 )
 
 
-def run_offer(config):
+def run_offer(settings):
     st.session_state.offer_info = []
     st.session_state.offer_error = None
 
@@ -40,14 +41,14 @@ def run_offer(config):
 
     try:
         args = create_offer_args(project_number)
-        st.session_state.offer_info = generate_offer(args, date.today(), config)
+        st.session_state.offer_info = generate_offer(args, date.today(), settings)
         st.toast("Angebot erzeugt", icon="✅")
     except (FileNotFoundError, ValueError) as e:
         st.session_state.offer_error = f"Error: {e!s}"
         st.toast("Fehler beim Erzeugen", icon="❌")
 
 
-def run_delivery(config):
+def run_delivery(settings):
     st.session_state.delivery_info = []
     st.session_state.delivery_error = None
 
@@ -56,14 +57,14 @@ def run_delivery(config):
 
     try:
         args = create_delivery_args(project_number, receipt_number)
-        st.session_state.delivery_info = generate_delivery(args, date.today(), config)
+        st.session_state.delivery_info = generate_delivery(args, date.today(), settings)
         st.toast("Lieferschein erzeugt", icon="✅")
     except (FileNotFoundError, ValueError) as e:
         st.session_state.delivery_error = f"Error: {e!s}"
         st.toast("Fehler beim Erzeugen", icon="❌")
 
 
-def run_invoice(config):
+def run_invoice(settings):
     st.session_state.invoice_info = []
     st.session_state.invoice_error = []
 
@@ -73,7 +74,7 @@ def run_invoice(config):
     try:
         args = create_invoice_args(project_number, receipt_number)
         st.session_state.invoice_info = generate_invoice_and_order(
-            args, date.today(), config
+            args, date.today(), settings
         )
         st.toast("Rechnung und Auftragsbestätigung erzeugt", icon="✅")
     except (FileNotFoundError, ValueError) as e:
@@ -83,12 +84,20 @@ def run_invoice(config):
 
 def app():
     st.html(ASSETS_DIR / "style.css")
-    config = get_config()
     initialize_session_state()
 
     with st.container(gap="xxsmall"):
         st.title("Heinrich Abrechnung")
         st.caption("CSV rein, PDF raus")
+
+    try:
+        settings = load_settings()
+    except ValueError as e:
+        st.error(f"Error: {e!s}")
+        st.stop()
+    if settings is None:
+        st.info("Noch keine Pfade eingestellt.")
+        st.stop()
 
     with st.form("offer_form"):
         st.subheader("Angebot")
@@ -98,7 +107,7 @@ def app():
             st.form_submit_button(
                 "Angebot erzeugen",
                 on_click=run_offer,
-                args=(config,),
+                args=(settings,),
                 type="primary",
             )
 
@@ -125,7 +134,7 @@ def app():
             st.form_submit_button(
                 "Lieferschein erzeugen",
                 on_click=run_delivery,
-                args=(config,),
+                args=(settings,),
                 type="primary",
             )
 
@@ -152,7 +161,7 @@ def app():
             st.form_submit_button(
                 "Rechnung und Auftragsbestätigung erzeugen",
                 on_click=run_invoice,
-                args=(config,),
+                args=(settings,),
                 type="primary",
             )
 

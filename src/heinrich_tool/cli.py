@@ -5,12 +5,12 @@ import sys
 from datetime import date
 
 from heinrich_tool.backend.cli_args_parser import parse_cli_args
-from heinrich_tool.backend.config import load_config
-from heinrich_tool.backend.paths import CONFIG_PATH
 from heinrich_tool.backend.services import (
+    SETTINGS_PATH,
     generate_delivery,
     generate_invoice_and_order,
     generate_offer,
+    load_settings,
 )
 
 logging.basicConfig(
@@ -22,14 +22,18 @@ logger = logging.getLogger(__name__)
 
 def main():
     args = parse_cli_args()
-    config = load_config(CONFIG_PATH)
+    settings = load_settings()
+    if settings is None:
+        raise FileNotFoundError(
+            f"No settings found at {SETTINGS_PATH}, set the paths in the app first"
+        )
 
     if args.mode == "offer":
-        generate_offer(args, date.today(), config)
+        generate_offer(args, date.today(), settings)
     elif args.mode == "delivery":
-        generate_delivery(args, date.today(), config)
+        generate_delivery(args, date.today(), settings)
     elif args.mode == "invoice":
-        generate_invoice_and_order(args, date.today(), config)
+        generate_invoice_and_order(args, date.today(), settings)
 
 
 if __name__ == "__main__":

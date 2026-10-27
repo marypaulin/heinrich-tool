@@ -1,13 +1,6 @@
-"""Streamlit session state initialisation and config caching."""
+"""Streamlit session state initialisation."""
 
 import streamlit as st
-
-from heinrich_tool.backend.config import Config, load_config
-from heinrich_tool.backend.paths import CONFIG_PATH
-
-
-def get_config() -> Config:
-    return st.session_state.setdefault("config", load_config(CONFIG_PATH))
 
 
 def initialize_session_state() -> None:

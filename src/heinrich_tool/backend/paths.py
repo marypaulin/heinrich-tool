@@ -10,12 +10,6 @@ from heinrich_tool.backend.messages import Messages
 
 logger = logging.getLogger(__name__)
 
-HEINRICH_ROOT = Path(__file__).resolve().parents[3]
-CONFIG_PATH = HEINRICH_ROOT / "config.json"
-
-TEMPLATES_DIR = HEINRICH_ROOT / "templates"
-VORDRUCK_PATH = TEMPLATES_DIR / "Vordruck.docx"
-
 
 def _format_filename(template: str, **values: str) -> str:
     """Fill the filename template placeholders with values"""

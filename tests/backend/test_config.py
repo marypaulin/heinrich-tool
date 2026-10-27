@@ -25,22 +25,6 @@ def write_variant(tmp_path: Path, **changes) -> Path:
     return write_config_text(tmp_path, json.dumps(raw))
 
 
-# — Data root —————————————————————————————————————————————————————————————————
-
-
-def test_relative_data_root_is_resolved_against_the_config_file():
-    config = load_config(SAMPLE_CONFIG_PATH)
-
-    assert config.data_root == FIXTURES_DIR
-
-
-def test_absolute_data_root_is_kept(tmp_path):
-    data_root = Path(tmp_path.anchor) / "Datenordner"
-    config_path = write_variant(tmp_path, DATA_ROOT=str(data_root))
-
-    assert load_config(config_path).data_root == data_root
-
-
 # — Rates —————————————————————————————————————————————————————————————————————
 
 

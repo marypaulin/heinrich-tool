@@ -2,7 +2,6 @@
 
 import re
 import shutil
-from dataclasses import replace
 from datetime import date
 from pathlib import Path
 
@@ -12,7 +11,6 @@ from docx.document import Document as DocxDocument
 from docx.table import Table, _Cell
 
 from heinrich_tool.backend import services
-from heinrich_tool.backend.config import Config
 from heinrich_tool.backend.input_args import (
     create_delivery_args,
     create_invoice_args,
@@ -23,6 +21,7 @@ from heinrich_tool.backend.services import (
     generate_invoice_and_order,
     generate_offer,
 )
+from heinrich_tool.backend.settings import Settings
 
 FIXTURES_DIR = Path(__file__).parents[1] / "fixtures"
 PROJECT_FOLDER = "1234 - Schutzgitter Mischer 3"
@@ -52,14 +51,6 @@ SUM_ROWS = [
 
 
 @pytest.fixture(autouse=True)
-def patch_template_path(monkeypatch):
-    """The template path is fixed in the code until the path resolution is rebuilt."""
-    monkeypatch.setattr(
-        services, "VORDRUCK_PATH", FIXTURES_DIR / "Vordruck_sample.docx"
-    )
-
-
-@pytest.fixture(autouse=True)
 def no_pdf(monkeypatch):
     """PDF rendering is checked by hand."""
     monkeypatch.setattr(services, "render_pdf", lambda docx_path, messages: None)
@@ -76,8 +67,12 @@ def sample_data_root(tmp_path) -> Path:
 
 
 @pytest.fixture
-def sample_config_with_data_root(sample_config, sample_data_root) -> Config:
-    return replace(sample_config, data_root=sample_data_root)
+def sample_settings(sample_data_root) -> Settings:
+    return Settings(
+        data_root=sample_data_root,
+        config_path=FIXTURES_DIR / "config_sample.json",
+        template_path=FIXTURES_DIR / "Vordruck_sample.docx",
+    )
 
 
 def open_document(data_root: Path, filename: str) -> DocxDocument:
@@ -122,10 +117,8 @@ def assert_no_placeholders_left(doc: DocxDocument) -> None:
 # — Angebot ———————————————————————————————————————————————————————————————————
 
 
-def test_offer(sample_config_with_data_root, sample_data_root):
-    generate_offer(
-        create_offer_args("1234"), date(2025, 8, 1), sample_config_with_data_root
-    )
+def test_offer(sample_settings, sample_data_root):
+    generate_offer(create_offer_args("1234"), date(2025, 8, 1), sample_settings)
 
     doc = open_document(sample_data_root, "Angebot Nr. 1234.docx")
     doc_texts = texts(doc)
@@ -144,9 +137,9 @@ def test_offer(sample_config_with_data_root, sample_data_root):
 # — Lieferschein ——————————————————————————————————————————————————————————————
 
 
-def test_delivery_note(sample_config_with_data_root, sample_data_root):
+def test_delivery_note(sample_settings, sample_data_root):
     args = create_delivery_args("1234", "4100012345")
-    generate_delivery(args, date(2025, 8, 15), sample_config_with_data_root)
+    generate_delivery(args, date(2025, 8, 15), sample_settings)
 
     doc = open_document(sample_data_root, "Lieferschein Nr. 1234.docx")
     doc_texts = texts(doc)
@@ -181,10 +174,10 @@ def test_delivery_note(sample_config_with_data_root, sample_data_root):
     ],
 )
 def test_invoice_and_order_confirmation(
-    sample_config_with_data_root, sample_data_root, filename, doctype, header
+    sample_settings, sample_data_root, filename, doctype, header
 ):
     args = create_invoice_args("1234", "4100012345")
-    generate_invoice_and_order(args, date(2025, 8, 20), sample_config_with_data_root)
+    generate_invoice_and_order(args, date(2025, 8, 20), sample_settings)
 
     doc = open_document(sample_data_root, filename)
     doc_texts = texts(doc)

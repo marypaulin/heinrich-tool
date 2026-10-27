@@ -18,7 +18,7 @@ class Settings:
     template_path: Path
 
 
-def load_settings(path: Path) -> Settings | None:
+def read_settings(path: Path) -> Settings | None:
     """Return the stored settings, or None before they have been set on this computer."""
     if not path.exists():
         return None
@@ -30,7 +30,7 @@ def load_settings(path: Path) -> Settings | None:
     )
 
 
-def save_settings(path: Path, settings: Settings) -> None:
+def write_settings(path: Path, settings: Settings) -> None:
     raw = {
         "data_root": str(settings.data_root),
         "config_path": str(settings.config_path),

@@ -1,5 +1,4 @@
 {
-  "DATA_ROOT": ".",
   "HOURLY_RATE_MAPPING": {
     "84.90": "Meisterstunde",
     "139.90": "Meisterstunde Sonntag",

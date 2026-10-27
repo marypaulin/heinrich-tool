@@ -4,7 +4,7 @@ import logging
 from datetime import date, timedelta
 from pathlib import Path
 
-from heinrich_tool.backend.config import Config
+from heinrich_tool.backend.config import Config, load_config
 from heinrich_tool.backend.csv_loader import load_csv_data
 from heinrich_tool.backend.csv_transformer import csv_rows_to_line_items
 from heinrich_tool.backend.docgen import (
@@ -17,7 +17,6 @@ from heinrich_tool.backend.input_args import DeliveryArgs, InvoiceArgs, OfferArg
 from heinrich_tool.backend.messages import Messages
 from heinrich_tool.backend.models import DocxDeliveryDate, DocxMeta, LineItem, Totals
 from heinrich_tool.backend.paths import (
-    VORDRUCK_PATH,
     get_delivery_target_path,
     get_invoice_target_path,
     get_latest_csv_path,
@@ -26,6 +25,7 @@ from heinrich_tool.backend.paths import (
     get_project_dir,
 )
 from heinrich_tool.backend.pdfgen import render_pdf
+from heinrich_tool.backend.settings import SETTINGS_PATH, Settings, read_settings
 
 logger = logging.getLogger(__name__)
 
@@ -81,13 +81,14 @@ def _generate_document(
     document_date: date,
     line_items: list[LineItem],
     target_path: Path,
+    template_path: Path,
     config: Config,
     messages: Messages,
     log_label_en: str,
     log_label_de: str,
 ) -> None:
     """Fill Word template with CSV data and save as DOCX."""
-    doc = load_template(VORDRUCK_PATH)
+    doc = load_template(template_path)
     meta = _build_meta(project_number, receipt_number, document_date, doc_key, config)
     totals = Totals.calculate_sums_and_vat(line_items, config.vat_rate)
     delivery_date = _build_delivery_date(document_date, doc_key, config)
@@ -106,10 +107,17 @@ def _generate_document(
 # — Public API ————————————————————————————————————————————————————————————————
 
 
-def generate_offer(args: OfferArgs, document_date: date, config: Config) -> list[str]:
+def load_settings() -> Settings | None:
+    return read_settings(SETTINGS_PATH)
+
+
+def generate_offer(
+    args: OfferArgs, document_date: date, settings: Settings
+) -> list[str]:
     """Full pipeline: find project → load CSV → generate Angebot DOCX + PDF."""
     messages = Messages()
-    project_dir, dir_msgs = get_project_dir(config.data_root, args.project_number)
+    config = load_config(settings.config_path)
+    project_dir, dir_msgs = get_project_dir(settings.data_root, args.project_number)
     messages.items.extend(dir_msgs)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = get_offer_target_path(project_dir, args.project_number, config)
@@ -120,6 +128,7 @@ def generate_offer(args: OfferArgs, document_date: date, config: Config) -> list
         document_date=document_date,
         line_items=line_items,
         target_path=target_path,
+        template_path=settings.template_path,
         config=config,
         messages=messages,
         log_label_en="offer",
@@ -130,11 +139,12 @@ def generate_offer(args: OfferArgs, document_date: date, config: Config) -> list
 
 
 def generate_delivery(
-    args: DeliveryArgs, document_date: date, config: Config
+    args: DeliveryArgs, document_date: date, settings: Settings
 ) -> list[str]:
     """Full pipeline: find project → load CSV → generate Lieferschein DOCX + PDF."""
     messages = Messages()
-    project_dir, dir_msgs = get_project_dir(config.data_root, args.project_number)
+    config = load_config(settings.config_path)
+    project_dir, dir_msgs = get_project_dir(settings.data_root, args.project_number)
     messages.items.extend(dir_msgs)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = get_delivery_target_path(project_dir, args.project_number, config)
@@ -145,6 +155,7 @@ def generate_delivery(
         document_date=document_date,
         line_items=line_items,
         target_path=target_path,
+        template_path=settings.template_path,
         config=config,
         messages=messages,
         log_label_en="delivery note",
@@ -155,11 +166,12 @@ def generate_delivery(
 
 
 def generate_invoice_and_order(
-    args: InvoiceArgs, document_date: date, config: Config
+    args: InvoiceArgs, document_date: date, settings: Settings
 ) -> list[str]:
     """Full pipeline: find project → load CSV → generate Rechnung + Auftragsbestätigung DOCX + PDF."""
     messages = Messages()
-    project_dir, dir_msgs = get_project_dir(config.data_root, args.project_number)
+    config = load_config(settings.config_path)
+    project_dir, dir_msgs = get_project_dir(settings.data_root, args.project_number)
     messages.items.extend(dir_msgs)
     line_items = _load_line_items(project_dir, config, messages)
     invoice_path = get_invoice_target_path(
@@ -175,6 +187,7 @@ def generate_invoice_and_order(
         document_date=document_date,
         line_items=line_items,
         target_path=invoice_path,
+        template_path=settings.template_path,
         config=config,
         messages=messages,
         log_label_en="invoice",
@@ -187,6 +200,7 @@ def generate_invoice_and_order(
         document_date=document_date,
         line_items=line_items,
         target_path=order_path,
+        template_path=settings.template_path,
         config=config,
         messages=messages,
         log_label_en="order confirmation",
