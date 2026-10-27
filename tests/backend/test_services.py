@@ -11,7 +11,7 @@ from docx import Document
 from docx.document import Document as DocxDocument
 from docx.table import Table, _Cell
 
-from heinrich_tool.backend import docgen, services
+from heinrich_tool.backend import services
 from heinrich_tool.backend.config import Config
 from heinrich_tool.backend.input_args import (
     create_delivery_args,
@@ -54,7 +54,9 @@ SUM_ROWS = [
 @pytest.fixture(autouse=True)
 def patch_template_path(monkeypatch):
     """The template path is fixed in the code until the path resolution is rebuilt."""
-    monkeypatch.setattr(docgen, "VORDRUCK_PATH", FIXTURES_DIR / "Vordruck_sample.docx")
+    monkeypatch.setattr(
+        services, "VORDRUCK_PATH", FIXTURES_DIR / "Vordruck_sample.docx"
+    )
 
 
 @pytest.fixture(autouse=True)

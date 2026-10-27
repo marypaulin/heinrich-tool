@@ -17,6 +17,7 @@ from heinrich_tool.backend.input_args import DeliveryArgs, InvoiceArgs, OfferArg
 from heinrich_tool.backend.messages import Messages
 from heinrich_tool.backend.models import DocxDeliveryDate, DocxMeta, LineItem, Totals
 from heinrich_tool.backend.paths import (
+    VORDRUCK_PATH,
     get_delivery_target_path,
     get_invoice_target_path,
     get_latest_csv_path,
@@ -86,7 +87,7 @@ def _generate_document(
     log_label_de: str,
 ) -> None:
     """Fill Word template with CSV data and save as DOCX."""
-    doc = load_template()
+    doc = load_template(VORDRUCK_PATH)
     meta = _build_meta(project_number, receipt_number, document_date, doc_key, config)
     totals = Totals.calculate_sums_and_vat(line_items, config.vat_rate)
     delivery_date = _build_delivery_date(document_date, doc_key, config)

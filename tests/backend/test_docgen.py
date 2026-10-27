@@ -12,6 +12,7 @@ from docx.table import Table
 
 from heinrich_tool.backend.docgen import (
     fill_table_with_line_items,
+    load_template,
     replace_placeholders,
 )
 from heinrich_tool.backend.models import LineItem
@@ -85,6 +86,14 @@ HELPER_HOURS = hours_item(
     "111", "3.00", "Helferstunde zu Auftrag Nr. 111", "48.00", "144.00"
 )
 MATERIAL = material_item("111", "Material zu Auftrag Nr. 111", "270.00")
+
+
+# — Template ——————————————————————————————————————————————————————————————————
+
+
+def test_missing_template_raises(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        load_template(tmp_path / "Vordruck.docx")
 
 
 # — Placeholders ——————————————————————————————————————————————————————————————

@@ -17,19 +17,19 @@ from docx.text.paragraph import Paragraph
 
 from heinrich_tool.backend.formatting import format_price, format_quantity
 from heinrich_tool.backend.models import LineItem
-from heinrich_tool.backend.paths import VORDRUCK_PATH, get_display_path
+from heinrich_tool.backend.paths import get_display_path
 
 logger = logging.getLogger(__name__)
 
 
-def load_template() -> DocxDocument:
+def load_template(path: Path) -> DocxDocument:
     try:
-        doc = Document(str(VORDRUCK_PATH))
-        display_path = get_display_path(VORDRUCK_PATH)
+        doc = Document(str(path))
+        display_path = get_display_path(path)
         logger.info(f"Using template: {display_path}")
         return doc
-    except PackageNotFoundError:
-        raise ValueError(f"Template not found: {VORDRUCK_PATH}")
+    except PackageNotFoundError as e:
+        raise FileNotFoundError(f"Template not found: {path}") from e
 
 
 def save_docx(doc: DocxDocument, path: Path) -> None:
