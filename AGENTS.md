@@ -11,14 +11,10 @@ not in `services.py`.
 
 ## Data protection
 
-These paths are gitignored because they hold real client data (Heinrich
-Metallbau — master data and rates). Never read their contents into context; use
-the listed substitute where one exists.
-
-- `config.json`
-- `templates/Vordruck.docx` — use `tests/fixtures/Vordruck_sample.docx` instead
-
-Substitutes for client data are named `_sample` and live in `tests/fixtures/`:
+Real client data (company details, rates, the document template, time-tracking
+CSVs) lives outside the repository, at the paths stored in the machine-local
+`settings.json`. Never read the files it points to into context. Use the
+substitutes instead: they are named `_sample` and live in `tests/fixtures/`:
 `Vordruck_sample.docx`, `heinrich_zeiterfassung_sample.csv`, `config_sample.json`
 (not `config.example.json`).
 
