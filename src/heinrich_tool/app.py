@@ -86,7 +86,7 @@ def run_delivery(settings):
 
 def run_invoice(settings):
     st.session_state.invoice_info = []
-    st.session_state.invoice_error = []
+    st.session_state.invoice_error = None
 
     project_number = st.session_state.get("project_number_invoice", "")
     receipt_number = st.session_state.get("receipt_number_invoice", "")
