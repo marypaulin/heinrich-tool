@@ -304,19 +304,34 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
 #### W10 — Pfade eintragen
 
 - **Vorbereitung:** OneDrive in der VM angemeldet (wie W5). Darin einen
-  Datenordner anlegen, z. B. `Heinrich Daten`, und aus `tests\fixtures` des
-  Projektordners hineinkopieren: `config_sample.json` und
-  `Vordruck_sample.docx` direkt, `heinrich_zeiterfassung_sample.csv` in einen
-  Unterordner `1234 - Schutzgitter Mischer 3`.
-- **Aktion:** App starten. Im Block „Pfade“ alle drei Felder per Rechtsklick →
-  „Als Pfad kopieren“ füllen, Anführungszeichen stehen lassen, „Speichern“.
-  Dann Angebot für `1234` erzeugen. App beenden, neu starten.
+  Datenordner mit den Beispieldateien anlegen, in PowerShell im Projektordner.
+  Die letzte Zeile gibt die drei Pfade so aus, wie „Als Pfad kopieren“ sie
+  liefert:
+  ```powershell
+  $data = Join-Path $env:OneDrive 'Heinrich Daten'
+  $project = Join-Path $data '1234 - Schutzgitter Mischer 3'
+  New-Item -ItemType Directory -Force $project | Out-Null
+  Copy-Item tests\fixtures\config_sample.json, tests\fixtures\Vordruck_sample.docx $data
+  Copy-Item tests\fixtures\heinrich_zeiterfassung_sample.csv $project
+  "`"$data`"", "`"$data\config_sample.json`"", "`"$data\Vordruck_sample.docx`""
+  ```
+- **Aktion:** App starten. Im Block „Pfade“ die drei Felder füllen, per
+  Rechtsklick → „Als Pfad kopieren“ oder aus der Ausgabe oben,
+  Anführungszeichen stehen lassen, „Speichern“. Dann Angebot für `1234`
+  erzeugen. App beenden (Tab schließen reicht nicht, der Server läuft weiter),
+  in PowerShell:
+  ```powershell
+  Get-NetTCPConnection -LocalPort 8502 -State Listen | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
+  ```
+  Danach über die Verknüpfung neu starten.
 - **Erwartet:**
-  - Nach dem Speichern „Pfade gespeichert“, die Dokument-Formulare sind
-    aktiv.
+  - Nach dem Speichern „Pfade gespeichert“, der Block klappt zu, die
+    Dokument-Formulare sind aktiv.
   - „Projektordner gefunden“, „CSV-Datei gefunden“, Angebot als DOCX im
-    Projektordner. Die PDF fehlt mit „PDF wurde nicht erzeugt …“: Die VM hat
-    kein Word.
+    Projektordner. Die PDF fehlt mit „PDF-Erzeugung fehlgeschlagen
+    ((-2147221005, 'Ungültige Klassenzeichenfolge', …))“: Die VM hat kein
+    Word. Das erste Angebot nach der Installation braucht um eine Minute,
+    weitere sind sofort da.
   - Nach dem Neustart ist der Block zu und hält die drei Pfade ohne
     Anführungszeichen, die Formulare sind sofort aktiv.
   - `%LOCALAPPDATA%\HeinrichTool\settings.json` existiert.
