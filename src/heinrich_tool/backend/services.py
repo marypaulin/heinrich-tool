@@ -13,15 +13,15 @@ from heinrich_tool.backend.docgen import (
     replace_placeholders,
     save_docx,
 )
-from heinrich_tool.backend.input_args import DeliveryArgs, InvoiceArgs, OfferArgs
+from heinrich_tool.backend.input_args import DeliveryNoteArgs, InvoiceArgs, OfferArgs
 from heinrich_tool.backend.messages import Messages
 from heinrich_tool.backend.models import DocxDeliveryDate, DocxMeta, LineItem, Totals
 from heinrich_tool.backend.paths import (
-    get_delivery_target_path,
+    get_delivery_note_target_path,
     get_invoice_target_path,
     get_latest_csv_path,
     get_offer_target_path,
-    get_order_target_path,
+    get_order_confirmation_target_path,
     get_project_dir,
 )
 from heinrich_tool.backend.pdfgen import render_pdf
@@ -147,8 +147,8 @@ def generate_offer(
     return messages.items
 
 
-def generate_delivery(
-    args: DeliveryArgs, document_date: date, settings: Settings
+def generate_delivery_note(
+    args: DeliveryNoteArgs, document_date: date, settings: Settings
 ) -> list[str]:
     """Full pipeline: find project → load CSV → generate Lieferschein DOCX + PDF."""
     messages = Messages()
@@ -156,7 +156,9 @@ def generate_delivery(
     project_dir, dir_msgs = get_project_dir(settings.data_root, args.project_number)
     messages.items.extend(dir_msgs)
     line_items = _load_line_items(project_dir, config, messages)
-    target_path = get_delivery_target_path(project_dir, args.project_number, config)
+    target_path = get_delivery_note_target_path(
+        project_dir, args.project_number, config
+    )
     _generate_document(
         doc_key="LIEFERSCHEIN",
         project_number=args.project_number,
@@ -186,7 +188,7 @@ def generate_invoice_and_order(
     invoice_path = get_invoice_target_path(
         project_dir, args.project_number, args.receipt_number, config
     )
-    order_path = get_order_target_path(
+    order_path = get_order_confirmation_target_path(
         project_dir, args.project_number, args.receipt_number, config
     )
     _generate_document(

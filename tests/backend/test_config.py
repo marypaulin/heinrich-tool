@@ -36,7 +36,7 @@ def test_vat_rate_is_read_as_decimal():
 
 
 def test_hourly_rates_are_looked_up_by_decimal():
-    mapping = load_config(SAMPLE_CONFIG_PATH).hourly_rate_mapping
+    mapping = load_config(SAMPLE_CONFIG_PATH).rate_descriptions
 
     assert mapping[Decimal("84.90")] == "Meisterstunde"
     assert mapping[Decimal("48.00")] == "Helferstunde"
@@ -44,7 +44,7 @@ def test_hourly_rates_are_looked_up_by_decimal():
 
 def test_old_and_raised_rate_share_a_description():
     """The client adds raised rates next to the old ones so older CSVs still work."""
-    mapping = load_config(SAMPLE_CONFIG_PATH).hourly_rate_mapping
+    mapping = load_config(SAMPLE_CONFIG_PATH).rate_descriptions
 
     assert mapping[Decimal("84.90")] == mapping[Decimal("92.00")]
 

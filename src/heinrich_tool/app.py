@@ -7,13 +7,13 @@ from pathlib import Path
 import streamlit as st
 
 from heinrich_tool.backend.input_args import (
-    create_delivery_args,
+    create_delivery_note_args,
     create_invoice_args,
     create_offer_args,
     create_settings,
 )
 from heinrich_tool.backend.services import (
-    generate_delivery,
+    generate_delivery_note,
     generate_invoice_and_order,
     generate_offer,
     load_settings,
@@ -74,8 +74,10 @@ def run_delivery(settings):
     receipt_number = st.session_state.get("receipt_number_delivery", "")
 
     try:
-        args = create_delivery_args(project_number, receipt_number)
-        st.session_state.delivery_info = generate_delivery(args, date.today(), settings)
+        args = create_delivery_note_args(project_number, receipt_number)
+        st.session_state.delivery_info = generate_delivery_note(
+            args, date.today(), settings
+        )
         st.toast("Lieferschein erzeugt", icon="✅")
     except (FileNotFoundError, ValueError) as e:
         st.session_state.delivery_error = f"Error: {e!s}"

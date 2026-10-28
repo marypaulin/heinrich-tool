@@ -15,8 +15,8 @@ class DocumentConfig:
 
 @dataclass(frozen=True)
 class Config:
-    hourly_rate_mapping: dict[Decimal, str]
-    hourly_rate_default: str
+    rate_descriptions: dict[Decimal, str]
+    default_rate_description: str
     date_format: str
     vat_rate: Decimal
     documents: dict[str, DocumentConfig]
@@ -26,10 +26,10 @@ class Config:
 def load_config(path: Path) -> Config:
     raw = json.loads(path.read_text(encoding="utf-8"), parse_float=Decimal)
 
-    mapping_raw = raw["HOURLY_RATE_MAPPING"]
-    mapping_converted = {Decimal(k): v for k, v in mapping_raw.items()}
+    rate_descriptions_raw = raw["HOURLY_RATE_MAPPING"]
+    rate_descriptions = {Decimal(k): v for k, v in rate_descriptions_raw.items()}
 
-    default_description = raw["HOURLY_RATE_DEFAULT"]
+    default_rate_description = raw["HOURLY_RATE_DEFAULT"]
     date_format = raw["DATE_FORMAT"]
     vat_rate = Decimal(raw["VAT_RATE"])
 
@@ -49,8 +49,8 @@ def load_config(path: Path) -> Config:
     filenames = raw["FILENAMES"]
 
     return Config(
-        hourly_rate_mapping=mapping_converted,
-        hourly_rate_default=default_description,
+        rate_descriptions=rate_descriptions,
+        default_rate_description=default_rate_description,
         date_format=date_format,
         vat_rate=vat_rate,
         documents=documents,

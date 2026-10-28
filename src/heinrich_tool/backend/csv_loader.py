@@ -40,37 +40,43 @@ REQUIRED_VALUES = [
 ]
 
 
-def _parse_date(i: int, value: str, config: Config) -> date:
+def _parse_date(row_number: int, value: str, config: Config) -> date:
     """Parse str to date from config.date_format"""
     value = value.strip()
     try:
         return datetime.strptime(value, config.date_format).date()
     except ValueError:
-        raise ValueError(f"Invalid date format in row {i}: {value}") from None
+        raise ValueError(f"Invalid date format in row {row_number}: {value}") from None
 
 
-def _parse_decimal(i: int, value: str) -> Decimal:
+def _parse_decimal(row_number: int, value: str) -> Decimal:
     """Replace comma with dot, strip spaces, handle both ',' and '.'"""
     value = value.strip().replace(",", ".")
     try:
         return Decimal(value)
     except InvalidOperation:
-        raise ValueError(f"Invalid numeric value in row {i}: {value}") from None
+        raise ValueError(
+            f"Invalid numeric value in row {row_number}: {value}"
+        ) from None
 
 
-def _parse_hours(i: int, value: str) -> Decimal:
+def _parse_hours(row_number: int, value: str) -> Decimal:
     """Parse a duration; anything off the half hour is taken for a typo."""
-    hours = _parse_decimal(i, value)
+    hours = _parse_decimal(row_number, value)
     if hours % HOUR_STEP != 0:
-        raise ValueError(f"Invalid hours in row {i}: {hours} (half hours only)")
+        raise ValueError(
+            f"Invalid hours in row {row_number}: {hours} (half hours only)"
+        )
     return hours
 
 
-def _parse_amount(i: int, value: str) -> Decimal:
+def _parse_amount(row_number: int, value: str) -> Decimal:
     """Parse a money amount; finer than cents is taken for a typo, not rounded."""
-    amount = _parse_decimal(i, value)
+    amount = _parse_decimal(row_number, value)
     if round_cents(amount) != amount:
-        raise ValueError(f"Amount with more than two decimals in row {i}: {amount}")
+        raise ValueError(
+            f"Amount with more than two decimals in row {row_number}: {amount}"
+        )
     return amount
 
 

@@ -61,7 +61,7 @@ def get_offer_target_path(
     return path
 
 
-def get_delivery_target_path(
+def get_delivery_note_target_path(
     project_dir: Path,
     project_number: str,
     config: Config,
@@ -91,7 +91,7 @@ def get_invoice_target_path(
     return path
 
 
-def get_order_target_path(
+def get_order_confirmation_target_path(
     project_dir: Path,
     project_number: str,
     receipt_number: str,

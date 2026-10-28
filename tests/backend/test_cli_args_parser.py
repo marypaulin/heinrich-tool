@@ -3,7 +3,7 @@
 import pytest
 
 from heinrich_tool.backend.cli_args_parser import parse_cli_args
-from heinrich_tool.backend.input_args import DeliveryArgs, InvoiceArgs, OfferArgs
+from heinrich_tool.backend.input_args import DeliveryNoteArgs, InvoiceArgs, OfferArgs
 
 PROJECT_NUMBER = "1408"
 RECEIPT_NUMBER = "8100045372"
@@ -15,12 +15,12 @@ def test_cli_builds_offer_args():
     assert args == OfferArgs(mode="offer", project_number=PROJECT_NUMBER)
 
 
-def test_cli_builds_delivery_args():
+def test_cli_builds_delivery_note_args():
     args = parse_cli_args(
         ["-m", "delivery", "-p", PROJECT_NUMBER, "-r", RECEIPT_NUMBER]
     )
 
-    assert args == DeliveryArgs(
+    assert args == DeliveryNoteArgs(
         mode="delivery",
         project_number=PROJECT_NUMBER,
         receipt_number=RECEIPT_NUMBER,

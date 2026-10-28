@@ -7,7 +7,7 @@ from collections.abc import Iterable
 
 from heinrich_tool.backend.input_args import (
     InputArgs,
-    create_delivery_args,
+    create_delivery_note_args,
     create_invoice_args,
     create_offer_args,
 )
@@ -46,7 +46,7 @@ def parse_cli_args(argv: Iterable[str] | None = None) -> InputArgs:
         if args.mode == "offer":
             return create_offer_args(args.project_number)
         elif args.mode == "delivery":
-            return create_delivery_args(args.project_number, args.receipt_number)
+            return create_delivery_note_args(args.project_number, args.receipt_number)
         else:
             if args.receipt_number is None:
                 parser.error("RECEIPT_NUMBER is required for invoice mode")

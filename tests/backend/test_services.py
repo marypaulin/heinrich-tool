@@ -12,12 +12,12 @@ from docx.table import Table, _Cell
 
 from heinrich_tool.backend import services
 from heinrich_tool.backend.input_args import (
-    create_delivery_args,
+    create_delivery_note_args,
     create_invoice_args,
     create_offer_args,
 )
 from heinrich_tool.backend.services import (
-    generate_delivery,
+    generate_delivery_note,
     generate_invoice_and_order,
     generate_offer,
 )
@@ -138,8 +138,8 @@ def test_offer(sample_settings, sample_data_root):
 
 
 def test_delivery_note(sample_settings, sample_data_root):
-    args = create_delivery_args("1234", "4100012345")
-    generate_delivery(args, date(2025, 8, 15), sample_settings)
+    args = create_delivery_note_args("1234", "4100012345")
+    generate_delivery_note(args, date(2025, 8, 15), sample_settings)
 
     doc = open_document(sample_data_root, "Lieferschein Nr. 1234.docx")
     doc_texts = texts(doc)
