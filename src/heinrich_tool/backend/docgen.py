@@ -17,7 +17,6 @@ from docx.text.paragraph import Paragraph
 
 from heinrich_tool.backend.formatting import format_price, format_quantity
 from heinrich_tool.backend.models import LineItem
-from heinrich_tool.backend.paths import get_display_path
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +24,7 @@ logger = logging.getLogger(__name__)
 def load_template(path: Path) -> DocxDocument:
     try:
         doc = Document(str(path))
-        display_path = get_display_path(path)
-        logger.info(f"Using template: {display_path}")
+        logger.info(f"Using template: {path.name}")
         return doc
     except PackageNotFoundError as e:
         raise FileNotFoundError(f"Template not found: {path}") from e

@@ -102,9 +102,8 @@ def _generate_document(
     replace_placeholders(doc, meta.to_mapping(config.date_format))
     save_docx(doc, target_path)
 
-    display_path = target_path.name
-    logger.info(f"Generated {log_label_en}: {display_path}")
-    messages.info(f"{log_label_de} erzeugt ({display_path})")
+    logger.info(f"Generated {log_label_en}: {target_path.name}")
+    messages.info(f"{log_label_de} erzeugt ({target_path.name})")
 
 
 # — Public API ————————————————————————————————————————————————————————————————

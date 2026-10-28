@@ -26,9 +26,8 @@ def get_project_dir(data_root: Path, project_number: str, messages: Messages) ->
     """Find the folder with the given 4-digit project number as prefix."""
     for folder in data_root.iterdir():
         if folder.is_dir() and folder.name.startswith(f"{project_number} "):
-            display_folder = get_display_path(folder)
-            logger.info(f"Found project folder: {display_folder}")
-            messages.info(f"Projektordner gefunden ({display_folder})")
+            logger.info(f"Found project folder: {folder.name}")
+            messages.info(f"Projektordner gefunden ({folder.name})")
             return folder
     raise FileNotFoundError(f"No folder found for project number {project_number}")
 
@@ -39,9 +38,8 @@ def get_latest_csv_path(project_dir: Path, config: Config, messages: Messages) -
     if not csv_files:
         raise FileNotFoundError(f"No CSV files found in {project_dir}")
     latest = max(csv_files, key=lambda p: p.stat().st_mtime)
-    display_latest = latest.name
-    logger.info(f"Using CSV file: {display_latest}")
-    messages.info(f"CSV-Datei gefunden ({display_latest})")
+    logger.info(f"Using CSV file: {latest.name}")
+    messages.info(f"CSV-Datei gefunden ({latest.name})")
     return latest
 
 
@@ -103,9 +101,3 @@ def get_order_confirmation_target_path(
     )
     path = project_dir / filename
     return path
-
-
-def get_display_path(path: Path) -> str:
-    """Get relative grandparent path for logging purposes"""
-    display_path = f"{path.parent.parent.name}/{path.parent.name}/{path.name}"
-    return display_path
