@@ -53,11 +53,15 @@ Für die Nutzung des Tools werden zwei weitere Dateien benötigt, die sich nicht
 - `Vordruck.docx` (Word-Template für alle Outputdokumente)
 - `config.json` (Konfigurationsdatei mit Stundenlohn, Mehrwertsteuersatz etc.)
 
-Diese erhält der Nutzer des Tools per Mail. Für die korrekte Nutzung:
+Diese erhält der Nutzer des Tools per Mail und legt sie an einem beliebigen Ort ab, etwa im Datenordner neben den Projektordnern.
 
-1. `Vordruck.docx` → Ordner `templates`
-2. `config.json` → Heinrich Tool Projektordner (Root-Ebene)
-3. In `config.json` den Pfad zum Datenverzeichnis konfigurieren: `"DATA_ROOT": "/Pfad/zum/Datenordner/"`
+Beim ersten Start ist der Block **Pfade** oben auf der Hauptseite geöffnet, die Dokumente sind bis dahin gesperrt. Dort einmal pro Rechner eintragen und **Speichern**:
+
+- **Datenordner:** der Ordner mit den Projektordnern
+- **Config:** Pfad zur `config.json`
+- **Vordruck:** Pfad zur `Vordruck.docx`
+
+Die Pfade lassen sich im Explorer per Rechtsklick → **Als Pfad kopieren** übernehmen, die Anführungszeichen dürfen stehen bleiben. Gespeichert werden sie in `%LOCALAPPDATA%\HeinrichTool\settings.json`, nur für diesen Rechner.
 
 ---
 
@@ -73,6 +77,8 @@ Das Tool läuft als lokale Web-App und wird per Doppelklick auf die Verknüpfung
 ## 4. Nutzung als CLI-Tool
 
 Als CLI-Tool wird das Programm im Projektordner über die Kommandozeile gestartet. Es braucht [uv](https://docs.astral.sh/uv/) — nach der Installation aus Abschnitt 1 ist alles eingerichtet. Ansonsten das Repository klonen und einmalig im Projektordner `uv sync` ausführen.
+
+Das CLI nutzt die in der App gespeicherten Pfade (Abschnitt 2). Sind dort noch keine eingetragen, bricht es mit einem Hinweis ab.
 
 ### Angebot erzeugen
 

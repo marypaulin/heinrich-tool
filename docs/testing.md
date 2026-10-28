@@ -234,19 +234,14 @@ eigene Fixes behoben.
 
 #### W2 — Verknüpfungen
 
-- **Vorbereitung:** Konfiguration und Vorlage fehlen nach W1, sie sind
-  gitignored. Im Projektordner die Beispieldateien einsetzen:
-  ```powershell
-  Copy-Item tests\fixtures\config_sample.json config.json
-  New-Item -ItemType Directory templates
-  Copy-Item tests\fixtures\Vordruck_sample.docx templates\Vordruck.docx
-  ```
 - **Erwartet:**
   - Desktop: „Heinrich Tool“ mit App-Icon.
   - Startmenü: „Heinrich Tool“ und „Heinrich Tool aktualisieren“.
   - „Heinrich Tool“ startet die App (`scripts/run_windows.bat`), der Browser
     öffnet genau einen Tab. Keine Abfrage der Windows-Firewall: Streamlit
     lauscht nur auf `127.0.0.1`.
+  - Block „Pfade“ ist offen, darunter „Noch keine Pfade eingestellt.“, alle
+    Dokument-Formulare ausgegraut.
   - Der erste Start nach der Installation dauert über eine Minute (Python
     kompiliert, Defender prüft jede neue Datei), spätere um 10 Sekunden.
   - Zweiter Klick bei laufender App: nur der Browser öffnet.
@@ -305,3 +300,23 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
 - **Erwartet:** „Heinrich Tool wird beendet“ vor „Neueste Version wird geholt“,
   dann `Fast-forward`, „Fertig“. Danach startet die App über die Verknüpfung
   in der neuen Fassung, nicht nur der Browser.
+
+#### W10 — Pfade eintragen
+
+- **Vorbereitung:** OneDrive in der VM angemeldet (wie W5). Darin einen
+  Datenordner anlegen, z. B. `Heinrich Daten`, und aus `tests\fixtures` des
+  Projektordners hineinkopieren: `config_sample.json` und
+  `Vordruck_sample.docx` direkt, `heinrich_zeiterfassung_sample.csv` in einen
+  Unterordner `1234 - Schutzgitter Mischer 3`.
+- **Aktion:** App starten. Im Block „Pfade“ alle drei Felder per Rechtsklick →
+  „Als Pfad kopieren“ füllen, Anführungszeichen stehen lassen, „Speichern“.
+  Dann Angebot für `1234` erzeugen. App beenden, neu starten.
+- **Erwartet:**
+  - Nach dem Speichern „Pfade gespeichert“, die Dokument-Formulare sind
+    aktiv.
+  - „Projektordner gefunden“, „CSV-Datei gefunden“, Angebot als DOCX im
+    Projektordner. Die PDF fehlt mit „PDF wurde nicht erzeugt …“: Die VM hat
+    kein Word.
+  - Nach dem Neustart ist der Block zu und hält die drei Pfade ohne
+    Anführungszeichen, die Formulare sind sofort aktiv.
+  - `%LOCALAPPDATA%\HeinrichTool\settings.json` existiert.
