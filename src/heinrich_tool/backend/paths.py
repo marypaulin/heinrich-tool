@@ -22,21 +22,19 @@ def _format_filename(template: str, **values: str) -> str:
         ) from e
 
 
-def get_project_dir(data_root: Path, project_number: str) -> tuple[Path, list[str]]:
+def get_project_dir(data_root: Path, project_number: str, messages: Messages) -> Path:
     """Find the folder with the given 4-digit project number as prefix."""
-    messages = Messages()
     for folder in data_root.iterdir():
         if folder.is_dir() and folder.name.startswith(f"{project_number} "):
             display_folder = get_display_path(folder)
             logger.info(f"Found project folder: {display_folder}")
             messages.info(f"Projektordner gefunden ({display_folder})")
-            return folder, messages.items
+            return folder
     raise FileNotFoundError(f"No folder found for project number {project_number}")
 
 
-def get_latest_csv_path(project_dir: Path, config: Config) -> tuple[Path, list[str]]:
+def get_latest_csv_path(project_dir: Path, config: Config, messages: Messages) -> Path:
     """Find the latest CSV file in the order folder."""
-    messages = Messages()
     csv_files = list(project_dir.glob(config.filenames["CSV_GLOB"]))
     if not csv_files:
         raise FileNotFoundError(f"No CSV files found in {project_dir}")
@@ -44,7 +42,7 @@ def get_latest_csv_path(project_dir: Path, config: Config) -> tuple[Path, list[s
     display_latest = latest.name
     logger.info(f"Using CSV file: {display_latest}")
     messages.info(f"CSV-Datei gefunden ({display_latest})")
-    return latest, messages.items
+    return latest
 
 
 def get_offer_target_path(

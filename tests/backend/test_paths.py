@@ -18,45 +18,45 @@ def write_csv(project_dir: Path, name: str, mtime: int) -> Path:
 # — Project folder ————————————————————————————————————————————————————————————
 
 
-def test_project_folder_is_found_by_its_number(tmp_path):
+def test_project_folder_is_found_by_its_number(tmp_path, messages):
     (tmp_path / "12345 - Abdeckblech Förderband").mkdir()
     (tmp_path / "1234 - Schutzgitter Mischer 3").mkdir()
 
-    project_dir, _ = get_project_dir(tmp_path, "1234")
+    project_dir = get_project_dir(tmp_path, "1234", messages)
 
     assert project_dir == tmp_path / "1234 - Schutzgitter Mischer 3"
 
 
-def test_file_with_the_project_number_is_not_a_project_folder(tmp_path):
+def test_file_with_the_project_number_is_not_a_project_folder(tmp_path, messages):
     (tmp_path / "1234 - Aufmaß Schutzgitter.pdf").write_text("", encoding="utf-8")
 
     with pytest.raises(FileNotFoundError):
-        get_project_dir(tmp_path, "1234")
+        get_project_dir(tmp_path, "1234", messages)
 
 
-def test_unknown_project_number_raises(tmp_path):
+def test_unknown_project_number_raises(tmp_path, messages):
     (tmp_path / "1234 - Schutzgitter Mischer 3").mkdir()
 
     with pytest.raises(FileNotFoundError):
-        get_project_dir(tmp_path, "4321")
+        get_project_dir(tmp_path, "4321", messages)
 
 
 # — Latest CSV ————————————————————————————————————————————————————————————————
 
 
-def test_latest_csv_is_the_most_recently_modified(tmp_path, sample_config):
+def test_latest_csv_is_the_most_recently_modified(tmp_path, sample_config, messages):
     write_csv(tmp_path, "heinrich_zeiterfassung_2025-08-01.csv", mtime=1_754_000_000)
     newest = write_csv(
         tmp_path, "heinrich_zeiterfassung_2025-07-01.csv", mtime=1_756_000_000
     )
 
-    csv_path, _ = get_latest_csv_path(tmp_path, sample_config)
+    csv_path = get_latest_csv_path(tmp_path, sample_config, messages)
 
     assert csv_path == newest
 
 
-def test_project_folder_without_csv_raises(tmp_path, sample_config):
+def test_project_folder_without_csv_raises(tmp_path, sample_config, messages):
     (tmp_path / "Angebot Nr. 1234.docx").write_text("", encoding="utf-8")
 
     with pytest.raises(FileNotFoundError):
-        get_latest_csv_path(tmp_path, sample_config)
+        get_latest_csv_path(tmp_path, sample_config, messages)

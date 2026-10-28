@@ -66,11 +66,9 @@ def _load_line_items(
     config: Config,
     messages: Messages,
 ) -> list[LineItem]:
-    csv_path, csv_msgs = get_latest_csv_path(project_dir, config)
-    messages.items.extend(csv_msgs)
+    csv_path = get_latest_csv_path(project_dir, config, messages)
     csv_rows = load_csv_data(csv_path, config)
-    line_items, transform_msgs = csv_rows_to_line_items(csv_rows, config)
-    messages.items.extend(transform_msgs)
+    line_items = csv_rows_to_line_items(csv_rows, config, messages)
     if not line_items:
         raise ValueError(f"No valid rows found in {csv_path.name}")
     return line_items
@@ -126,8 +124,7 @@ def generate_offer(
     """Full pipeline: find project → load CSV → generate Angebot DOCX + PDF."""
     messages = Messages()
     config = load_config(settings.config_path)
-    project_dir, dir_msgs = get_project_dir(settings.data_root, args.project_number)
-    messages.items.extend(dir_msgs)
+    project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = get_offer_target_path(project_dir, args.project_number, config)
     _generate_document(
@@ -153,8 +150,7 @@ def generate_delivery_note(
     """Full pipeline: find project → load CSV → generate Lieferschein DOCX + PDF."""
     messages = Messages()
     config = load_config(settings.config_path)
-    project_dir, dir_msgs = get_project_dir(settings.data_root, args.project_number)
-    messages.items.extend(dir_msgs)
+    project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = get_delivery_note_target_path(
         project_dir, args.project_number, config
@@ -182,8 +178,7 @@ def generate_invoice_and_order(
     """Full pipeline: find project → load CSV → generate Rechnung + Auftragsbestätigung DOCX + PDF."""
     messages = Messages()
     config = load_config(settings.config_path)
-    project_dir, dir_msgs = get_project_dir(settings.data_root, args.project_number)
-    messages.items.extend(dir_msgs)
+    project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     invoice_path = get_invoice_target_path(
         project_dir, args.project_number, args.receipt_number, config

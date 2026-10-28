@@ -56,7 +56,8 @@ def _material_item(csv_row: CsvRow) -> LineItem:
 def csv_rows_to_line_items(
     csv_rows: Iterable[CsvRow],
     config: Config,
-) -> tuple[list[LineItem], list[str]]:
+    messages: Messages,
+) -> list[LineItem]:
     """
     Transform CsvRow objects into LineItem domain objects.
 
@@ -87,12 +88,11 @@ def csv_rows_to_line_items(
     Parameters:
         csv_rows: Iterable of parsed CsvRow objects.
         config: Application configuration (hourly rate descriptions, defaults).
+        messages: Collects the warnings for skipped rows and unknown rates.
 
     Returns:
         A list of LineItem objects ready for document generation or export.
-        A list of info and warning messages to display in UI.
     """
-    messages = Messages()
     result = []
     for csv_row in csv_rows:
         if not csv_row.order_number:
@@ -115,4 +115,4 @@ def csv_rows_to_line_items(
         if csv_row.material_cost != 0:
             result.append(_material_item(csv_row))
 
-    return result, messages.items
+    return result
