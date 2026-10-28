@@ -1,5 +1,5 @@
 {
-  "HOURLY_RATE_MAPPING": {
+  "RATE_DESCRIPTIONS": {
     "84.90": "Meisterstunde",
     "139.90": "Meisterstunde Sonntag",
     "48.00": "Helferstunde",
@@ -7,7 +7,7 @@
     "92.00": "Meisterstunde",
     "151.00": "Meisterstunde Sonntag"
   },
-  "HOURLY_RATE_DEFAULT": "Arbeitsstunde",
+  "DEFAULT_RATE_DESCRIPTION": "Arbeitsstunde",
   "DATE_FORMAT": "%d.%m.%Y",
   "VAT_RATE": 0.19,
   "DOCUMENTS": {

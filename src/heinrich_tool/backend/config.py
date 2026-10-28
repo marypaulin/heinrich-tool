@@ -26,10 +26,10 @@ class Config:
 def load_config(path: Path) -> Config:
     raw = json.loads(path.read_text(encoding="utf-8"), parse_float=Decimal)
 
-    rate_descriptions_raw = raw["HOURLY_RATE_MAPPING"]
+    rate_descriptions_raw = raw["RATE_DESCRIPTIONS"]
     rate_descriptions = {Decimal(k): v for k, v in rate_descriptions_raw.items()}
 
-    default_rate_description = raw["HOURLY_RATE_DEFAULT"]
+    default_rate_description = raw["DEFAULT_RATE_DESCRIPTION"]
     date_format = raw["DATE_FORMAT"]
     vat_rate = Decimal(raw["VAT_RATE"])
 
