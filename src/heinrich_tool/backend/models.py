@@ -48,8 +48,8 @@ class Totals:
     vat: Decimal
     sum_gross: Decimal
 
-    @staticmethod
-    def calculate_sums_and_vat(line_items: list[LineItem], vat_rate: Decimal) -> Totals:
+    @classmethod
+    def from_line_items(cls, line_items: list[LineItem], vat_rate: Decimal) -> Totals:
         """Calculate sum_net, vat, and sum_gross from LineItems.
 
         Each value is rounded to cents in order, and the VAT is calculated from
@@ -61,7 +61,7 @@ class Totals:
         )
         vat = round_cents(sum_net * vat_rate)
         sum_gross = sum_net + vat
-        return Totals(sum_net=sum_net, vat=vat, sum_gross=sum_gross)
+        return cls(sum_net=sum_net, vat=vat, sum_gross=sum_gross)
 
     def to_mapping(self) -> dict[str, str]:
         return {

@@ -33,7 +33,7 @@ def material_item(unit_price: Decimal) -> LineItem:
 
 
 def test_totals_of_a_single_hours_item():
-    totals = Totals.calculate_sums_and_vat(
+    totals = Totals.from_line_items(
         [hours_item(Decimal("8.00"), Decimal("84.90"))], VAT_RATE
     )
 
@@ -49,7 +49,7 @@ def test_totals_sum_hours_and_material():
         material_item(Decimal("212.35")),
     ]
 
-    totals = Totals.calculate_sums_and_vat(line_items, VAT_RATE)
+    totals = Totals.from_line_items(line_items, VAT_RATE)
 
     assert totals.sum_net == Decimal("1059.55")
     assert totals.vat == Decimal("201.31")
@@ -57,7 +57,7 @@ def test_totals_sum_hours_and_material():
 
 
 def test_totals_of_no_line_items_are_zero():
-    totals = Totals.calculate_sums_and_vat([], VAT_RATE)
+    totals = Totals.from_line_items([], VAT_RATE)
 
     assert totals.sum_net == Decimal("0.00")
     assert totals.vat == Decimal("0.00")
@@ -65,7 +65,7 @@ def test_totals_of_no_line_items_are_zero():
 
 
 def test_vat_on_a_half_cent_is_rounded_up():
-    totals = Totals.calculate_sums_and_vat([material_item(Decimal("13.50"))], VAT_RATE)
+    totals = Totals.from_line_items([material_item(Decimal("13.50"))], VAT_RATE)
 
     assert totals.vat == Decimal("2.57")
 
@@ -85,7 +85,7 @@ def test_vat_on_a_half_cent_is_rounded_up():
 )
 def test_printed_amounts_add_up(unit_price):
     """Net, VAT and gross are printed side by side; a customer can add them up."""
-    totals = Totals.calculate_sums_and_vat([material_item(unit_price)], VAT_RATE)
+    totals = Totals.from_line_items([material_item(unit_price)], VAT_RATE)
     mapping = totals.to_mapping()
 
     def cents(amount: str) -> int:
@@ -97,7 +97,7 @@ def test_printed_amounts_add_up(unit_price):
 
 
 def test_to_mapping_formats_every_placeholder():
-    totals = Totals.calculate_sums_and_vat(
+    totals = Totals.from_line_items(
         [hours_item(Decimal("8.00"), Decimal("84.90"))], VAT_RATE
     )
 

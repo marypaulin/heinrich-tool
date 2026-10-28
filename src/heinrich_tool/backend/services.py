@@ -93,7 +93,7 @@ def _generate_document(
     """Fill Word template with CSV data and save as DOCX."""
     doc = load_template(template_path)
     meta = _build_meta(project_number, receipt_number, document_date, doc_key, config)
-    totals = Totals.calculate_sums_and_vat(line_items, config.vat_rate)
+    totals = Totals.from_line_items(line_items, config.vat_rate)
     delivery_date = _build_delivery_date(document_date, doc_key, config)
 
     fill_table_with_line_items(doc, line_items)
