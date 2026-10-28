@@ -88,6 +88,13 @@ working notes and is always fine to read.
 - Test data helpers take every value a test asserts on as an argument, so
   the expected value is visible in the test itself.
 
+## Cleanup
+
+- Status file: `notes/planung/cleanup-status.md`, next to the feature status
+  files.
+- After each cleanup, tag `cleanup/YYYY-MM-DD` and push the tag. The next
+  routine cleanup covers `git diff cleanup/<latest>..HEAD`.
+
 ## Git
 
 - Conventional Commits, one line of at most 50 characters, imperative mood,
