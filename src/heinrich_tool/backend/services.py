@@ -15,7 +15,7 @@ from heinrich_tool.backend.docgen import (
 )
 from heinrich_tool.backend.input_args import DeliveryNoteArgs, InvoiceArgs, OfferArgs
 from heinrich_tool.backend.messages import Messages
-from heinrich_tool.backend.models import DocxDeliveryDate, DocxMeta, LineItem, Totals
+from heinrich_tool.backend.models import DeliveryDate, DocumentMeta, LineItem, Totals
 from heinrich_tool.backend.paths import (
     get_delivery_note_target_path,
     get_invoice_target_path,
@@ -43,9 +43,9 @@ def _build_meta(
     document_date: date,
     doc_key: str,
     config: Config,
-) -> DocxMeta:
+) -> DocumentMeta:
     doc_config = config.documents[doc_key]
-    return DocxMeta(
+    return DocumentMeta(
         project_number=project_number,
         receipt_number=receipt_number,
         doctype=doc_config.doctype,
@@ -56,9 +56,9 @@ def _build_meta(
 
 def _build_delivery_date(
     document_date: date, doc_key: str, config: Config
-) -> DocxDeliveryDate:
+) -> DeliveryDate:
     delivery_days = config.documents[doc_key].delivery_days
-    return DocxDeliveryDate(document_date + timedelta(days=delivery_days))
+    return DeliveryDate(document_date + timedelta(days=delivery_days))
 
 
 def _load_line_items(

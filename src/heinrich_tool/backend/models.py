@@ -72,7 +72,7 @@ class Totals:
 
 
 @dataclass(frozen=True)
-class DocxMeta:
+class DocumentMeta:
     project_number: str
     receipt_number: str | None
     doctype: str
@@ -90,7 +90,7 @@ class DocxMeta:
 
 
 @dataclass(frozen=True)
-class DocxDeliveryDate:
+class DeliveryDate:
     value: date
 
     def to_mapping(self, date_format: str) -> dict[str, str]:
