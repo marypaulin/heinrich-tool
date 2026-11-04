@@ -1,4 +1,4 @@
-"""Paths to the invented sample files that stand in for the client's real data."""
+"""Paths to invented sample files standing in for client's real data."""
 
 from pathlib import Path
 

@@ -45,7 +45,7 @@ def _render_word(docx_path: Path, messages: Messages) -> None:
             return
 
     # COM init is required per-thread on Windows. Streamlit may execute in a thread without COM initialized.
-    import pythoncom  # type: ignore  # provided by pywin32, which exists on Windows only
+    import pythoncom  # type: ignore  # pywin32, Windows only
 
     try:
         with _WORD_CONVERT_LOCK:

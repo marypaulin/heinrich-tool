@@ -20,7 +20,7 @@ from heinrich_tool.backend.models import LineItem
 
 logger = logging.getLogger(__name__)
 
-# Matches the line item table in the template
+# Matches line item table in template
 TABLE_FONT_NAME = "Calibri"
 TABLE_FONT_SIZE = Pt(9)
 

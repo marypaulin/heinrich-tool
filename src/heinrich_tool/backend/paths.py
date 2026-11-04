@@ -50,10 +50,10 @@ def get_target_path(
     project_number: str,
     receipt_number: str | None = None,
 ) -> Path:
-    """Build the document path from the filename template of `doc_key`.
+    """Build document path from filename template of `doc_key`.
 
-    The receipt number is passed only when there is one: a template that asks
-    for it then fails with a clear error instead of naming the file "... None".
+    Receipt number is passed only when given: a template asking for it then
+    fails with a clear error instead of naming the file "... None".
     """
     values = {"project_number": project_number}
     if receipt_number is not None:
