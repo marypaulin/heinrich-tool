@@ -20,6 +20,10 @@ from heinrich_tool.backend.models import LineItem
 
 logger = logging.getLogger(__name__)
 
+# Matches the line item table in the template
+TABLE_FONT_NAME = "Calibri"
+TABLE_FONT_SIZE = Pt(9)
+
 
 def load_template(path: Path) -> DocxDocument:
     try:
@@ -79,14 +83,12 @@ def replace_placeholders(doc: DocxDocument, mapping: dict[str, str]) -> None:
             _replace_in_paragraph(paragraph, placeholder, value)
 
 
-def _format_cell(
-    cell: _Cell, font_name: str = "Calibri", font_size: int = 9, bold: bool = True
-) -> None:
+def _format_cell(cell: _Cell) -> None:
     for paragraph in cell.paragraphs:
         for run in paragraph.runs:
-            run.font.name = font_name
-            run.font.size = Pt(font_size)
-            run.font.bold = bold
+            run.font.name = TABLE_FONT_NAME
+            run.font.size = TABLE_FONT_SIZE
+            run.font.bold = True
 
 
 def _fill_row_cells(row: _Row, pos: int, item: LineItem) -> None:
