@@ -45,15 +45,11 @@ def _render_word(docx_path: Path, messages: Messages) -> None:
             return
 
     # COM init is required per-thread on Windows. Streamlit may execute in a thread without COM initialized.
-    try:
-        import pythoncom  # type: ignore  # provided by pywin32
-    except ImportError:
-        pythoncom = None
+    import pythoncom  # type: ignore  # provided by pywin32, which exists on Windows only
 
     try:
         with _WORD_CONVERT_LOCK:
-            if pythoncom is not None:
-                pythoncom.CoInitialize()
+            pythoncom.CoInitialize()
 
             # More robust: output directory instead of output file
             convert(str(docx_path), str(docx_path.parent))
@@ -75,9 +71,8 @@ def _render_word(docx_path: Path, messages: Messages) -> None:
         logger.exception("Word-based PDF conversion failed")
 
     finally:
-        if pythoncom is not None:
-            with contextlib.suppress(Exception):
-                pythoncom.CoUninitialize()
+        with contextlib.suppress(Exception):
+            pythoncom.CoUninitialize()
 
 
 def _render_libreoffice(docx_path: Path, messages: Messages) -> None:
