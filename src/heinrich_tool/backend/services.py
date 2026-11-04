@@ -76,18 +76,19 @@ def _load_line_items(
 
 def _generate_document(
     doc_key: str,
+    project_dir: Path,
     project_number: str,
     receipt_number: str | None,
     document_date: date,
     line_items: list[LineItem],
-    target_path: Path,
     template_path: Path,
     config: Config,
     messages: Messages,
-    log_label_en: str,
-    log_label_de: str,
-) -> None:
-    """Fill Word template with CSV data and save as DOCX."""
+) -> Path:
+    """Fill Word template with CSV data, save as DOCX and return its path."""
+    target_path = get_target_path(
+        project_dir, doc_key, config, project_number, receipt_number
+    )
     doc = load_template(template_path)
     meta = _build_meta(project_number, receipt_number, document_date, doc_key, config)
     totals = Totals.from_line_items(line_items, config.vat_rate)
@@ -102,8 +103,10 @@ def _generate_document(
     )
     save_docx(doc, target_path)
 
-    logger.info(f"Generated {log_label_en}: {target_path.name}")
-    messages.info(f"{log_label_de} erzeugt ({target_path.name})")
+    log_label = doc_key.lower().replace("_", " ")
+    logger.info(f"Generated {log_label}: {target_path.name}")
+    messages.info(f"{meta.doctype} erzeugt ({target_path.name})")
+    return target_path
 
 
 # — Public API ————————————————————————————————————————————————————————————————
@@ -125,19 +128,16 @@ def generate_offer(
     config = load_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
-    target_path = get_target_path(project_dir, "OFFER", config, args.project_number)
-    _generate_document(
+    target_path = _generate_document(
         doc_key="OFFER",
+        project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=None,
         document_date=document_date,
         line_items=line_items,
-        target_path=target_path,
         template_path=settings.template_path,
         config=config,
         messages=messages,
-        log_label_en="offer",
-        log_label_de="Angebot",
     )
     render_pdf(target_path, messages)
     return messages.items
@@ -151,25 +151,16 @@ def generate_delivery_note(
     config = load_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
-    target_path = get_target_path(
-        project_dir,
-        "DELIVERY_NOTE",
-        config,
-        args.project_number,
-        args.receipt_number,
-    )
-    _generate_document(
+    target_path = _generate_document(
         doc_key="DELIVERY_NOTE",
+        project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,
         document_date=document_date,
         line_items=line_items,
-        target_path=target_path,
         template_path=settings.template_path,
         config=config,
         messages=messages,
-        log_label_en="delivery note",
-        log_label_de="Lieferschein",
     )
     render_pdf(target_path, messages)
     return messages.items
@@ -183,41 +174,27 @@ def generate_invoice_and_order(
     config = load_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
-    invoice_path = get_target_path(
-        project_dir, "INVOICE", config, args.project_number, args.receipt_number
-    )
-    order_path = get_target_path(
-        project_dir,
-        "ORDER_CONFIRMATION",
-        config,
-        args.project_number,
-        args.receipt_number,
-    )
-    _generate_document(
+    invoice_path = _generate_document(
         doc_key="INVOICE",
+        project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,
         document_date=document_date,
         line_items=line_items,
-        target_path=invoice_path,
         template_path=settings.template_path,
         config=config,
         messages=messages,
-        log_label_en="invoice",
-        log_label_de="Rechnung",
     )
-    _generate_document(
+    order_path = _generate_document(
         doc_key="ORDER_CONFIRMATION",
+        project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,
         document_date=document_date,
         line_items=line_items,
-        target_path=order_path,
         template_path=settings.template_path,
         config=config,
         messages=messages,
-        log_label_en="order confirmation",
-        log_label_de="Auftragsbestätigung",
     )
     render_pdf(invoice_path, messages)
     render_pdf(order_path, messages)
