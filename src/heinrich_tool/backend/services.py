@@ -17,12 +17,9 @@ from heinrich_tool.backend.input_args import DeliveryNoteArgs, InvoiceArgs, Offe
 from heinrich_tool.backend.messages import Messages
 from heinrich_tool.backend.models import DeliveryDate, DocumentMeta, LineItem, Totals
 from heinrich_tool.backend.paths import (
-    get_delivery_note_target_path,
-    get_invoice_target_path,
     get_latest_csv_path,
-    get_offer_target_path,
-    get_order_confirmation_target_path,
     get_project_dir,
+    get_target_path,
 )
 from heinrich_tool.backend.pdfgen import render_pdf
 from heinrich_tool.backend.settings import (
@@ -128,7 +125,7 @@ def generate_offer(
     config = load_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
-    target_path = get_offer_target_path(project_dir, args.project_number, config)
+    target_path = get_target_path(project_dir, "OFFER", config, args.project_number)
     _generate_document(
         doc_key="OFFER",
         project_number=args.project_number,
@@ -154,8 +151,12 @@ def generate_delivery_note(
     config = load_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
-    target_path = get_delivery_note_target_path(
-        project_dir, args.project_number, config
+    target_path = get_target_path(
+        project_dir,
+        "DELIVERY_NOTE",
+        config,
+        args.project_number,
+        args.receipt_number,
     )
     _generate_document(
         doc_key="DELIVERY_NOTE",
@@ -182,11 +183,15 @@ def generate_invoice_and_order(
     config = load_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
-    invoice_path = get_invoice_target_path(
-        project_dir, args.project_number, args.receipt_number, config
+    invoice_path = get_target_path(
+        project_dir, "INVOICE", config, args.project_number, args.receipt_number
     )
-    order_path = get_order_confirmation_target_path(
-        project_dir, args.project_number, args.receipt_number, config
+    order_path = get_target_path(
+        project_dir,
+        "ORDER_CONFIRMATION",
+        config,
+        args.project_number,
+        args.receipt_number,
     )
     _generate_document(
         doc_key="INVOICE",

@@ -43,61 +43,20 @@ def get_latest_csv_path(project_dir: Path, config: Config, messages: Messages) -
     return latest
 
 
-def get_offer_target_path(
+def get_target_path(
     project_dir: Path,
-    project_number: str,
+    doc_key: str,
     config: Config,
-) -> Path:
-    """Create filepath for Angebot using filename template from config"""
-    filename = _format_filename(
-        config.filenames["OFFER"],
-        project_number=project_number,
-    )
-    path = project_dir / filename
-    return path
-
-
-def get_delivery_note_target_path(
-    project_dir: Path,
     project_number: str,
-    config: Config,
+    receipt_number: str | None = None,
 ) -> Path:
-    """Create filepath for Lieferschein using filename template from config"""
-    filename = _format_filename(
-        config.filenames["DELIVERY_NOTE"],
-        project_number=project_number,
-    )
-    path = project_dir / filename
-    return path
+    """Build the document path from the filename template of `doc_key`.
 
-
-def get_invoice_target_path(
-    project_dir: Path,
-    project_number: str,
-    receipt_number: str,
-    config: Config,
-) -> Path:
-    """Create filepath for Rechnung using filename template from config"""
-    filename = _format_filename(
-        config.filenames["INVOICE"],
-        project_number=project_number,
-        receipt_number=receipt_number,
-    )
-    path = project_dir / filename
-    return path
-
-
-def get_order_confirmation_target_path(
-    project_dir: Path,
-    project_number: str,
-    receipt_number: str,
-    config: Config,
-) -> Path:
-    """Create filepath for Auftragsbestätigung using filename template from config"""
-    filename = _format_filename(
-        config.filenames["ORDER_CONFIRMATION"],
-        project_number=project_number,
-        receipt_number=receipt_number,
-    )
-    path = project_dir / filename
-    return path
+    The receipt number is passed only when there is one: a template that asks
+    for it then fails with a clear error instead of naming the file "... None".
+    """
+    values = {"project_number": project_number}
+    if receipt_number is not None:
+        values["receipt_number"] = receipt_number
+    filename = _format_filename(config.filenames[doc_key], **values)
+    return project_dir / filename
