@@ -22,8 +22,8 @@ from heinrich_tool.backend.services import (
     generate_offer,
 )
 from heinrich_tool.backend.settings import Settings
+from samples import SAMPLE_CONFIG_PATH, SAMPLE_CSV_PATH, SAMPLE_TEMPLATE_PATH
 
-FIXTURES_DIR = Path(__file__).parents[1] / "fixtures"
 PROJECT_FOLDER = "1234 - Schutzgitter Mischer 3"
 
 # CSV row 11 has a blank order number and is skipped
@@ -62,7 +62,7 @@ def sample_data_root(tmp_path) -> Path:
     data_root = tmp_path / "Daten"
     project_dir = data_root / PROJECT_FOLDER
     project_dir.mkdir(parents=True)
-    shutil.copy(FIXTURES_DIR / "heinrich_zeiterfassung_sample.csv", project_dir)
+    shutil.copy(SAMPLE_CSV_PATH, project_dir)
     return data_root
 
 
@@ -70,8 +70,8 @@ def sample_data_root(tmp_path) -> Path:
 def sample_settings(sample_data_root) -> Settings:
     return Settings(
         data_root=sample_data_root,
-        config_path=FIXTURES_DIR / "config_sample.json",
-        template_path=FIXTURES_DIR / "Vordruck_sample.docx",
+        config_path=SAMPLE_CONFIG_PATH,
+        template_path=SAMPLE_TEMPLATE_PATH,
     )
 
 

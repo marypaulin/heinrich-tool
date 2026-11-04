@@ -23,6 +23,8 @@ build-backend = "uv_build"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Makes tests/samples.py importable; tests/ is no package
+pythonpath = ["tests"]
 
 [tool.ruff.lint]
 extend-select = ["TID252"]
@@ -32,6 +34,10 @@ ignore = [
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
+
+[tool.ruff.lint.isort]
+# tests/samples.py, imported via the pytest pythonpath
+known-first-party = ["samples"]
 
 [tool.ruff.lint.per-file-ignores]
 "demo/**" = [

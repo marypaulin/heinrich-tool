@@ -7,8 +7,8 @@ import pytest
 
 from heinrich_tool.backend.csv_loader import load_csv_data
 from heinrich_tool.backend.models import CsvRow
+from samples import SAMPLE_CSV_PATH
 
-FIXTURE = Path(__file__).parents[1] / "fixtures" / "heinrich_zeiterfassung_sample.csv"
 FIXTURE_DELIMITER = ";"
 
 
@@ -20,7 +20,7 @@ def write_lines(tmp_path: Path, lines: list[str]) -> Path:
 
 def write_variant(tmp_path: Path, row: int, column: str, value: str) -> Path:
     """Write the fixture with one field replaced; `row` counts data rows from 1."""
-    lines = FIXTURE.read_text(encoding="utf-8").splitlines()
+    lines = SAMPLE_CSV_PATH.read_text(encoding="utf-8").splitlines()
     header = lines[0].split(FIXTURE_DELIMITER)
     fields = lines[row].split(FIXTURE_DELIMITER)
     fields[header.index(column)] = f'"{value}"'
@@ -29,7 +29,7 @@ def write_variant(tmp_path: Path, row: int, column: str, value: str) -> Path:
 
 
 def write_without_column(tmp_path: Path, column: str) -> Path:
-    lines = FIXTURE.read_text(encoding="utf-8").splitlines()
+    lines = SAMPLE_CSV_PATH.read_text(encoding="utf-8").splitlines()
     index = lines[0].split(FIXTURE_DELIMITER).index(column)
     trimmed = []
     for line in lines:
@@ -43,13 +43,13 @@ def write_without_column(tmp_path: Path, column: str) -> Path:
 
 
 def test_fixture_rows_are_numbered_like_excel():
-    rows = load_csv_data(FIXTURE)
+    rows = load_csv_data(SAMPLE_CSV_PATH)
 
     assert [row.row_number for row in rows] == list(range(2, 13))
 
 
 def test_first_row_is_read_completely():
-    rows = load_csv_data(FIXTURE)
+    rows = load_csv_data(SAMPLE_CSV_PATH)
 
     assert rows[0] == CsvRow(
         row_number=2,
@@ -63,7 +63,7 @@ def test_first_row_is_read_completely():
 
 def test_numbers_are_read_as_decimal():
     """A float would still compare equal to the Decimal in the test above."""
-    row = load_csv_data(FIXTURE)[0]
+    row = load_csv_data(SAMPLE_CSV_PATH)[0]
 
     assert type(row.duration_hours) is Decimal
     assert type(row.hourly_rate) is Decimal
@@ -71,7 +71,7 @@ def test_numbers_are_read_as_decimal():
 
 
 def test_umlauts_and_sharp_s_survive():
-    rows = load_csv_data(FIXTURE)
+    rows = load_csv_data(SAMPLE_CSV_PATH)
 
     assert rows[3].description == "Aufmaß Halle 3"
     assert rows[5].description == "Filtergehäuse prüfen"
@@ -79,20 +79,22 @@ def test_umlauts_and_sharp_s_survive():
 
 
 def test_empty_description_stays_empty():
-    rows = load_csv_data(FIXTURE)
+    rows = load_csv_data(SAMPLE_CSV_PATH)
 
     assert rows[8].description == ""
 
 
 def test_file_with_bom_reads_like_file_without(tmp_path):
     csv_path = tmp_path / "with_bom.csv"
-    csv_path.write_text(FIXTURE.read_text(encoding="utf-8"), encoding="utf-8-sig")
+    csv_path.write_text(
+        SAMPLE_CSV_PATH.read_text(encoding="utf-8"), encoding="utf-8-sig"
+    )
 
-    assert load_csv_data(csv_path) == load_csv_data(FIXTURE)
+    assert load_csv_data(csv_path) == load_csv_data(SAMPLE_CSV_PATH)
 
 
 def test_blank_order_number_becomes_empty():
-    rows = load_csv_data(FIXTURE)
+    rows = load_csv_data(SAMPLE_CSV_PATH)
 
     assert rows[9].order_number == ""
 
@@ -151,7 +153,7 @@ def test_hours_off_the_half_hour_are_rejected(tmp_path):
 def test_unused_column_is_not_checked(tmp_path, column):
     csv_path = write_variant(tmp_path, row=1, column=column, value="")
 
-    assert load_csv_data(csv_path) == load_csv_data(FIXTURE)
+    assert load_csv_data(csv_path) == load_csv_data(SAMPLE_CSV_PATH)
 
 
 def test_missing_file_is_rejected(tmp_path):

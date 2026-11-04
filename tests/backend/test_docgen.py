@@ -1,7 +1,6 @@
 """Tests for filling the Word template: placeholders, delivery date, line item table."""
 
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 from docx import Document
@@ -25,14 +24,12 @@ from heinrich_tool.backend.placeholders import (
     PH_SUM_GROSS,
     PH_SUM_NET,
 )
-
-FIXTURES_DIR = Path(__file__).parents[1] / "fixtures"
-TEMPLATE_PATH = FIXTURES_DIR / "Vordruck_sample.docx"
+from samples import SAMPLE_TEMPLATE_PATH
 
 
 @pytest.fixture
 def sample_template() -> DocxDocument:
-    return Document(str(TEMPLATE_PATH))
+    return Document(str(SAMPLE_TEMPLATE_PATH))
 
 
 def paragraph_texts(doc: DocxDocument) -> list[str]:
