@@ -67,7 +67,7 @@ def _load_line_items(
     messages: Messages,
 ) -> list[LineItem]:
     csv_path = get_latest_csv_path(project_dir, config, messages)
-    csv_rows = load_csv_data(csv_path, config)
+    csv_rows = load_csv_data(csv_path)
     line_items = csv_rows_to_line_items(csv_rows, config, messages)
     if not line_items:
         raise ValueError(f"No valid rows found in {csv_path.name}")

@@ -23,13 +23,13 @@ from heinrich_tool.backend.placeholders import (
 @dataclass(frozen=True)
 class CsvRow:
     row_number: int
-    date: date
     order_number: str
+    # Not used yet: the client sometimes adds one by hand, it may go on the
+    # document later.
     description: str
     duration_hours: Decimal
     hourly_rate: Decimal
     material_cost: Decimal
-    total_cost: Decimal  # Not used, totals are always recomputed
 
 
 @dataclass(frozen=True)

@@ -1,6 +1,5 @@
 """Tests for turning parsed CSV rows into document line items."""
 
-from datetime import date
 from decimal import Decimal
 
 from heinrich_tool.backend.csv_transformer import csv_rows_to_line_items
@@ -16,13 +15,11 @@ def csv_row(
 ) -> CsvRow:
     return CsvRow(
         row_number=row_number,
-        date=date(2025, 7, 24),
         order_number=order_number,
         description="Rahmen Baugruppe 4",
         duration_hours=duration_hours,
         hourly_rate=hourly_rate,
         material_cost=material_cost,
-        total_cost=duration_hours * hourly_rate + material_cost,
     )
 
 

@@ -3,30 +3,24 @@ CSV loading utility
 """
 
 import csv
-from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
-from heinrich_tool.backend.config import Config
 from heinrich_tool.backend.models import CsvRow
 from heinrich_tool.backend.money import round_cents
 
-CSV_COL_DATE = "Datum"
 CSV_COL_ORDER_NUMBER = "Auftrags-Nr."
 CSV_COL_DESC = "Beschreibung"
 CSV_COL_DURATION = "Dauer (Std)"
 CSV_COL_HOURLY_RATE = "Stundensatz"
 CSV_COL_MATERIAL = "Material"
-CSV_COL_TOTAL = "Gesamt"
 
 REQUIRED_COLUMNS = [
-    CSV_COL_DATE,
     CSV_COL_ORDER_NUMBER,
     CSV_COL_DESC,
     CSV_COL_DURATION,
     CSV_COL_HOURLY_RATE,
     CSV_COL_MATERIAL,
-    CSV_COL_TOTAL,
 ]
 
 # The client records time in half hours only
@@ -38,15 +32,6 @@ REQUIRED_VALUES = [
     CSV_COL_HOURLY_RATE,
     CSV_COL_MATERIAL,
 ]
-
-
-def _parse_date(row_number: int, value: str, config: Config) -> date:
-    """Parse str to date from config.date_format"""
-    value = value.strip()
-    try:
-        return datetime.strptime(value, config.date_format).date()
-    except ValueError:
-        raise ValueError(f"Invalid date format in row {row_number}: {value}") from None
 
 
 def _parse_decimal(row_number: int, value: str) -> Decimal:
@@ -80,19 +65,18 @@ def _parse_amount(row_number: int, value: str) -> Decimal:
     return amount
 
 
-def load_csv_data(csv_path: Path, config: Config) -> list[CsvRow]:
+def load_csv_data(csv_path: Path) -> list[CsvRow]:
     """
     Load and parse a CSV file into a list of CsvRow objects.
 
     This function is responsible for:
     - reading the CSV file,
     - validating required columns and values,
-    - parsing strings into typed values (date, Decimal),
+    - parsing strings into typed values (Decimal),
     - and creating typed CsvRow domain objects.
 
     Parameters:
         csv_path: Path to the CSV file to load.
-        config: Application configuration (used for date parsing).
 
     Returns:
         A list of CsvRow objects representing the parsed CSV rows.
@@ -124,13 +108,11 @@ def load_csv_data(csv_path: Path, config: Config) -> list[CsvRow]:
 
         csv_row = CsvRow(
             row_number=row_number,
-            date=_parse_date(row_number, row[CSV_COL_DATE], config),
             order_number=row[CSV_COL_ORDER_NUMBER].strip(),
             description=row[CSV_COL_DESC],
             duration_hours=_parse_hours(row_number, row[CSV_COL_DURATION]),
             hourly_rate=_parse_amount(row_number, row[CSV_COL_HOURLY_RATE]),
             material_cost=_parse_amount(row_number, row[CSV_COL_MATERIAL]),
-            total_cost=_parse_decimal(row_number, row[CSV_COL_TOTAL]),
         )
         result.append(csv_row)
     return result
