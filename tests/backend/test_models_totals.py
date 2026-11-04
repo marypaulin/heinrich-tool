@@ -12,8 +12,6 @@ VAT_RATE = Decimal("0.19")
 
 def hours_item(quantity: Decimal, unit_price: Decimal) -> LineItem:
     return LineItem(
-        kind="hours",
-        order_number="90010001",
         quantity=quantity,
         description="Meisterstunde zu Auftrag Nr. 90010001",
         unit_price=unit_price,
@@ -23,8 +21,6 @@ def hours_item(quantity: Decimal, unit_price: Decimal) -> LineItem:
 
 def material_item(unit_price: Decimal) -> LineItem:
     return LineItem(
-        kind="material",
-        order_number="90010001",
         quantity=Decimal(1),
         description="Material zu Auftrag Nr. 90010001",
         unit_price=unit_price,

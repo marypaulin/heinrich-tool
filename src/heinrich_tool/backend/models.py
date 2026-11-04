@@ -3,7 +3,6 @@
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
-from typing import Literal
 
 from heinrich_tool.backend.formatting import format_price
 from heinrich_tool.backend.money import round_cents
@@ -34,8 +33,6 @@ class CsvRow:
 
 @dataclass(frozen=True)
 class LineItem:
-    kind: Literal["hours", "material"]
-    order_number: str
     quantity: Decimal
     description: str
     unit_price: Decimal

@@ -52,15 +52,12 @@ def row_texts(table: Table, row_index: int) -> list[str]:
 
 
 def hours_item(
-    order_number: str,
     quantity: str,
     description: str,
     unit_price: str,
     total_price: str,
 ) -> LineItem:
     return LineItem(
-        kind="hours",
-        order_number=order_number,
         quantity=Decimal(quantity),
         description=description,
         unit_price=Decimal(unit_price),
@@ -68,10 +65,8 @@ def hours_item(
     )
 
 
-def material_item(order_number: str, description: str, amount: str) -> LineItem:
+def material_item(description: str, amount: str) -> LineItem:
     return LineItem(
-        kind="material",
-        order_number=order_number,
         quantity=Decimal(1),
         description=description,
         unit_price=Decimal(amount),
@@ -80,12 +75,10 @@ def material_item(order_number: str, description: str, amount: str) -> LineItem:
 
 
 MASTER_HOURS = hours_item(
-    "90010004", "2.50", "Meisterstunde zu Auftrag Nr. 90010004", "84.90", "212.25"
+    "2.50", "Meisterstunde zu Auftrag Nr. 90010004", "84.90", "212.25"
 )
-HELPER_HOURS = hours_item(
-    "111", "3.00", "Helferstunde zu Auftrag Nr. 111", "48.00", "144.00"
-)
-MATERIAL = material_item("111", "Material zu Auftrag Nr. 111", "270.00")
+HELPER_HOURS = hours_item("3.00", "Helferstunde zu Auftrag Nr. 111", "48.00", "144.00")
+MATERIAL = material_item("Material zu Auftrag Nr. 111", "270.00")
 
 
 # — Template ——————————————————————————————————————————————————————————————————

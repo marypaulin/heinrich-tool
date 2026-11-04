@@ -31,8 +31,6 @@ def test_row_without_material_becomes_one_hours_item(sample_config, messages):
 
     assert line_items == [
         LineItem(
-            kind="hours",
-            order_number="90010001",
             quantity=Decimal("3.00"),
             description="Meisterstunde zu Auftrag Nr. 90010001",
             unit_price=Decimal("84.90"),
@@ -90,10 +88,11 @@ def test_material_adds_a_material_item_after_the_hours(sample_config, messages):
         messages,
     )
 
-    assert [item.kind for item in line_items] == ["hours", "material"]
+    assert [item.description for item in line_items] == [
+        "Meisterstunde zu Auftrag Nr. 90010001",
+        "Material zu Auftrag Nr. 90010001",
+    ]
     assert line_items[1] == LineItem(
-        kind="material",
-        order_number="90010001",
         quantity=Decimal(1),
         description="Material zu Auftrag Nr. 90010001",
         unit_price=Decimal("95.00"),
@@ -111,8 +110,6 @@ def test_row_without_hours_becomes_only_a_material_item(sample_config, messages)
 
     assert line_items == [
         LineItem(
-            kind="material",
-            order_number="90010001",
             quantity=Decimal(1),
             description="Material zu Auftrag Nr. 90010001",
             unit_price=Decimal("95.00"),
@@ -134,7 +131,10 @@ def test_row_without_order_number_is_skipped_with_warning(sample_config, message
 
     line_items = csv_rows_to_line_items(rows, sample_config, messages)
 
-    assert [item.order_number for item in line_items] == ["90010001", "90010002"]
+    assert [item.description for item in line_items] == [
+        "Meisterstunde zu Auftrag Nr. 90010001",
+        "Meisterstunde zu Auftrag Nr. 90010002",
+    ]
     assert len(messages.items) == 1
 
 
@@ -162,8 +162,8 @@ def test_items_follow_the_csv_order(sample_config, messages):
 
     line_items = csv_rows_to_line_items(rows, sample_config, messages)
 
-    assert [(item.order_number, item.kind) for item in line_items] == [
-        ("90010001", "hours"),
-        ("90010001", "material"),
-        ("90010002", "hours"),
+    assert [item.description for item in line_items] == [
+        "Meisterstunde zu Auftrag Nr. 90010001",
+        "Material zu Auftrag Nr. 90010001",
+        "Meisterstunde zu Auftrag Nr. 90010002",
     ]

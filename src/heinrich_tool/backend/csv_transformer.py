@@ -31,8 +31,6 @@ def _hours_item(csv_row: CsvRow, config: Config, messages: Messages) -> LineItem
     logger.info(f"Creating hours item for order number: {csv_row.order_number}")
     hourly_description = _get_hourly_description(csv_row, config, messages)
     return LineItem(
-        kind="hours",
-        order_number=csv_row.order_number,
         quantity=csv_row.duration_hours,
         description=f"{hourly_description} zu Auftrag Nr. {csv_row.order_number}",
         unit_price=csv_row.hourly_rate,
@@ -43,8 +41,6 @@ def _hours_item(csv_row: CsvRow, config: Config, messages: Messages) -> LineItem
 def _material_item(csv_row: CsvRow) -> LineItem:
     logger.info(f"Creating material item for order number: {csv_row.order_number}")
     return LineItem(
-        kind="material",
-        order_number=csv_row.order_number,
         quantity=Decimal(1),
         # NOTE: Original CSV description currently not used upon client request
         description=f"Material zu Auftrag Nr. {csv_row.order_number}",
