@@ -26,14 +26,11 @@ def parse_cli_args(argv: Iterable[str] | None = None) -> InputArgs:
         help="Mode: offer, delivery or invoice",
     )
     parser.add_argument(
-        "-p", "--project-number", type=str, required=True, help="4-digit project number"
+        "-p", "--project-number", required=True, help="4-digit project number"
     )
     parser.add_argument(
         "-r",
         "--receipt-number",
-        type=str,
-        required=False,
-        default=None,
         help="Receipt number (optional for delivery, required for invoice)",
     )
 
