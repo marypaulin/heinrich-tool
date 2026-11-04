@@ -97,9 +97,12 @@ def _generate_document(
     delivery_date = _build_delivery_date(document_date, doc_key, config)
 
     fill_table_with_line_items(doc, line_items)
-    replace_placeholders(doc, totals.to_mapping())
-    replace_placeholders(doc, delivery_date.to_mapping(config.date_format))
-    replace_placeholders(doc, meta.to_mapping(config.date_format))
+    replace_placeholders(
+        doc,
+        totals.to_mapping()
+        | delivery_date.to_mapping(config.date_format)
+        | meta.to_mapping(config.date_format),
+    )
     save_docx(doc, target_path)
 
     logger.info(f"Generated {log_label_en}: {target_path.name}")
