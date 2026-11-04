@@ -50,6 +50,10 @@ working notes and is always fine to read.
 
 ## Comments and docstrings
 
+- Style follows PEP 8 and PEP 257. One deliberate deviation: comments are written
+  like headlines, without articles and filler where the meaning stays clear
+  ("Matches line item table in template"). Docstring bodies that explain a
+  contract may use sentences, with the same economy.
 - No inline comments unless the *why* is non-obvious (a hidden constraint, a workaround,
   a non-intuitive invariant). Never describe *what* the code does.
 - Docstrings only for functions with a non-obvious contract or complex behavior (see
