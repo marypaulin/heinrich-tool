@@ -127,7 +127,7 @@ def generate_offer(
     line_items = _load_line_items(project_dir, config, messages)
     target_path = get_offer_target_path(project_dir, args.project_number, config)
     _generate_document(
-        doc_key="ANGEBOT",
+        doc_key="OFFER",
         project_number=args.project_number,
         receipt_number=None,
         document_date=document_date,
@@ -155,7 +155,7 @@ def generate_delivery_note(
         project_dir, args.project_number, config
     )
     _generate_document(
-        doc_key="LIEFERSCHEIN",
+        doc_key="DELIVERY_NOTE",
         project_number=args.project_number,
         receipt_number=args.receipt_number,
         document_date=document_date,
@@ -186,7 +186,7 @@ def generate_invoice_and_order(
         project_dir, args.project_number, args.receipt_number, config
     )
     _generate_document(
-        doc_key="RECHNUNG",
+        doc_key="INVOICE",
         project_number=args.project_number,
         receipt_number=args.receipt_number,
         document_date=document_date,
@@ -199,7 +199,7 @@ def generate_invoice_and_order(
         log_label_de="Rechnung",
     )
     _generate_document(
-        doc_key="AUFTRAG",
+        doc_key="ORDER_CONFIRMATION",
         project_number=args.project_number,
         receipt_number=args.receipt_number,
         document_date=document_date,

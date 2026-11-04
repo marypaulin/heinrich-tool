@@ -55,11 +55,11 @@ def test_old_and_raised_rate_share_a_description():
 def test_offer_and_delivery_note_get_their_delivery_days():
     documents = load_config(SAMPLE_CONFIG_PATH).documents
 
-    assert documents["ANGEBOT"].delivery_days == 14
-    assert documents["LIEFERSCHEIN"].delivery_days == 0
+    assert documents["OFFER"].delivery_days == 14
+    assert documents["DELIVERY_NOTE"].delivery_days == 0
 
 
-@pytest.mark.parametrize("key", ["RECHNUNG", "AUFTRAG"])
+@pytest.mark.parametrize("key", ["INVOICE", "ORDER_CONFIRMATION"])
 def test_invoice_and_order_confirmation_are_due_on_document_date(key):
     assert load_config(SAMPLE_CONFIG_PATH).documents[key].delivery_days == 0
 

@@ -36,7 +36,7 @@ def load_config(path: Path) -> Config:
     documents_raw = raw["DOCUMENTS"]
     documents = {}
     for key, value in documents_raw.items():
-        if key in ["ANGEBOT", "LIEFERSCHEIN"]:
+        if key in ["OFFER", "DELIVERY_NOTE"]:
             delivery_days = value.get("DELIVERY_DAYS", 21)
         else:
             delivery_days = 0
