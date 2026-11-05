@@ -72,8 +72,10 @@ Pfade existieren.
 **Konsequenzen:**
 
 - Auf jedem neuen Rechner die drei Pfade einmal eintragen.
-- `DATA_ROOT` ist aus der Config entfallen; ein verbliebener Eintrag wird
-  ignoriert.
-- Eine `settings.json` mit fehlendem Schlüssel wirft einen `KeyError`, den
-  weder App noch CLI abfangen. Die Datei schreibt nur die App, das Risiko ist
-  gering.
+- `DATA_ROOT` ist aus der Config entfallen. Seit 05.11.2026 lehnt die App
+  unbekannte Keys in der Config ab, ein verbliebener Eintrag muss also
+  gelöscht werden.
+- Eine `settings.json` mit fehlendem Schlüssel wirft seit 05.11.2026 einen
+  `ValueError`, den App und CLI als Fehlermeldung zeigen. Vorher war es ein
+  ungefangener `KeyError`, bewusst in Kauf genommen, weil nur die App die
+  Datei schreibt.
