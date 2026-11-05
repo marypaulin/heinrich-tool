@@ -24,6 +24,16 @@ def write_raw(tmp_path: Path, raw: dict) -> Path:
     return write_config_text(tmp_path, json.dumps(raw))
 
 
+# — File ——————————————————————————————————————————————————————————————————————
+
+
+def test_config_saved_with_bom_is_loaded(tmp_path):
+    text = SAMPLE_CONFIG_PATH.read_text(encoding="utf-8")
+    config_path = write_config_text(tmp_path, "﻿" + text)
+
+    assert load_config(config_path).vat_rate == Decimal("0.19")
+
+
 # — Rates —————————————————————————————————————————————————————————————————————
 
 

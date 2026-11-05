@@ -46,7 +46,8 @@ def load_config(path: Path) -> Config:
     report, not crashes. The message lists every problem with its key path,
     e.g. "documents.invoice.filename: Field required".
     """
-    raw = json.loads(path.read_text(encoding="utf-8"), parse_float=Decimal)
+    # Some Windows editors save UTF-8 with BOM
+    raw = json.loads(path.read_text(encoding="utf-8-sig"), parse_float=Decimal)
     try:
         return Config.model_validate(raw)
     except ValidationError as e:
