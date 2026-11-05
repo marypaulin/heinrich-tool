@@ -4,7 +4,7 @@ import logging
 from datetime import date, timedelta
 from pathlib import Path
 
-from heinrich_tool.backend.config import Config, load_config
+from heinrich_tool.backend.config import Config, read_config
 from heinrich_tool.backend.csv_loader import load_csv_data
 from heinrich_tool.backend.csv_transformer import csv_rows_to_line_items
 from heinrich_tool.backend.docgen import (
@@ -125,7 +125,7 @@ def generate_offer(
 ) -> list[str]:
     """Full pipeline: find project → load CSV → generate Angebot DOCX + PDF."""
     messages = Messages()
-    config = load_config(settings.config_path)
+    config = read_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = _generate_document(
@@ -148,7 +148,7 @@ def generate_delivery_note(
 ) -> list[str]:
     """Full pipeline: find project → load CSV → generate Lieferschein DOCX + PDF."""
     messages = Messages()
-    config = load_config(settings.config_path)
+    config = read_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = _generate_document(
@@ -171,7 +171,7 @@ def generate_invoice_and_order(
 ) -> list[str]:
     """Full pipeline: find project → load CSV → generate Rechnung + Auftragsbestätigung DOCX + PDF."""
     messages = Messages()
-    config = load_config(settings.config_path)
+    config = read_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     invoice_path = _generate_document(

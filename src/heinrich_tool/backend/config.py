@@ -39,8 +39,8 @@ class Config(_ConfigModel):
         return getattr(self.documents, doc_key)
 
 
-def load_config(path: Path) -> Config:
-    """Load the config, rejecting any invalid entry with ValueError.
+def read_config(path: Path) -> Config:
+    """Read the config, rejecting any invalid entry with ValueError.
 
     The client edits the file directly, so problems are user errors to
     report, not crashes. The message lists every problem with its key path,

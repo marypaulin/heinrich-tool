@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from heinrich_tool.backend.config import load_config
+from heinrich_tool.backend.config import read_config
 from samples import SAMPLE_CONFIG_PATH
 
 
@@ -31,21 +31,21 @@ def test_config_saved_with_bom_is_loaded(tmp_path):
     text = SAMPLE_CONFIG_PATH.read_text(encoding="utf-8")
     config_path = write_config_text(tmp_path, "﻿" + text)
 
-    assert load_config(config_path).vat_rate == Decimal("0.19")
+    assert read_config(config_path).vat_rate == Decimal("0.19")
 
 
 # — Rates —————————————————————————————————————————————————————————————————————
 
 
 def test_vat_rate_is_read_as_decimal():
-    config = load_config(SAMPLE_CONFIG_PATH)
+    config = read_config(SAMPLE_CONFIG_PATH)
 
     assert config.vat_rate == Decimal("0.19")
     assert type(config.vat_rate) is Decimal
 
 
 def test_hourly_rates_are_looked_up_by_decimal():
-    mapping = load_config(SAMPLE_CONFIG_PATH).rate_descriptions
+    mapping = read_config(SAMPLE_CONFIG_PATH).rate_descriptions
 
     assert mapping[Decimal("84.90")] == "Meisterstunde"
     assert mapping[Decimal("48.00")] == "Helferstunde"
@@ -53,7 +53,7 @@ def test_hourly_rates_are_looked_up_by_decimal():
 
 def test_old_and_raised_rate_share_a_description():
     """The client adds raised rates next to the old ones so older CSVs still work."""
-    mapping = load_config(SAMPLE_CONFIG_PATH).rate_descriptions
+    mapping = read_config(SAMPLE_CONFIG_PATH).rate_descriptions
 
     assert mapping[Decimal("84.90")] == mapping[Decimal("92.00")]
 
@@ -62,7 +62,7 @@ def test_old_and_raised_rate_share_a_description():
 
 
 def test_offer_and_delivery_note_get_their_delivery_days():
-    config = load_config(SAMPLE_CONFIG_PATH)
+    config = read_config(SAMPLE_CONFIG_PATH)
 
     assert config.document("offer").delivery_days == 14
     assert config.document("delivery_note").delivery_days == 0
@@ -70,7 +70,7 @@ def test_offer_and_delivery_note_get_their_delivery_days():
 
 @pytest.mark.parametrize("key", ["invoice", "order_confirmation"])
 def test_invoice_and_order_confirmation_are_due_on_document_date(key):
-    assert load_config(SAMPLE_CONFIG_PATH).document(key).delivery_days == 0
+    assert read_config(SAMPLE_CONFIG_PATH).document(key).delivery_days == 0
 
 
 # — Errors ————————————————————————————————————————————————————————————————————
@@ -84,7 +84,7 @@ def test_new_rate_without_comma_is_rejected(tmp_path):
     config_path = write_config_text(tmp_path, broken)
 
     with pytest.raises(ValueError):
-        load_config(config_path)
+        read_config(config_path)
 
 
 def test_missing_key_is_rejected(tmp_path):
@@ -92,7 +92,7 @@ def test_missing_key_is_rejected(tmp_path):
     del raw["vat_rate"]
 
     with pytest.raises(ValueError):
-        load_config(write_raw(tmp_path, raw))
+        read_config(write_raw(tmp_path, raw))
 
 
 def test_missing_document_is_rejected(tmp_path):
@@ -100,7 +100,7 @@ def test_missing_document_is_rejected(tmp_path):
     del raw["documents"]["invoice"]
 
     with pytest.raises(ValueError):
-        load_config(write_raw(tmp_path, raw))
+        read_config(write_raw(tmp_path, raw))
 
 
 def test_missing_filename_is_rejected(tmp_path):
@@ -108,7 +108,7 @@ def test_missing_filename_is_rejected(tmp_path):
     del raw["documents"]["invoice"]["filename"]
 
     with pytest.raises(ValueError):
-        load_config(write_raw(tmp_path, raw))
+        read_config(write_raw(tmp_path, raw))
 
 
 def test_misspelled_key_is_rejected(tmp_path):
@@ -118,7 +118,7 @@ def test_misspelled_key_is_rejected(tmp_path):
     )
 
     with pytest.raises(ValueError):
-        load_config(write_raw(tmp_path, raw))
+        read_config(write_raw(tmp_path, raw))
 
 
 def test_rate_with_decimal_comma_is_rejected(tmp_path):
@@ -126,9 +126,9 @@ def test_rate_with_decimal_comma_is_rejected(tmp_path):
     raw["rate_descriptions"]["99,00"] = "Meisterstunde"
 
     with pytest.raises(ValueError):
-        load_config(write_raw(tmp_path, raw))
+        read_config(write_raw(tmp_path, raw))
 
 
 def test_missing_file_is_rejected(tmp_path):
     with pytest.raises(FileNotFoundError):
-        load_config(tmp_path / "config.json")
+        read_config(tmp_path / "config.json")
