@@ -34,7 +34,7 @@ def get_project_dir(data_root: Path, project_number: str, messages: Messages) ->
 
 def get_latest_csv_path(project_dir: Path, config: Config, messages: Messages) -> Path:
     """Find the latest CSV file in the order folder."""
-    csv_files = list(project_dir.glob(config.filenames["CSV_GLOB"]))
+    csv_files = list(project_dir.glob(config.csv_glob))
     if not csv_files:
         raise FileNotFoundError(f"No CSV files found in {project_dir}")
     latest = max(csv_files, key=lambda p: p.stat().st_mtime)
@@ -58,5 +58,5 @@ def get_target_path(
     values = {"project_number": project_number}
     if receipt_number is not None:
         values["receipt_number"] = receipt_number
-    filename = _format_filename(config.filenames[doc_key], **values)
+    filename = _format_filename(config.document(doc_key).filename, **values)
     return project_dir / filename

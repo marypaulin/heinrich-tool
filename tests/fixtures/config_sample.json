@@ -1,5 +1,5 @@
 {
-  "RATE_DESCRIPTIONS": {
+  "rate_descriptions": {
     "84.90": "Meisterstunde",
     "139.90": "Meisterstunde Sonntag",
     "48.00": "Helferstunde",
@@ -7,34 +7,32 @@
     "92.00": "Meisterstunde",
     "151.00": "Meisterstunde Sonntag"
   },
-  "DEFAULT_RATE_DESCRIPTION": "Arbeitsstunde",
-  "DATE_FORMAT": "%d.%m.%Y",
-  "VAT_RATE": 0.19,
-  "DOCUMENTS": {
-    "OFFER": {
-      "DOCTYPE": "Angebot",
-      "HEADER": "Wir bieten folgende Positionen an:",
-      "DELIVERY_DAYS": 14
+  "default_rate_description": "Arbeitsstunde",
+  "date_format": "%d.%m.%Y",
+  "vat_rate": 0.19,
+  "csv_glob": "heinrich_zeiterfassung_*.csv",
+  "documents": {
+    "offer": {
+      "doctype": "Angebot",
+      "header": "Wir bieten folgende Positionen an:",
+      "filename": "Angebot Nr. {project_number}.docx",
+      "delivery_days": 14
     },
-    "DELIVERY_NOTE": {
-      "DOCTYPE": "Lieferschein",
-      "HEADER": "Wir liefern folgende Positionen an:",
-      "DELIVERY_DAYS": 0
+    "delivery_note": {
+      "doctype": "Lieferschein",
+      "header": "Wir liefern folgende Positionen an:",
+      "filename": "Lieferschein Nr. {project_number}.docx",
+      "delivery_days": 0
     },
-    "INVOICE": {
-      "DOCTYPE": "Rechnung",
-      "HEADER": "Wir bitten um Ausgleich der folgenden Positionen:"
+    "invoice": {
+      "doctype": "Rechnung",
+      "header": "Wir bitten um Ausgleich der folgenden Positionen:",
+      "filename": "Rechnung Nr. {project_number} - {receipt_number}.docx"
     },
-    "ORDER_CONFIRMATION": {
-      "DOCTYPE": "Auftragsbestätigung",
-      "HEADER": "Wir bestätigen den Auftrag über folgende Positionen:"
+    "order_confirmation": {
+      "doctype": "Auftragsbestätigung",
+      "header": "Wir bestätigen den Auftrag über folgende Positionen:",
+      "filename": "Auftragsbestätigung Nr. {project_number} - {receipt_number}.docx"
     }
-  },
-  "FILENAMES": {
-    "CSV_GLOB": "heinrich_zeiterfassung_*.csv",
-    "OFFER": "Angebot Nr. {project_number}.docx",
-    "DELIVERY_NOTE": "Lieferschein Nr. {project_number}.docx",
-    "INVOICE": "Rechnung Nr. {project_number} - {receipt_number}.docx",
-    "ORDER_CONFIRMATION": "Auftragsbestätigung Nr. {project_number} - {receipt_number}.docx"
   }
 }

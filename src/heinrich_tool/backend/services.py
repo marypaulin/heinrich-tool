@@ -41,7 +41,7 @@ def _build_meta(
     doc_key: str,
     config: Config,
 ) -> DocumentMeta:
-    doc_config = config.documents[doc_key]
+    doc_config = config.document(doc_key)
     return DocumentMeta(
         project_number=project_number,
         receipt_number=receipt_number,
@@ -54,7 +54,7 @@ def _build_meta(
 def _build_delivery_date(
     document_date: date, doc_key: str, config: Config
 ) -> DeliveryDate:
-    delivery_days = config.documents[doc_key].delivery_days
+    delivery_days = config.document(doc_key).delivery_days
     return DeliveryDate(document_date + timedelta(days=delivery_days))
 
 
@@ -103,7 +103,7 @@ def _generate_document(
     )
     save_docx(doc, target_path)
 
-    log_label = doc_key.lower().replace("_", " ")
+    log_label = doc_key.replace("_", " ")
     logger.info(f"Generated {log_label}: {target_path.name}")
     messages.info(f"{meta.doctype} erzeugt ({target_path.name})")
     return target_path
@@ -129,7 +129,7 @@ def generate_offer(
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = _generate_document(
-        doc_key="OFFER",
+        doc_key="offer",
         project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=None,
@@ -152,7 +152,7 @@ def generate_delivery_note(
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = _generate_document(
-        doc_key="DELIVERY_NOTE",
+        doc_key="delivery_note",
         project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,
@@ -175,7 +175,7 @@ def generate_invoice_and_order(
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     invoice_path = _generate_document(
-        doc_key="INVOICE",
+        doc_key="invoice",
         project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,
@@ -186,7 +186,7 @@ def generate_invoice_and_order(
         messages=messages,
     )
     order_path = _generate_document(
-        doc_key="ORDER_CONFIRMATION",
+        doc_key="order_confirmation",
         project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,

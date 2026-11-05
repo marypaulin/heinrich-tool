@@ -1,4 +1,4 @@
-"""Tests for loading the application settings from the JSON config file."""
+"""Tests for loading the client's business config."""
 
 import json
 from decimal import Decimal
@@ -16,10 +16,11 @@ def write_config_text(tmp_path: Path, text: str) -> Path:
     return config_path
 
 
-def write_variant(tmp_path: Path, **changes) -> Path:
-    """Write the sample config with top-level entries replaced."""
-    raw = json.loads(SAMPLE_CONFIG_PATH.read_text(encoding="utf-8"))
-    raw.update(changes)
+def read_sample_raw() -> dict:
+    return json.loads(SAMPLE_CONFIG_PATH.read_text(encoding="utf-8"))
+
+
+def write_raw(tmp_path: Path, raw: dict) -> Path:
     return write_config_text(tmp_path, json.dumps(raw))
 
 
@@ -53,11 +54,11 @@ def test_old_and_raised_rate_share_a_description():
 def test_offer_and_delivery_note_get_their_delivery_days():
     documents = load_config(SAMPLE_CONFIG_PATH).documents
 
-    assert documents["OFFER"].delivery_days == 14
-    assert documents["DELIVERY_NOTE"].delivery_days == 0
+    assert documents["offer"].delivery_days == 14
+    assert documents["delivery_note"].delivery_days == 0
 
 
-@pytest.mark.parametrize("key", ["INVOICE", "ORDER_CONFIRMATION"])
+@pytest.mark.parametrize("key", ["invoice", "order_confirmation"])
 def test_invoice_and_order_confirmation_are_due_on_document_date(key):
     assert load_config(SAMPLE_CONFIG_PATH).documents[key].delivery_days == 0
 
@@ -77,22 +78,27 @@ def test_new_rate_without_comma_is_rejected(tmp_path):
 
 
 def test_missing_key_is_rejected(tmp_path):
-    raw = json.loads(SAMPLE_CONFIG_PATH.read_text(encoding="utf-8"))
-    del raw["VAT_RATE"]
-    config_path = write_config_text(tmp_path, json.dumps(raw))
+    raw = read_sample_raw()
+    del raw["vat_rate"]
 
     with pytest.raises(ValueError):
-        load_config(config_path)
+        load_config(write_raw(tmp_path, raw))
 
 
-@pytest.mark.parametrize("section", ["DOCUMENTS", "FILENAMES"])
-def test_missing_document_key_is_rejected(tmp_path, section):
-    raw = json.loads(SAMPLE_CONFIG_PATH.read_text(encoding="utf-8"))
-    entries = {k: v for k, v in raw[section].items() if k != "INVOICE"}
-    config_path = write_variant(tmp_path, **{section: entries})
+def test_missing_document_is_rejected(tmp_path):
+    raw = read_sample_raw()
+    del raw["documents"]["invoice"]
 
     with pytest.raises(ValueError):
-        load_config(config_path)
+        load_config(write_raw(tmp_path, raw))
+
+
+def test_missing_filename_is_rejected(tmp_path):
+    raw = read_sample_raw()
+    del raw["documents"]["invoice"]["filename"]
+
+    with pytest.raises(ValueError):
+        load_config(write_raw(tmp_path, raw))
 
 
 def test_missing_file_is_rejected(tmp_path):

@@ -10,6 +10,7 @@ from pathlib import Path
 class DocumentConfig:
     doctype: str
     header: str
+    filename: str
     delivery_days: int
 
 
@@ -19,11 +20,14 @@ class Config:
     default_rate_description: str
     date_format: str
     vat_rate: Decimal
+    csv_glob: str
     documents: dict[str, DocumentConfig]
-    filenames: dict[str, str]
+
+    def document(self, doc_key: str) -> DocumentConfig:
+        return self.documents[doc_key]
 
 
-DOCUMENT_KEYS = ("OFFER", "DELIVERY_NOTE", "INVOICE", "ORDER_CONFIRMATION")
+DOCUMENT_KEYS = ("offer", "delivery_note", "invoice", "order_confirmation")
 
 
 def _require_keys(raw: dict, parent_key: str, keys: tuple[str, ...]) -> None:
@@ -47,36 +51,29 @@ def load_config(path: Path) -> Config:
 
 
 def _parse_config(raw: dict) -> Config:
-    _require_keys(raw, "DOCUMENTS", DOCUMENT_KEYS)
-    _require_keys(raw, "FILENAMES", (*DOCUMENT_KEYS, "CSV_GLOB"))
+    _require_keys(raw, "documents", DOCUMENT_KEYS)
 
-    rate_descriptions_raw = raw["RATE_DESCRIPTIONS"]
+    rate_descriptions_raw = raw["rate_descriptions"]
     rate_descriptions = {Decimal(k): v for k, v in rate_descriptions_raw.items()}
 
-    default_rate_description = raw["DEFAULT_RATE_DESCRIPTION"]
-    date_format = raw["DATE_FORMAT"]
-    vat_rate = Decimal(raw["VAT_RATE"])
-
-    documents_raw = raw["DOCUMENTS"]
     documents = {}
-    for key, value in documents_raw.items():
-        if key in ["OFFER", "DELIVERY_NOTE"]:
-            delivery_days = value.get("DELIVERY_DAYS", 21)
+    for key, value in raw["documents"].items():
+        if key in ["offer", "delivery_note"]:
+            delivery_days = value.get("delivery_days", 21)
         else:
             delivery_days = 0
         documents[key] = DocumentConfig(
-            doctype=value["DOCTYPE"],
-            header=value["HEADER"],
+            doctype=value["doctype"],
+            header=value["header"],
+            filename=value["filename"],
             delivery_days=delivery_days,
         )
 
-    filenames = raw["FILENAMES"]
-
     return Config(
         rate_descriptions=rate_descriptions,
-        default_rate_description=default_rate_description,
-        date_format=date_format,
-        vat_rate=vat_rate,
+        default_rate_description=raw["default_rate_description"],
+        date_format=raw["date_format"],
+        vat_rate=Decimal(raw["vat_rate"]),
+        csv_glob=raw["csv_glob"],
         documents=documents,
-        filenames=filenames,
     )
