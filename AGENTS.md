@@ -35,8 +35,8 @@ working notes and is always fine to read.
 
 - Immutable value objects use `@dataclass(frozen=True)`. Produce new objects instead of
   mutating.
-- Exception: the config models in `config.py` are frozen pydantic models, because
-  pydantic validates the client-edited config file.
+- Exception: the models in `config.py` and `settings.py` are frozen pydantic models,
+  because pydantic validates the JSON files they are read from.
 - Domain models that map to Word template placeholders expose a `to_mapping()` method
   returning `dict[str, str]`.
 

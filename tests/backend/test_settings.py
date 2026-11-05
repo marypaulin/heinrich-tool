@@ -28,3 +28,11 @@ def test_broken_settings_file_raises(tmp_path):
 
     with pytest.raises(ValueError):
         read_settings(settings_path)
+
+
+def test_settings_file_with_missing_key_raises(tmp_path):
+    settings_path = tmp_path / "settings.json"
+    settings_path.write_text('{"data_root": "Daten"}', encoding="utf-8")
+
+    with pytest.raises(ValueError):
+        read_settings(settings_path)
