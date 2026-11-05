@@ -76,6 +76,25 @@ def test_new_rate_without_comma_is_rejected(tmp_path):
         load_config(config_path)
 
 
+def test_missing_key_is_rejected(tmp_path):
+    raw = json.loads(SAMPLE_CONFIG_PATH.read_text(encoding="utf-8"))
+    del raw["VAT_RATE"]
+    config_path = write_config_text(tmp_path, json.dumps(raw))
+
+    with pytest.raises(ValueError):
+        load_config(config_path)
+
+
+@pytest.mark.parametrize("section", ["DOCUMENTS", "FILENAMES"])
+def test_missing_document_key_is_rejected(tmp_path, section):
+    raw = json.loads(SAMPLE_CONFIG_PATH.read_text(encoding="utf-8"))
+    entries = {k: v for k, v in raw[section].items() if k != "INVOICE"}
+    config_path = write_variant(tmp_path, **{section: entries})
+
+    with pytest.raises(ValueError):
+        load_config(config_path)
+
+
 def test_missing_file_is_rejected(tmp_path):
     with pytest.raises(FileNotFoundError):
         load_config(tmp_path / "config.json")

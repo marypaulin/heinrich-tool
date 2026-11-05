@@ -1,4 +1,4 @@
-"""Config data model and loader for application settings."""
+"""Client's business config: rates, VAT, document texts and filenames."""
 
 import json
 from dataclasses import dataclass
@@ -23,8 +23,32 @@ class Config:
     filenames: dict[str, str]
 
 
+DOCUMENT_KEYS = ("OFFER", "DELIVERY_NOTE", "INVOICE", "ORDER_CONFIRMATION")
+
+
+def _require_keys(raw: dict, parent_key: str, keys: tuple[str, ...]) -> None:
+    missing = [f"{parent_key}.{key}" for key in keys if key not in raw[parent_key]]
+    if missing:
+        raise ValueError(f"Missing key in config.json: {', '.join(missing)}")
+
+
 def load_config(path: Path) -> Config:
+    """Load the config, rejecting a missing key with ValueError.
+
+    The client edits the file directly, so a missing key is a user error to report,
+    not a crash. All documents are checked up front; otherwise a gap would
+    only surface when that document is generated.
+    """
     raw = json.loads(path.read_text(encoding="utf-8"), parse_float=Decimal)
+    try:
+        return _parse_config(raw)
+    except KeyError as e:
+        raise ValueError(f"Missing key in config.json: {e.args[0]}") from e
+
+
+def _parse_config(raw: dict) -> Config:
+    _require_keys(raw, "DOCUMENTS", DOCUMENT_KEYS)
+    _require_keys(raw, "FILENAMES", (*DOCUMENT_KEYS, "CSV_GLOB"))
 
     rate_descriptions_raw = raw["RATE_DESCRIPTIONS"]
     rate_descriptions = {Decimal(k): v for k, v in rate_descriptions_raw.items()}
