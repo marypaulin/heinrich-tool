@@ -9,6 +9,7 @@ dependencies = [
     "streamlit>=1.65.0",
     "pywin32; sys_platform == 'win32'",
     "platformdirs>=4.13.6",
+    "pydantic>=2.14.3",
 ]
 
 [dependency-groups]

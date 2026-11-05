@@ -52,15 +52,15 @@ def test_old_and_raised_rate_share_a_description():
 
 
 def test_offer_and_delivery_note_get_their_delivery_days():
-    documents = load_config(SAMPLE_CONFIG_PATH).documents
+    config = load_config(SAMPLE_CONFIG_PATH)
 
-    assert documents["offer"].delivery_days == 14
-    assert documents["delivery_note"].delivery_days == 0
+    assert config.document("offer").delivery_days == 14
+    assert config.document("delivery_note").delivery_days == 0
 
 
 @pytest.mark.parametrize("key", ["invoice", "order_confirmation"])
 def test_invoice_and_order_confirmation_are_due_on_document_date(key):
-    assert load_config(SAMPLE_CONFIG_PATH).documents[key].delivery_days == 0
+    assert load_config(SAMPLE_CONFIG_PATH).document(key).delivery_days == 0
 
 
 # — Errors ————————————————————————————————————————————————————————————————————
@@ -96,6 +96,24 @@ def test_missing_document_is_rejected(tmp_path):
 def test_missing_filename_is_rejected(tmp_path):
     raw = read_sample_raw()
     del raw["documents"]["invoice"]["filename"]
+
+    with pytest.raises(ValueError):
+        load_config(write_raw(tmp_path, raw))
+
+
+def test_misspelled_key_is_rejected(tmp_path):
+    raw = read_sample_raw()
+    raw["documents"]["offer"]["delivery_day"] = raw["documents"]["offer"].pop(
+        "delivery_days"
+    )
+
+    with pytest.raises(ValueError):
+        load_config(write_raw(tmp_path, raw))
+
+
+def test_rate_with_decimal_comma_is_rejected(tmp_path):
+    raw = read_sample_raw()
+    raw["rate_descriptions"]["99,00"] = "Meisterstunde"
 
     with pytest.raises(ValueError):
         load_config(write_raw(tmp_path, raw))

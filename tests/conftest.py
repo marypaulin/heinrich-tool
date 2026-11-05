@@ -9,7 +9,6 @@ from samples import SAMPLE_CONFIG_PATH
 
 @pytest.fixture
 def sample_config() -> Config:
-    """Tests that need other values derive them with `dataclasses.replace`."""
     return load_config(SAMPLE_CONFIG_PATH)
 
 
