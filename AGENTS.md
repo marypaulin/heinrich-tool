@@ -23,13 +23,24 @@ working notes and is always fine to read.
 
 ## Error handling
 
-- Hard errors (file not found, invalid input): raise `ValueError` or `FileNotFoundError`
-  and let them bubble up to the entry point.
+- Hard errors (file not found, invalid input, unusable template): the backend
+  raises `ValueError` or `FileNotFoundError` and lets them bubble up unchanged.
+- Catch only where something can be done: translate a library exception into
+  one of these types (`raise ... from e`), or continue with a reduced result
+  and report it via `Messages`. Catching only to log and re-raise is not
+  handling.
+- Anything that would make the document wrong (a missing line item, a wrong
+  amount) is a hard error, never a warning.
+- Never ignore an error silently: every `except` re-raises, adds a `Messages`
+  entry, or carries a comment saying why ignoring is safe. Ruff enforces the
+  local part (see `pyproject.toml`).
 - Non-fatal warnings and status messages for the UI: accumulate via `Messages.info()` /
   `.warning()` and return them — never use `print()`.
+- Entry points are the only places that catch hard errors for display: they
+  show the exception text unchanged.
 - Logging messages and `raise` texts are in English; `Messages` entries shown to the
-  user are in German. An exception text is logged as well as displayed, so it follows
-  the logging rule — turning it into German UI text is the entry point's job.
+  user are in German. A `raise` text reaches the client as is, so it names the file
+  and key at fault in plain terms (see `read_config`).
 
 ## Models
 
