@@ -334,4 +334,27 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
     weitere sind sofort da.
   - Nach dem Neustart ist der Block zu und hält die drei Pfade ohne
     Anführungszeichen, die Formulare sind sofort aktiv.
-  - `%LOCALAPPDATA%\HeinrichTool\settings.json` existiert.
+  - `%LOCALAPPDATA%\HeinrichTool\settings.json` existiert und hält die drei
+    Pfade, in PowerShell:
+    ```powershell
+    Get-Content "$env:LOCALAPPDATA\HeinrichTool\settings.json"
+    ```
+
+#### W11 — Config im Editor bearbeiten
+
+Der Kunde pflegt die Config direkt im Windows-Editor.
+
+- **Vorbereitung:** W10 durchlaufen, App läuft. Config öffnen, in
+  PowerShell:
+  ```powershell
+  notepad "$env:OneDrive\Heinrich Daten\config_sample.json"
+  ```
+- **Aktion 1:** Unter `"offer"` die Zeile mit `"filename"` löschen,
+  Strg+S, Angebot für `1234` erzeugen. Die App liest die Config bei jedem
+  Erzeugen neu, kein Neustart nötig.
+- **Erwartet:** „Fehler beim Erzeugen“, darunter
+  `Invalid config.json: documents.offer.filename: Field required`.
+- **Aktion 2:** Zeile wieder einfügen, „Datei“ → „Speichern unter“,
+  „Codierung“ „UTF-8 mit BOM“, überschreiben. Angebot für `1234` erzeugen.
+  Ohne diesen Umweg speichert der Editor ohne BOM.
+- **Erwartet:** Angebot wie in W10.
