@@ -2,7 +2,9 @@
 
 Datum: 2026-11-04
 
-Status: angenommen
+Status: abgelöst durch `2026-11-06_meldungen-zweisprachig.md` — nie
+umgesetzt, die Umstellung wäre mehr Arbeit als der Nutzen. Beschreibt, was
+eine Umstellung auf Deutsch umfasst.
 
 **Kontext:** Bisher waren die Meldungen für den Nutzer (`Messages`) deutsch,
 Logging und die Texte eigener Exceptions englisch. Das Backend meldet deshalb
