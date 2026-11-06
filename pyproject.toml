@@ -27,7 +27,7 @@ testpaths = ["tests"]
 pythonpath = ["tests"]
 
 [tool.ruff.lint]
-extend-select = ["TID252"]
+extend-select = ["TID252", "BLE", "S110", "S112"]
 ignore = [
     "DTZ",     # naive local dates are intentional (German invoicing, no timezones)
 ]
