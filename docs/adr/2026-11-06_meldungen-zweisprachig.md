@@ -23,3 +23,6 @@ verständlich sein: Datei und Key nennen, keine Interna.
 - Manches meldet das Backend doppelt, per `logger` und per `Messages`.
 - Die Einstiegspunkte loggen keine Tracebacks; ohne Logdatei läse sie
   niemand.
+
+**Nachtrag 2026-11-09:** Der Kunde hat bestätigt, dass der Mix aus deutschen
+und englischen Meldungen im UI so in Ordnung ist.
