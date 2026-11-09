@@ -13,12 +13,12 @@ Geschäftsdaten an der Installation:
   Neuinstallation verliert beide.
 - Jeder Rechner hält eine eigene Kopie. Ein geänderter Stundensatz muss auf
   allen Rechnern nachgetragen werden, sonst rechnen sie unterschiedlich.
-- Um die Config zu bearbeiten, muss Max in den Installationsordner.
+- Um die Config zu bearbeiten, muss der Kunde in den Installationsordner.
 
 **Entscheidung:** Config und Vordruck liegen wie der Datenordner in OneDrive
 und stehen damit auf jedem Rechner bereit. Wo die drei auf dem jeweiligen
-Rechner liegen, hält eine rechnerlokale `settings.json` fest. Max trägt die
-Pfade einmal pro Rechner im Block „Pfade“ der App ein.
+Rechner liegen, hält eine rechnerlokale `settings.json` fest. Der Kunde trägt
+die Pfade einmal pro Rechner im Block „Pfade“ der App ein.
 
 *Ablageort unter Windows.* Windows kennt zwei Orte für benutzerbezogene
 Anwendungsdaten. `%APPDATA%` (`C:\Users\<Name>\AppData\Roaming`) ist für
@@ -40,8 +40,8 @@ gesetzt, in `~/.config`. Auf dem Entwicklungsrechner liegt die Datei damit in
 *Auflösung im Code.* Den Ordner bestimmt die Bibliothek `platformdirs`, nicht
 eigener Code: `user_config_dir("HeinrichTool", appauthor=False)` liefert je
 Betriebssystem den passenden Ort, unter Windows `%LOCALAPPDATA%\HeinrichTool`,
-unter Linux `~/.config/HeinrichTool`. So läuft derselbe Code bei Max und auf
-dem Entwicklungsrechner ohne Fallunterscheidung. Zwei Parameter sind bewusst
+unter Linux `~/.config/HeinrichTool`. So läuft derselbe Code beim Kunden und
+auf dem Entwicklungsrechner ohne Fallunterscheidung. Zwei Parameter sind bewusst
 gewählt: `roaming` bleibt auf dem Default `False`, sonst läge die Datei in
 `%APPDATA%`. `appauthor=False` verhindert, dass Windows eine zweite
 Ordnerebene für den Hersteller einschiebt (`HeinrichTool\HeinrichTool`).
@@ -55,8 +55,8 @@ Pfade existieren.
 **Alternativen:**
 
 - *Nur den Datenordner speichern, Config und Vordruck an festem Ort darin.* So
-  war es ursprünglich geplant. Verworfen aus zwei Gründen. Die Ablage soll Max
-  überlassen bleiben: neben den Projektordnern, in einem eigenen Unterordner
+  war es ursprünglich geplant. Verworfen aus zwei Gründen. Die Ablage soll dem
+  Kunden überlassen bleiben: neben den Projektordnern, in einem eigenen Unterordner
   oder an getrennten Orten in OneDrive. Und ein einzelner Pfad, aus dem die App
   die übrigen Dateien stillschweigend ableitet, versteckt Voraussetzungen. Mit
   drei Feldern ist alles, was die App zum Arbeiten braucht, in der Oberfläche
@@ -66,7 +66,8 @@ Pfade existieren.
   Verworfen. Der Vordruck enthält ebenfalls Geschäftsdaten und braucht ohnehin
   einen Ort außerhalb des öffentlichen Repos. Eine lokale Datei pro Rechner
   bringt die abweichenden Kopien zurück. Und Sätze, Texte und Dateinamen in der
-  Config sind Max' Sache: Liegt sie in OneDrive, ändert er sie selbst, ohne
+  Config sind Sache des Kunden: Liegt sie in OneDrive, ändert er sie selbst,
+  ohne
   Update und ohne Zugriff auf den Installationsordner.
 
 **Konsequenzen:**
