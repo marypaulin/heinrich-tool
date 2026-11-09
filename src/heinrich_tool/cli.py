@@ -4,7 +4,6 @@ import logging
 import sys
 from datetime import date
 
-from heinrich_tool.backend.cli_args_parser import parse_cli_args
 from heinrich_tool.backend.services import (
     SETTINGS_PATH,
     generate_delivery_note,
@@ -12,6 +11,7 @@ from heinrich_tool.backend.services import (
     generate_offer,
     load_settings,
 )
+from heinrich_tool.cli_args_parser import parse_cli_args
 
 logging.basicConfig(
     level=logging.WARNING, format="%(levelname)s (%(name)s): %(message)s"
