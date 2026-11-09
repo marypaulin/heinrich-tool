@@ -121,5 +121,5 @@ working notes and is always fine to read.
   when none of them fits.
 - Behavior changes get their own commit, separate from refactors and tests, so
   `git log` explains why an old invoice shows a different number.
-- Verification: `ruff check .` and `uv run pytest -q`, for commits that touch
-  `.py` files. Documentation-only commits need no check.
+- Verification: `ruff check .`, `ty check` and `uv run pytest -q`, for commits
+  that touch `.py` files. Documentation-only commits need no check.
