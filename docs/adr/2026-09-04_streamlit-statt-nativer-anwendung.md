@@ -51,7 +51,8 @@ akzeptiert hat.
 - Planung 1 und Planung 2 verlieren ihre Prämisse und werden überarbeitet.
 - Der Qt-Entwurf (`demo/qt_mockup.py`) bleibt als Gestaltungsreferenz erhalten —
   Palette und Kartenaufbau sind für das Streamlit-Theme weiter brauchbar. Er ist
-  keine Umsetzungsplanung mehr.
+  keine Umsetzungsplanung mehr. Entfernt am 2026-11-09, liegt in der
+  Git-History.
 - Der CSV-Editor entsteht mit `st.data_editor` statt mit einem eigenen
   Tabellenmodell. Weil dieser Weg über pandas läuft, muss beim Laden und
   Zurückschreiben die Typumwandlung unterbunden werden; der Round-Trip-Test aus

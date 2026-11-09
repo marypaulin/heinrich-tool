@@ -13,7 +13,6 @@ dependencies = [
 ]
 
 [dependency-groups]
-demo = ["PySide6>=6.11.2"]
 dev = [
     "pytest>=9.1.1",
 ]
@@ -42,5 +41,4 @@ known-first-party = ["samples"]
 [tool.ruff.lint.per-file-ignores]
 "demo/**" = [
     "BLE001",  # prototypes catch broadly on purpose
-    "B008",    # Qt APIs require QModelIndex() as a default argument
 ]
