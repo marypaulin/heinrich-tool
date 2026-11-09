@@ -41,6 +41,7 @@ def _parse_project_number(project_number: str) -> str:
     return project_number
 
 
+# Format unchecked, unlike project number: pasted from an email, not typed
 def _parse_receipt_number_optional(receipt_number: str | None) -> str | None:
     return (receipt_number or "").strip() or None
 
