@@ -40,7 +40,7 @@ working notes and is always fine to read.
   show the exception text unchanged.
 - Logging messages and `raise` texts are in English; `Messages` entries shown to the
   user are in German. A `raise` text reaches the client as is, so it names the file
-  and key at fault in plain terms (see `read_config`).
+  and key at fault in plain terms (see `read_json_model`).
 
 ## Models
 

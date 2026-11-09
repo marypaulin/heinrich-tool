@@ -1,10 +1,11 @@
 """Client's business config: rates, VAT, document texts and filenames."""
 
-import json
 from decimal import Decimal
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict, ValidationError
+from pydantic import BaseModel, ConfigDict
+
+from heinrich_tool.backend.json_files import read_json_model
 
 
 class _ConfigModel(BaseModel):
@@ -40,19 +41,4 @@ class Config(_ConfigModel):
 
 
 def read_config(path: Path) -> Config:
-    """Read the config, rejecting any invalid entry with ValueError.
-
-    The client edits the file directly, so problems are user errors to
-    report, not crashes. The message lists every problem with its key path,
-    e.g. "documents.invoice.filename: Field required".
-    """
-    # Some Windows editors save UTF-8 with BOM
-    raw = json.loads(path.read_text(encoding="utf-8-sig"), parse_float=Decimal)
-    try:
-        return Config.model_validate(raw)
-    except ValidationError as e:
-        problems = "; ".join(
-            f"{'.'.join(str(part) for part in error['loc'])}: {error['msg']}"
-            for error in e.errors()
-        )
-        raise ValueError(f"Invalid config.json: {problems}") from e
+    return read_json_model(path, Config)

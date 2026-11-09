@@ -353,7 +353,7 @@ Der Kunde pflegt die Config direkt im Windows-Editor.
   Strg+S, Angebot für `1234` erzeugen. Die App liest die Config bei jedem
   Erzeugen neu, kein Neustart nötig.
 - **Erwartet:** „Fehler beim Erzeugen“, darunter
-  `Invalid config.json: documents.offer.filename: Field required`.
+  `Invalid config_sample.json: documents.offer.filename: Field required`.
 - **Aktion 2:** Zeile wieder einfügen, „Datei“ → „Speichern unter“,
   „Codierung“ „UTF-8 mit BOM“, überschreiben. Angebot für `1234` erzeugen.
   Ohne diesen Umweg speichert der Editor ohne BOM.
