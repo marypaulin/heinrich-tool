@@ -91,8 +91,9 @@ working notes and is always fine to read.
 
 ## Testing
 
-- One test file per source module: `tests/backend/test_<module>.py`, or
-  `test_<module>_<object>.py` when a module holds several domain objects.
+- One test file per source module, at the module's path below
+  `src/heinrich_tool/` (`backend/config.py` → `tests/backend/test_config.py`),
+  or `test_<module>_<object>.py` when a module holds several domain objects.
 - Test only cases that occur in real use.
 - Error tests check the exception type, never the message text.
 - Test data lives in `tests/fixtures/` and is invented: numbers with realistic
