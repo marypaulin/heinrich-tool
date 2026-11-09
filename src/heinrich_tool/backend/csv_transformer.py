@@ -76,7 +76,8 @@ def csv_rows_to_line_items(
         total_price <- material_cost
 
     Validation and filtering:
-    - Rows without an order number are skipped.
+    - Rows without an order number are skipped: the client bills them
+      separately to a different customer.
     - Rows with neither hours nor material are skipped.
     - All numeric values are assumed to be already parsed and validated
       in the CSV loader.
