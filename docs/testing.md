@@ -65,7 +65,7 @@ git clone https://github.com/marypaulin/heinrich-tool.git <tmp>/heinrich-tool
 ### Windows-VM einrichten
 
 KVM mit libvirt und virt-manager, Begründung in
-`decisions/2026-10-19_kvm-statt-virtualbox.md`.
+`adr/2026-10-19_kvm-statt-virtualbox.md`.
 
 **Host:** Pakete `virt-manager`, `ovmf` (UEFI-Firmware) und `swtpm`
 (TPM-Emulator); der eigene Benutzer in der Gruppe `libvirt` (wirkt nach dem

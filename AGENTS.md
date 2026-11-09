@@ -80,7 +80,7 @@ working notes and is always fine to read.
 
 ## Style conventions
 
-- Language: code, docstrings and commit messages are in English; the decision log,
+- Language: code, docstrings and commit messages are in English; the ADRs,
   `notes/` and the README are in German. (For `Messages` and logging see Error
   handling above.)
 - Long files are divided by section separators: `# — Section name ————————————————`.

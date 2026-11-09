@@ -1,4 +1,4 @@
-# Decision Log
+# Architecture Decision Records
 
 Kurze, chronologisch sortierte Einträge zu Entscheidungen, deren Begründung
 später nicht mehr offensichtlich ist (Architektur, Tooling, Scope-Schnitte).
