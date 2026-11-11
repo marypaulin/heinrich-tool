@@ -47,8 +47,16 @@ def run_settings():
         save_settings(settings)
         st.toast("Pfade gespeichert", icon="✅")
     except (FileNotFoundError, ValueError) as e:
-        st.session_state.settings_error = f"Error: {e!s}"
+        st.session_state.settings_error = f"Fehler: {e!s}"
         st.toast("Fehler beim Speichern", icon="❌")
+
+
+def toast_result(document, messages):
+    # Failed PDF leaves DOCX intact, so generation counts as done but not clean
+    if messages.has_errors:
+        st.toast(f"{document} erzeugt, mit Fehlern", icon="⚠️")
+    else:
+        st.toast(f"{document} erzeugt", icon="✅")
 
 
 def run_offer(settings):
@@ -59,10 +67,11 @@ def run_offer(settings):
 
     try:
         args = create_offer_args(project_number)
-        st.session_state.offer_info = generate_offer(args, date.today(), settings)
-        st.toast("Angebot erzeugt", icon="✅")
+        messages = generate_offer(args, date.today(), settings)
+        st.session_state.offer_info = [str(m) for m in messages.items]
+        toast_result("Angebot", messages)
     except (FileNotFoundError, ValueError) as e:
-        st.session_state.offer_error = f"Error: {e!s}"
+        st.session_state.offer_error = f"Fehler: {e!s}"
         st.toast("Fehler beim Erzeugen", icon="❌")
 
 
@@ -75,12 +84,11 @@ def run_delivery(settings):
 
     try:
         args = create_delivery_note_args(project_number, receipt_number)
-        st.session_state.delivery_info = generate_delivery_note(
-            args, date.today(), settings
-        )
-        st.toast("Lieferschein erzeugt", icon="✅")
+        messages = generate_delivery_note(args, date.today(), settings)
+        st.session_state.delivery_info = [str(m) for m in messages.items]
+        toast_result("Lieferschein", messages)
     except (FileNotFoundError, ValueError) as e:
-        st.session_state.delivery_error = f"Error: {e!s}"
+        st.session_state.delivery_error = f"Fehler: {e!s}"
         st.toast("Fehler beim Erzeugen", icon="❌")
 
 
@@ -93,12 +101,11 @@ def run_invoice(settings):
 
     try:
         args = create_invoice_args(project_number, receipt_number)
-        st.session_state.invoice_info = generate_invoice_and_order(
-            args, date.today(), settings
-        )
-        st.toast("Rechnung und Auftragsbestätigung erzeugt", icon="✅")
+        messages = generate_invoice_and_order(args, date.today(), settings)
+        st.session_state.invoice_info = [str(m) for m in messages.items]
+        toast_result("Rechnung und Auftragsbestätigung", messages)
     except (FileNotFoundError, ValueError) as e:
-        st.session_state.invoice_error = f"Error: {e!s}"
+        st.session_state.invoice_error = f"Fehler: {e!s}"
         st.toast("Fehler beim Erzeugen", icon="❌")
 
 
@@ -115,7 +122,7 @@ def app():
     try:
         settings = load_settings()
     except ValueError as e:
-        load_error = f"Error: {e!s}"
+        load_error = f"Fehler: {e!s}"
 
     # Stays open while something is missing, so a failed save shows its error.
     expanded = settings is None or bool(st.session_state.settings_error)

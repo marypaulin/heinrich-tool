@@ -122,7 +122,7 @@ def save_settings(settings: Settings) -> None:
 
 def generate_offer(
     args: OfferArgs, document_date: date, settings: Settings
-) -> list[str]:
+) -> Messages:
     """Full pipeline: find project → load CSV → generate Angebot DOCX + PDF."""
     messages = Messages()
     config = read_config(settings.config_path)
@@ -140,12 +140,12 @@ def generate_offer(
         messages=messages,
     )
     render_pdf(target_path, messages)
-    return messages.items
+    return messages
 
 
 def generate_delivery_note(
     args: DeliveryNoteArgs, document_date: date, settings: Settings
-) -> list[str]:
+) -> Messages:
     """Full pipeline: find project → load CSV → generate Lieferschein DOCX + PDF."""
     messages = Messages()
     config = read_config(settings.config_path)
@@ -163,12 +163,12 @@ def generate_delivery_note(
         messages=messages,
     )
     render_pdf(target_path, messages)
-    return messages.items
+    return messages
 
 
 def generate_invoice_and_order(
     args: InvoiceArgs, document_date: date, settings: Settings
-) -> list[str]:
+) -> Messages:
     """Full pipeline: find project → load CSV → generate Rechnung + Auftragsbestätigung DOCX + PDF."""
     messages = Messages()
     config = read_config(settings.config_path)
@@ -198,4 +198,4 @@ def generate_invoice_and_order(
     )
     render_pdf(invoice_path, messages)
     render_pdf(order_path, messages)
-    return messages.items
+    return messages

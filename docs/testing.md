@@ -330,7 +330,8 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
   - „Projektordner gefunden“, „CSV-Datei gefunden“, Angebot als DOCX im
     Projektordner. Die PDF fehlt mit „PDF-Erzeugung fehlgeschlagen
     ((-2147221005, 'Ungültige Klassenzeichenfolge', …))“: Die VM hat kein
-    Word. Das erste Angebot nach der Installation braucht um eine Minute,
+    Word. Der Toast meldet deshalb „Angebot erzeugt, mit Fehlern“ mit ⚠️.
+    Das erste Angebot nach der Installation braucht um eine Minute,
     weitere sind sofort da.
   - Nach dem Neustart ist der Block zu und hält die drei Pfade ohne
     Anführungszeichen, die Formulare sind sofort aktiv.

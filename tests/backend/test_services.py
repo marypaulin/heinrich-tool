@@ -134,6 +134,18 @@ def test_offer(sample_settings, sample_data_root):
     assert "Liefertermin: 15.08.2025" in doc_texts
 
 
+def test_failed_pdf_is_reported_to_caller(monkeypatch, sample_settings):
+    monkeypatch.setattr(
+        services,
+        "render_pdf",
+        lambda docx_path, messages: messages.error("PDF-Erzeugung fehlgeschlagen"),
+    )
+    messages = generate_offer(
+        create_offer_args("1234"), date(2025, 8, 1), sample_settings
+    )
+    assert messages.has_errors
+
+
 # — Lieferschein ——————————————————————————————————————————————————————————————
 
 
