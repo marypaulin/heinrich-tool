@@ -35,7 +35,10 @@ def load_template(path: Path) -> DocxDocument:
 
 
 def save_docx(doc: DocxDocument, path: Path) -> None:
-    doc.save(str(path))
+    try:
+        doc.save(str(path))
+    except PermissionError as e:
+        raise ValueError(f"Cannot save {path.name}, it may be open in Word") from e
 
 
 def _body_and_table_paragraphs(doc: DocxDocument) -> Iterator[Paragraph]:

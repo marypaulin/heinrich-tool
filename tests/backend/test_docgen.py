@@ -13,6 +13,7 @@ from heinrich_tool.backend.docgen import (
     fill_table_with_line_items,
     load_template,
     replace_placeholders,
+    save_docx,
 )
 from heinrich_tool.backend.models import LineItem
 from heinrich_tool.backend.placeholders import (
@@ -84,6 +85,18 @@ MATERIAL = material_item("Material zu Auftrag Nr. 111", "270.00")
 def test_missing_template_raises(tmp_path):
     with pytest.raises(FileNotFoundError):
         load_template(tmp_path / "Vordruck.docx")
+
+
+# — Saving ————————————————————————————————————————————————————————————————————
+
+
+def test_docx_locked_by_word_raises(sample_template, tmp_path):
+    # Read-only file stands in for Word's lock on Windows
+    target = tmp_path / "Angebot.docx"
+    target.touch()
+    target.chmod(0o444)
+    with pytest.raises(ValueError):
+        save_docx(sample_template, target)
 
 
 # — Placeholders ——————————————————————————————————————————————————————————————
