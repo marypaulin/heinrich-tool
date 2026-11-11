@@ -1,11 +1,12 @@
 """DOCX-to-PDF conversion via Word (Windows) or LibreOffice (Linux)."""
 
-import contextlib
 import logging
 import platform
 import shutil
 import subprocess
 import threading
+from collections.abc import Generator
+from contextlib import contextmanager
 from pathlib import Path
 
 from docx2pdf import convert
@@ -30,6 +31,19 @@ def render_pdf(docx_path: Path, messages: Messages) -> None:
         logger.error(f"PDF generation not supported on system: {system}")
 
 
+@contextmanager
+def _com_initialized() -> Generator[None]:
+    # COM init is required per thread; Streamlit runs callbacks in worker threads
+    import pythoncom  # type: ignore  # pywin32, Windows only
+
+    # Uninitialize only after successful init, COM counts the calls per thread
+    pythoncom.CoInitialize()
+    try:
+        yield
+    finally:
+        pythoncom.CoUninitialize()
+
+
 def _render_with_word(docx_path: Path, messages: Messages) -> None:
     pdf_path = docx_path.with_suffix(".pdf")
 
@@ -44,13 +58,8 @@ def _render_with_word(docx_path: Path, messages: Messages) -> None:
             logger.exception(f"PDF locked / cannot delete: {pdf_path}")
             return
 
-    # COM init is required per-thread on Windows. Streamlit may execute in a thread without COM initialized.
-    import pythoncom  # type: ignore  # pywin32, Windows only
-
     try:
-        with _WORD_CONVERT_LOCK:
-            pythoncom.CoInitialize()
-
+        with _WORD_CONVERT_LOCK, _com_initialized():
             # More robust: output directory instead of output file
             convert(str(docx_path), str(docx_path.parent))
 
@@ -69,10 +78,6 @@ def _render_with_word(docx_path: Path, messages: Messages) -> None:
     except Exception as e:
         messages.error(f"PDF-Erzeugung fehlgeschlagen ({e})")
         logger.exception("Word-based PDF conversion failed")
-
-    finally:
-        with contextlib.suppress(Exception):
-            pythoncom.CoUninitialize()
 
 
 def _render_with_libreoffice(docx_path: Path, messages: Messages) -> None:
