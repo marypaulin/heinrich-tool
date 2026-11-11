@@ -38,9 +38,11 @@ working notes and is always fine to read.
   `.warning()` and return them — never use `print()`.
 - Entry points are the only places that catch hard errors for display: they
   show the exception text unchanged.
-- Logging messages and `raise` texts are in English; `Messages` entries shown to the
-  user are in German. A `raise` text reaches the client as is, so it names the file
-  and key at fault in plain terms (see `read_json_model`).
+- Logging messages and `raise` texts are in English; `Messages` entries and the
+  app's own UI texts are in German. A `raise` text reaches the client as is, so it
+  names the file and key at fault in plain terms (see `read_json_model`).
+- Texts shown or logged — `raise` texts, logging, `Messages` entries, toasts and
+  hints in the UI — end without a period.
 
 ## Models
 
