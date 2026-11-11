@@ -53,7 +53,7 @@ def _render_with_word(docx_path: Path, messages: Messages) -> None:
             pdf_path.unlink()
         except PermissionError:
             messages.error(
-                f"PDF konnte nicht überschrieben werden, Datei evtl. geöffnet ({pdf_path.name})"
+                f"PDF kann nicht gespeichert werden, evtl noch geöffnet ({pdf_path.name})"
             )
             logger.exception(f"PDF locked / cannot delete: {pdf_path}")
             return
