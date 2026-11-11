@@ -22,15 +22,15 @@ def render_pdf(docx_path: Path, messages: Messages) -> None:
     """Convert DOCX file to PDF using Word on Windows or LibreOffice on Linux."""
     system = platform.system()
     if system == "Windows":
-        _render_word(docx_path, messages)
+        _render_with_word(docx_path, messages)
     elif system == "Linux":
-        _render_libreoffice(docx_path, messages)
+        _render_with_libreoffice(docx_path, messages)
     else:
         messages.error("PDF-Erzeugung wird auf diesem Betriebssystem nicht unterstützt")
         logger.error(f"PDF generation not supported on system: {system}")
 
 
-def _render_word(docx_path: Path, messages: Messages) -> None:
+def _render_with_word(docx_path: Path, messages: Messages) -> None:
     pdf_path = docx_path.with_suffix(".pdf")
 
     # Most common failure: existing/open PDF blocks overwrite
@@ -75,7 +75,7 @@ def _render_word(docx_path: Path, messages: Messages) -> None:
             pythoncom.CoUninitialize()
 
 
-def _render_libreoffice(docx_path: Path, messages: Messages) -> None:
+def _render_with_libreoffice(docx_path: Path, messages: Messages) -> None:
     pdf_path = docx_path.with_suffix(".pdf")
 
     soffice = shutil.which("soffice") or shutil.which("libreoffice")
