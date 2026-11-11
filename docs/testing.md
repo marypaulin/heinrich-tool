@@ -240,7 +240,7 @@ eigene Fixes behoben.
   - „Heinrich Tool“ startet die App (`scripts/run_windows.bat`), der Browser
     öffnet genau einen Tab. Keine Abfrage der Windows-Firewall: Streamlit
     lauscht nur auf `127.0.0.1`.
-  - Block „Pfade“ ist offen, darunter „Noch keine Pfade eingestellt.“, alle
+  - Block „Pfade“ ist offen, darunter „Noch keine Pfade eingestellt“, alle
     Dokument-Formulare ausgegraut.
   - Der erste Start nach der Installation dauert über eine Minute (Python
     kompiliert, Defender prüft jede neue Datei), spätere um 10 Sekunden.

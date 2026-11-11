@@ -150,7 +150,7 @@ def app():
 
     disabled = settings is None
     if disabled:
-        st.info("Noch keine Pfade eingestellt.")
+        st.info("Noch keine Pfade eingestellt")
 
     with st.form("offer_form"):
         st.subheader("Angebot")

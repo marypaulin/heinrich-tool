@@ -126,4 +126,4 @@ def fill_table_with_line_items(doc: DocxDocument, line_items: list[LineItem]) ->
                 previous_tr = tr
             return
 
-    raise ValueError("No matching table found in template document.")
+    raise ValueError("No matching table found in template document")
