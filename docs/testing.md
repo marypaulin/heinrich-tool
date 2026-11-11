@@ -358,3 +358,20 @@ Der Kunde pflegt die Config direkt im Windows-Editor.
   „Codierung“ „UTF-8 mit BOM“, überschreiben. Angebot für `1234` erzeugen.
   Ohne diesen Umweg speichert der Editor ohne BOM.
 - **Erwartet:** Angebot wie in W10.
+
+#### W12 — Angebot in Word geöffnet
+
+Word sperrt ein geöffnetes Dokument für andere Prozesse. Die VM hat kein Word,
+PowerShell hält die Datei stattdessen mit derselben Sperre offen.
+
+- **Vorbereitung:** W10 durchlaufen, App läuft, `Angebot Nr. 1234.docx` liegt
+  im Projektordner. Datei sperren, in PowerShell:
+  ```powershell
+  $docx = Join-Path $env:OneDrive 'Heinrich Daten\1234 - Schutzgitter Mischer 3\Angebot Nr. 1234.docx'
+  $lock = [System.IO.File]::Open($docx, 'Open', 'ReadWrite', 'None')
+  ```
+- **Aktion 1:** Angebot für `1234` erzeugen.
+- **Erwartet:** „Fehler beim Erzeugen“, darunter
+  `Cannot save Angebot Nr. 1234.docx, it may be open in Word`. Kein Traceback.
+- **Aktion 2:** Sperre lösen mit `$lock.Close()`, Angebot erneut erzeugen.
+- **Erwartet:** Angebot wie in W10.
