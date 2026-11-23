@@ -60,8 +60,7 @@ def _render_with_word(docx_path: Path, messages: Messages) -> None:
 
     try:
         with _WORD_CONVERT_LOCK, _com_initialized():
-            # More robust: output directory instead of output file
-            convert(str(docx_path), str(docx_path.parent))
+            convert(str(docx_path), str(pdf_path))
 
             # docx2pdf can fail silently -> verify output exists
             if not pdf_path.exists():
