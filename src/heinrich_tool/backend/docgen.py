@@ -52,21 +52,24 @@ def _body_and_table_paragraphs(doc: DocxDocument) -> Iterator[Paragraph]:
                 yield from cell.paragraphs
 
 
-def _replace_in_paragraph(paragraph: Paragraph, placeholder: str, value: str) -> None:
+def _replace_in_paragraph(paragraph: Paragraph, placeholder: str, value: str) -> bool:
     """Replace every occurrence of a placeholder, even one split across runs.
 
     Word splits text into runs arbitrarily, e.g. "<Lieferdatum>" into "<",
     "Lieferdatum" and ">", so the texts of all runs are joined before
     searching for the placeholder. The value goes into the first run the
     placeholder touches and takes that run's formatting; the rest of the
-    placeholder is removed from the following runs.
+    placeholder is removed from the following runs. Returns whether the
+    placeholder occurred at all.
     """
     search_from = 0
+    replaced = False
     while True:
         runs = paragraph.runs
         start = "".join(run.text for run in runs).find(placeholder, search_from)
         if start == -1:
-            return
+            return replaced
+        replaced = True
         end = start + len(placeholder)
         run_start = 0
         value_inserted = False
@@ -84,9 +87,20 @@ def _replace_in_paragraph(paragraph: Paragraph, placeholder: str, value: str) ->
 
 
 def replace_placeholders(doc: DocxDocument, mapping: dict[str, str]) -> None:
+    """Replace placeholders in body and tables, raising if one is not found.
+
+    The client edits the template; a placeholder deleted, mistyped or moved
+    into a header or text box would otherwise leave a value missing from the
+    document without notice.
+    """
+    found = set()
     for paragraph in _body_and_table_paragraphs(doc):
         for placeholder, value in mapping.items():
-            _replace_in_paragraph(paragraph, placeholder, value)
+            if _replace_in_paragraph(paragraph, placeholder, value):
+                found.add(placeholder)
+    missing = [placeholder for placeholder in mapping if placeholder not in found]
+    if missing:
+        raise ValueError(f"Placeholder(s) missing in template: {', '.join(missing)}")
 
 
 def _format_cell(cell: _Cell) -> None:

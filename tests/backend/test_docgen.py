@@ -24,6 +24,7 @@ from heinrich_tool.backend.placeholders import (
     PH_RECEIPT_NO,
     PH_SUM_GROSS,
     PH_SUM_NET,
+    PH_VAT,
 )
 from samples import SAMPLE_TEMPLATE_PATH
 
@@ -140,6 +141,14 @@ def test_placeholder_is_replaced_at_every_occurrence(sample_template):
 
     assert item_table(sample_template).cell(2, 4).text == "254,70€"
     assert item_table(sample_template).cell(3, 0).text == "Ust. 19% auf 254,70€ netto"
+
+
+def test_placeholder_missing_in_template_raises(sample_template):
+    # Client deleted VAT placeholder while editing template
+    item_table(sample_template).cell(3, 4).text = ""
+
+    with pytest.raises(ValueError):
+        replace_placeholders(sample_template, {PH_VAT: "48,39€"})
 
 
 # — Placeholders split across runs ————————————————————————————————————————————

@@ -131,7 +131,7 @@ Das Tool arbeitet mit klar getrennten Modi. Jeder Modus erzeugt seine Dokumente 
 2. Die CSV-Zeilen werden in strukturierte Positionen (Line Items) umgewandelt.
 3. Die originale Word-Vorlage (`Vordruck.docx`) wird geladen.
 4. Die Positionstabelle wird mit den Line Items befüllt.
-5. Die Platzhalter werden gesetzt (Summen, Liefertermin, Datum, Nummern, Dokumenttyp).
+5. Die Platzhalter werden gesetzt (Summen, Liefertermin, Datum, Nummern, Dokumenttyp). Fehlt einer davon im Vordruck, bricht die Erzeugung mit einer Meldung ab.
 6. Das Dokument wird als DOCX gespeichert.
 7. Zusätzlich wird eine PDF-Version erzeugt.
 
