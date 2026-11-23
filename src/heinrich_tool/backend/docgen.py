@@ -26,12 +26,15 @@ TABLE_FONT_SIZE = Pt(9)
 
 
 def load_template(path: Path) -> DocxDocument:
+    # Settings are not rechecked on startup, the template may have moved since
+    if not path.is_file():
+        raise FileNotFoundError(f"Template not found: {path}")
     try:
         doc = Document(str(path))
         logger.info(f"Using template: {path.name}")
         return doc
     except PackageNotFoundError as e:
-        raise FileNotFoundError(f"Template not found: {path}") from e
+        raise ValueError(f"Template is not a .docx file: {path}") from e
 
 
 def save_docx(doc: DocxDocument, path: Path) -> None:

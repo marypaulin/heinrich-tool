@@ -87,6 +87,14 @@ def test_missing_template_raises(tmp_path):
         load_template(tmp_path / "Vordruck.docx")
 
 
+def test_template_in_old_doc_format_raises(tmp_path):
+    # OLE2 signature of a Word 97–2003 .doc
+    template = tmp_path / "Vordruck.doc"
+    template.write_bytes(bytes.fromhex("d0cf11e0a1b11ae1") + bytes(504))
+    with pytest.raises(ValueError):
+        load_template(template)
+
+
 # — Saving ————————————————————————————————————————————————————————————————————
 
 
