@@ -22,7 +22,12 @@ from heinrich_tool.backend.services import (
     generate_offer,
 )
 from heinrich_tool.backend.settings import Settings
-from samples import SAMPLE_CONFIG_PATH, SAMPLE_CSV_PATH, SAMPLE_TEMPLATE_PATH
+from samples import (
+    SAMPLE_CONFIG_PATH,
+    SAMPLE_CSV_PATH,
+    SAMPLE_TEMPLATE_PATH,
+    write_variant,
+)
 
 PROJECT_FOLDER = "1234 - Schutzgitter Mischer 3"
 
@@ -202,3 +207,14 @@ def test_invoice_and_order_confirmation(
         f"Vielen Dank für ihr Vertrauen in Heinrich Metallbau. {header} "
     ) in doc_texts
     assert "Liefertermin: 20.08.2025" in doc_texts
+
+
+# — Errors ————————————————————————————————————————————————————————————————————
+
+
+def test_csv_without_order_numbers_raises(sample_settings, sample_data_root):
+    # No row has an order number; such rows are billed separately and skipped
+    write_variant(sample_data_root / PROJECT_FOLDER, column="Auftrags-Nr.", value="")
+
+    with pytest.raises(ValueError):
+        generate_offer(create_offer_args("1234"), date(2025, 8, 1), sample_settings)
