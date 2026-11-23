@@ -7,7 +7,6 @@ from typing import Literal
 
 from heinrich_tool.backend.settings import Settings
 
-# Project number should be exactly four digits
 PROJECT_NUMBER_RE = re.compile(r"\d{4}")
 
 
@@ -77,7 +76,7 @@ def create_invoice_args(project_number: str, receipt_number: str) -> InvoiceArgs
 
 
 def _parse_path(path: str, name: str) -> Path:
-    # Windows' "Copy as path" wraps the path in double quotes.
+    # Windows' "Copy as path" wraps the path in double quotes
     path = path.strip().strip('"')
     if not path:
         raise ValueError(f"{name} is required")

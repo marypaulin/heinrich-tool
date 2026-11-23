@@ -85,7 +85,6 @@ def _generate_document(
     config: Config,
     messages: Messages,
 ) -> Path:
-    """Fill Word template with CSV data, save as DOCX and return its path."""
     target_path = get_target_path(
         project_dir, doc_key, config, project_number, receipt_number
     )
@@ -123,7 +122,6 @@ def save_settings(settings: Settings) -> None:
 def generate_offer(
     args: OfferArgs, document_date: date, settings: Settings
 ) -> Messages:
-    """Full pipeline: find project → load CSV → generate Angebot DOCX + PDF."""
     messages = Messages()
     config = read_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
@@ -146,7 +144,6 @@ def generate_offer(
 def generate_delivery_note(
     args: DeliveryNoteArgs, document_date: date, settings: Settings
 ) -> Messages:
-    """Full pipeline: find project → load CSV → generate Lieferschein DOCX + PDF."""
     messages = Messages()
     config = read_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
@@ -169,7 +166,6 @@ def generate_delivery_note(
 def generate_invoice_and_order(
     args: InvoiceArgs, document_date: date, settings: Settings
 ) -> Messages:
-    """Full pipeline: find project → load CSV → generate Rechnung + Auftragsbestätigung DOCX + PDF."""
     messages = Messages()
     config = read_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)

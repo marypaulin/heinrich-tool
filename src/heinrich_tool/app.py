@@ -124,7 +124,7 @@ def app():
     except ValueError as e:
         load_error = f"Fehler: {e!s}"
 
-    # Stays open while something is missing, so a failed save shows its error.
+    # Stays open while something is missing, so a failed save shows its error
     expanded = settings is None or bool(st.session_state.settings_error)
     with (
         st.expander("Pfade", expanded=expanded),

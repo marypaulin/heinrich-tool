@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict
 from heinrich_tool.backend.json_files import read_json_model
 
 # Local, not roaming: the paths differ per computer and must not travel with
-# the Windows profile.
+# the Windows profile
 SETTINGS_PATH = Path(user_config_dir("HeinrichTool", appauthor=False)) / "settings.json"
 
 

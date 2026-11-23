@@ -1,6 +1,4 @@
-"""
-CLI Argument parsing and validation for heinrich-tool CLI.
-"""
+"""Command line parser for the CLI entry point."""
 
 import argparse
 from collections.abc import Iterable

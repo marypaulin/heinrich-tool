@@ -1,6 +1,4 @@
-"""
-Path and file discovery utilities for heinrich-tool.
-"""
+"""File system lookups: project folder, latest CSV, document target path."""
 
 import logging
 from pathlib import Path
@@ -12,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 def _format_filename(template: str, **values: str) -> str:
-    """Fill the filename template placeholders with values"""
     try:
         return template.format(**values)
     except KeyError as e:
@@ -23,7 +20,6 @@ def _format_filename(template: str, **values: str) -> str:
 
 
 def get_project_dir(data_root: Path, project_number: str, messages: Messages) -> Path:
-    """Find the folder with the given 4-digit project number as prefix."""
     # Settings are not rechecked on startup, the folder may have moved since
     if not data_root.is_dir():
         raise FileNotFoundError(f"Data folder not found: {data_root}")
@@ -36,7 +32,6 @@ def get_project_dir(data_root: Path, project_number: str, messages: Messages) ->
 
 
 def get_latest_csv_path(project_dir: Path, config: Config, messages: Messages) -> Path:
-    """Find the latest CSV file in the order folder."""
     csv_files = list(project_dir.glob(config.csv_glob))
     if not csv_files:
         raise FileNotFoundError(f"No CSV files found in {project_dir}")

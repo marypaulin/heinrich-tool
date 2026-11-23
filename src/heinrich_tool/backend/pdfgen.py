@@ -15,12 +15,11 @@ from heinrich_tool.backend.messages import Messages
 
 logger = logging.getLogger(__name__)
 
-# Ensure Word conversion runs strictly one-at-a-time (Streamlit reruns / double clicks can parallelize)
+# One Word conversion at a time: Streamlit reruns and double clicks run in parallel
 _WORD_CONVERT_LOCK = threading.Lock()
 
 
 def render_pdf(docx_path: Path, messages: Messages) -> None:
-    """Convert DOCX file to PDF using Word on Windows or LibreOffice on Linux."""
     system = platform.system()
     if system == "Windows":
         _render_with_word(docx_path, messages)
@@ -62,7 +61,7 @@ def _render_with_word(docx_path: Path, messages: Messages) -> None:
         with _WORD_CONVERT_LOCK, _com_initialized():
             convert(str(docx_path), str(pdf_path))
 
-            # docx2pdf can fail silently -> verify output exists
+            # docx2pdf can fail without raising
             if not pdf_path.exists():
                 messages.error(
                     "PDF wurde nicht erzeugt, bitte prüfen, ob Word installiert "

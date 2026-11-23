@@ -1,4 +1,4 @@
-"""Streamlit session state initialisation."""
+"""Streamlit session state initialization."""
 
 import streamlit as st
 

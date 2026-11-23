@@ -1,6 +1,4 @@
-"""
-Word document generation.
-"""
+"""Word document generation from the template: placeholders, line item table, saving."""
 
 import logging
 from collections.abc import Iterator
@@ -81,8 +79,8 @@ def _replace_in_paragraph(paragraph: Paragraph, placeholder: str, value: str) ->
                 run.text = before + ("" if value_inserted else value) + after
                 value_inserted = True
             run_start = run_end
-        # Continue after the inserted value: a value that contains the placeholder
-        # itself would otherwise be found again and replaced forever.
+        # Continue after inserted value: a value containing the placeholder
+        # would otherwise be found again and replaced forever
         search_from = start + len(value)
 
 

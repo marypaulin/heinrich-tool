@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 def _get_hourly_description(csv_row: CsvRow, config: Config, messages: Messages) -> str:
-    """Get description based on hourly rate"""
     if csv_row.hourly_rate in config.rate_descriptions:
         return config.rate_descriptions[csv_row.hourly_rate]
     logger.warning(

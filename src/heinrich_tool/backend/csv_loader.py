@@ -1,6 +1,4 @@
-"""
-CSV loading utility
-"""
+"""CSV reader for the client's time tracking, with column and value checks."""
 
 import csv
 from decimal import Decimal, InvalidOperation
@@ -35,7 +33,6 @@ REQUIRED_VALUES = [
 
 
 def _parse_decimal(row_number: int, value: str) -> Decimal:
-    """Replace comma with dot, strip spaces, handle both ',' and '.'"""
     value = value.strip().replace(",", ".")
     try:
         return Decimal(value)
@@ -66,25 +63,6 @@ def _parse_amount(row_number: int, value: str) -> Decimal:
 
 
 def load_csv_data(csv_path: Path) -> list[CsvRow]:
-    """
-    Load and parse a CSV file into a list of CsvRow objects.
-
-    This function is responsible for:
-    - reading the CSV file,
-    - validating required columns and values,
-    - parsing strings into typed values (Decimal),
-    - and creating typed CsvRow domain objects.
-
-    Parameters:
-        csv_path: Path to the CSV file to load.
-
-    Returns:
-        A list of CsvRow objects representing the parsed CSV rows.
-
-    Raises:
-        ValueError: If required fields are missing or values cannot be parsed.
-        FileNotFoundError: If the CSV file does not exist.
-    """
     with open(csv_path, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f, delimiter=";")
         rows = list(reader)

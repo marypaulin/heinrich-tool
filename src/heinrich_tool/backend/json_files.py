@@ -1,4 +1,4 @@
-"""Reading of the JSON files the client edits or the app writes."""
+"""Shared JSON reader for config and settings, with readable errors."""
 
 import json
 from decimal import Decimal
