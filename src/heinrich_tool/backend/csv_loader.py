@@ -36,10 +36,8 @@ def _parse_decimal(row_number: int, value: str) -> Decimal:
     value = value.strip().replace(",", ".")
     try:
         return Decimal(value)
-    except InvalidOperation:
-        raise ValueError(
-            f"Invalid numeric value in row {row_number}: {value}"
-        ) from None
+    except InvalidOperation as e:
+        raise ValueError(f"Invalid numeric value in row {row_number}: {value}") from e
 
 
 def _parse_hours(row_number: int, value: str) -> Decimal:
