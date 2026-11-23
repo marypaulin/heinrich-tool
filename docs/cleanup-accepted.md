@@ -3,3 +3,4 @@
 - `app.py`, `cli.py` · logging setup — both entry points configure logging with the same lines. Reason: each entry point owns its logging; the app will likely log to a file for support, so the copies are expected to diverge. (2026-11-04)
 - `json_files.py` · tests — no own test file; covered through test_config.py and test_settings.py. Reason: it only rewords the json and pydantic errors, and tests don't check message text. (2026-11-09)
 - `pdfgen.py` · `_render_with_word`, `_render_with_libreoffice` — no timeout; a hanging Word blocks all further PDF conversions until restart. Reason: a Word timeout needs a separate process and killing WINWORD.EXE, not worth it without a real occurrence; LibreOffice only runs on the developer's machine. (2026-11-23)
+- `paths.py` · `get_project_dir` — with two folders for the same project number, an arbitrary one wins without warning. Reason: the client's data folder never holds two folders with the same number. (2026-11-23)
