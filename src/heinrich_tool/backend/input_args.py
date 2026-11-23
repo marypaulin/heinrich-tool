@@ -37,7 +37,7 @@ InputArgs = OfferArgs | DeliveryNoteArgs | InvoiceArgs
 def _parse_project_number(project_number: str) -> str:
     project_number = project_number.strip()
     if not PROJECT_NUMBER_RE.fullmatch(project_number):
-        raise ValueError("PROJECT_NUMBER must be exactly four digits")
+        raise ValueError("Project number must be exactly four digits")
     return project_number
 
 
@@ -49,7 +49,7 @@ def _parse_receipt_number_optional(receipt_number: str | None) -> str | None:
 def _parse_receipt_number_required(receipt_number: str) -> str:
     receipt_number = receipt_number.strip()
     if not receipt_number:
-        raise ValueError("RECEIPT_NUMBER is required")
+        raise ValueError("Receipt number is required")
     return receipt_number
 
 
@@ -100,7 +100,7 @@ def _parse_file(path: str, name: str) -> Path:
 
 def create_settings(data_root: str, config_path: str, template_path: str) -> Settings:
     return Settings(
-        data_root=_parse_dir(data_root, "DATA_ROOT"),
-        config_path=_parse_file(config_path, "CONFIG_PATH"),
-        template_path=_parse_file(template_path, "TEMPLATE_PATH"),
+        data_root=_parse_dir(data_root, "Data folder"),
+        config_path=_parse_file(config_path, "Config file"),
+        template_path=_parse_file(template_path, "Template"),
     )
