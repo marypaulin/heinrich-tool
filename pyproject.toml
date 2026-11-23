@@ -26,10 +26,14 @@ testpaths = ["tests"]
 pythonpath = ["tests"]
 
 [tool.ruff.lint]
-extend-select = ["TID252", "BLE", "S110", "S112"]
+extend-select = ["TID252", "BLE", "S110", "S112", "D"]
 ignore = [
     "DTZ",     # naive local dates are intentional (German invoicing, no timezones)
+    "D1",      # docstrings only where a contract needs one (AGENTS.md)
 ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -41,4 +45,7 @@ known-first-party = ["samples"]
 [tool.ruff.lint.per-file-ignores]
 "demo/**" = [
     "BLE001",  # prototypes catch broadly on purpose
+]
+"tests/**" = [
+    "D401",    # fixture docstrings name what they provide
 ]
