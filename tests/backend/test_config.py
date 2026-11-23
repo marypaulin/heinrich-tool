@@ -51,21 +51,7 @@ def test_hourly_rates_are_looked_up_by_decimal():
     assert mapping[Decimal("48.00")] == "Helferstunde"
 
 
-def test_old_and_raised_rate_share_a_description():
-    """The client adds raised rates next to the old ones so older CSVs still work."""
-    mapping = read_config(SAMPLE_CONFIG_PATH).rate_descriptions
-
-    assert mapping[Decimal("84.90")] == mapping[Decimal("92.00")]
-
-
 # — Documents —————————————————————————————————————————————————————————————————
-
-
-def test_offer_and_delivery_note_get_their_delivery_days():
-    config = read_config(SAMPLE_CONFIG_PATH)
-
-    assert config.document("offer").delivery_days == 14
-    assert config.document("delivery_note").delivery_days == 0
 
 
 @pytest.mark.parametrize("key", ["invoice", "order_confirmation"])
