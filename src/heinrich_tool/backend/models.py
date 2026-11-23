@@ -23,7 +23,7 @@ from heinrich_tool.backend.placeholders import (
 class CsvRow:
     row_number: int
     order_number: str
-    # Not used yet: client sometimes adds one by hand, may go on document later
+    # Off documents at client's request; still read in case that changes
     description: str
     duration_hours: Decimal
     hourly_rate: Decimal

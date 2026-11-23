@@ -41,7 +41,7 @@ def _material_item(csv_row: CsvRow) -> LineItem:
     logger.info(f"Creating material item for order number: {csv_row.order_number}")
     return LineItem(
         quantity=Decimal(1),
-        # NOTE: Original CSV description currently not used upon client request
+        # CSV description left out at client's request (see CsvRow.description)
         description=f"Material zu Auftrag Nr. {csv_row.order_number}",
         unit_price=csv_row.material_cost,
         total_price=csv_row.material_cost,
