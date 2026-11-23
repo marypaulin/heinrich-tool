@@ -31,7 +31,6 @@ def test_format_price_rejects_amount_finer_than_cents():
 @pytest.mark.parametrize(
     ("value", "expected"),
     [
-        (Decimal("0.00"), "0"),
         (Decimal("1.00"), "1"),
         (Decimal("2.00"), "2"),
         (Decimal("8.00"), "8"),

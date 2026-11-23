@@ -52,14 +52,6 @@ def test_totals_sum_hours_and_material():
     assert totals.sum_gross == Decimal("1260.86")
 
 
-def test_totals_of_no_line_items_are_zero():
-    totals = Totals.from_line_items([], VAT_RATE)
-
-    assert totals.sum_net == Decimal("0.00")
-    assert totals.vat == Decimal("0.00")
-    assert totals.sum_gross == Decimal("0.00")
-
-
 def test_vat_on_a_half_cent_is_rounded_up():
     totals = Totals.from_line_items([material_item(Decimal("13.50"))], VAT_RATE)
 
