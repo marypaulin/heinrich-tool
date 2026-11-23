@@ -74,7 +74,9 @@ working notes and is always fine to read.
 - Docstrings only for functions with a non-obvious contract or complex behavior (see
   `_replace_in_paragraph`, `csv_rows_to_line_items` for examples of what
   warrants one).
-- Short one-line module docstrings at the top of each file.
+- Module docstring: one line, a noun phrase naming what the module holds
+  (`German locale formatters for prices and quantities.`). Ruff enforces the
+  PEP 257 form of all docstrings (see `pyproject.toml`).
 - Be explicit about what another developer would otherwise have to ask: a hidden
   constraint, a tooling decision and its reasoning, a deliberate omission.
 - Never explain language or library mechanics. Only domain knowledge and decisions
