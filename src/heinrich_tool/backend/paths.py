@@ -24,6 +24,9 @@ def _format_filename(template: str, **values: str) -> str:
 
 def get_project_dir(data_root: Path, project_number: str, messages: Messages) -> Path:
     """Find the folder with the given 4-digit project number as prefix."""
+    # Settings are not rechecked on startup, the folder may have moved since
+    if not data_root.is_dir():
+        raise FileNotFoundError(f"Data folder not found: {data_root}")
     for folder in data_root.iterdir():
         if folder.is_dir() and folder.name.startswith(f"{project_number} "):
             logger.info(f"Found project folder: {folder.name}")

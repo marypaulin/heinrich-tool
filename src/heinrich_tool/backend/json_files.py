@@ -14,8 +14,10 @@ def read_json_model[M: BaseModel](path: Path, model: type[M]) -> M:
     report, not crashes. The message names the file and, for invalid entries,
     every problem with its key path, e.g.
     "Invalid config.json: documents.invoice.filename: Field required".
-    A missing file raises FileNotFoundError unchanged.
+    A missing file raises FileNotFoundError naming the file.
     """
+    if not path.is_file():
+        raise FileNotFoundError(f"{path.name} not found: {path}")
     try:
         # Some Windows editors save UTF-8 with BOM
         raw = json.loads(path.read_text(encoding="utf-8-sig"), parse_float=Decimal)

@@ -41,6 +41,11 @@ def test_unknown_project_number_raises(tmp_path, messages):
         get_project_dir(tmp_path, "4321", messages)
 
 
+def test_moved_data_folder_raises(tmp_path, messages):
+    with pytest.raises(FileNotFoundError):
+        get_project_dir(tmp_path / "Daten", "1234", messages)
+
+
 # — Latest CSV ————————————————————————————————————————————————————————————————
 
 
