@@ -27,7 +27,13 @@ def csv_row(
 
 
 def test_row_without_material_becomes_one_hours_item(sample_config, messages):
-    line_items = csv_rows_to_line_items([csv_row()], sample_config, messages)
+    row = csv_row(
+        order_number="90010001",
+        duration_hours=Decimal("3.00"),
+        hourly_rate=Decimal("84.90"),
+    )
+
+    line_items = csv_rows_to_line_items([row], sample_config, messages)
 
     assert line_items == [
         LineItem(
@@ -42,8 +48,8 @@ def test_row_without_material_becomes_one_hours_item(sample_config, messages):
 
 def test_each_row_gets_the_description_of_its_hourly_rate(sample_config, messages):
     rows = [
-        csv_row(hourly_rate=Decimal("84.90")),
-        csv_row(hourly_rate=Decimal("48.00")),
+        csv_row(order_number="90010001", hourly_rate=Decimal("84.90")),
+        csv_row(order_number="90010001", hourly_rate=Decimal("48.00")),
     ]
 
     line_items = csv_rows_to_line_items(rows, sample_config, messages)
@@ -57,9 +63,13 @@ def test_each_row_gets_the_description_of_its_hourly_rate(sample_config, message
 def test_unknown_hourly_rate_falls_back_to_default_with_warning(
     sample_config, messages
 ):
-    line_items = csv_rows_to_line_items(
-        [csv_row(hourly_rate=Decimal("65.00"))], sample_config, messages
+    row = csv_row(
+        order_number="90010001",
+        duration_hours=Decimal("3.00"),
+        hourly_rate=Decimal("65.00"),
     )
+
+    line_items = csv_rows_to_line_items([row], sample_config, messages)
 
     assert line_items[0].description == "Arbeitsstunde zu Auftrag Nr. 90010001"
     assert line_items[0].total_price == Decimal("195.00")
@@ -82,11 +92,14 @@ def test_line_total_is_rounded_to_cents_half_up(sample_config, messages):
 
 
 def test_material_adds_a_material_item_after_the_hours(sample_config, messages):
-    line_items = csv_rows_to_line_items(
-        [csv_row(duration_hours=Decimal("1.00"), material_cost=Decimal("95.00"))],
-        sample_config,
-        messages,
+    row = csv_row(
+        order_number="90010001",
+        duration_hours=Decimal("1.00"),
+        hourly_rate=Decimal("84.90"),
+        material_cost=Decimal("95.00"),
     )
+
+    line_items = csv_rows_to_line_items([row], sample_config, messages)
 
     assert [item.description for item in line_items] == [
         "Meisterstunde zu Auftrag Nr. 90010001",
@@ -102,11 +115,13 @@ def test_material_adds_a_material_item_after_the_hours(sample_config, messages):
 
 
 def test_row_without_hours_becomes_only_a_material_item(sample_config, messages):
-    line_items = csv_rows_to_line_items(
-        [csv_row(duration_hours=Decimal("0.00"), material_cost=Decimal("95.00"))],
-        sample_config,
-        messages,
+    row = csv_row(
+        order_number="90010001",
+        duration_hours=Decimal("0.00"),
+        material_cost=Decimal("95.00"),
     )
+
+    line_items = csv_rows_to_line_items([row], sample_config, messages)
 
     assert line_items == [
         LineItem(
@@ -124,9 +139,9 @@ def test_row_without_hours_becomes_only_a_material_item(sample_config, messages)
 
 def test_row_without_order_number_is_skipped_with_warning(sample_config, messages):
     rows = [
-        csv_row(order_number="90010001", row_number=2),
+        csv_row(order_number="90010001", hourly_rate=Decimal("84.90"), row_number=2),
         csv_row(order_number="", row_number=3),
-        csv_row(order_number="90010002", row_number=4),
+        csv_row(order_number="90010002", hourly_rate=Decimal("84.90"), row_number=4),
     ]
 
     line_items = csv_rows_to_line_items(rows, sample_config, messages)
@@ -156,8 +171,12 @@ def test_row_without_hours_and_material_is_skipped_with_warning(
 
 def test_items_follow_the_csv_order(sample_config, messages):
     rows = [
-        csv_row(order_number="90010001", material_cost=Decimal("30.00")),
-        csv_row(order_number="90010002"),
+        csv_row(
+            order_number="90010001",
+            hourly_rate=Decimal("84.90"),
+            material_cost=Decimal("30.00"),
+        ),
+        csv_row(order_number="90010002", hourly_rate=Decimal("84.90")),
     ]
 
     line_items = csv_rows_to_line_items(rows, sample_config, messages)
