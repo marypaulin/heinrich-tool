@@ -1,43 +1,12 @@
 """Tests for reading the time-tracking CSV file into typed rows."""
 
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 
 from heinrich_tool.backend.csv_loader import load_csv_data
 from heinrich_tool.backend.models import CsvRow
-from samples import SAMPLE_CSV_PATH
-
-FIXTURE_DELIMITER = ";"
-
-
-def write_lines(tmp_path: Path, lines: list[str]) -> Path:
-    csv_path = tmp_path / "variant.csv"
-    csv_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return csv_path
-
-
-def write_variant(tmp_path: Path, row: int, column: str, value: str) -> Path:
-    """Write the fixture with one field replaced; `row` counts data rows from 1."""
-    lines = SAMPLE_CSV_PATH.read_text(encoding="utf-8").splitlines()
-    header = lines[0].split(FIXTURE_DELIMITER)
-    fields = lines[row].split(FIXTURE_DELIMITER)
-    fields[header.index(column)] = f'"{value}"'
-    lines[row] = FIXTURE_DELIMITER.join(fields)
-    return write_lines(tmp_path, lines)
-
-
-def write_without_column(tmp_path: Path, column: str) -> Path:
-    lines = SAMPLE_CSV_PATH.read_text(encoding="utf-8").splitlines()
-    index = lines[0].split(FIXTURE_DELIMITER).index(column)
-    trimmed = []
-    for line in lines:
-        fields = line.split(FIXTURE_DELIMITER)
-        del fields[index]
-        trimmed.append(FIXTURE_DELIMITER.join(fields))
-    return write_lines(tmp_path, trimmed)
-
+from samples import SAMPLE_CSV_PATH, write_variant, write_without_column
 
 # — Reading ———————————————————————————————————————————————————————————————————
 
