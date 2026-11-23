@@ -3,8 +3,7 @@
     "84.90": "Meisterstunde",
     "139.90": "Meisterstunde Sonntag",
     "48.00": "Helferstunde",
-    "74.90": "Helferstunde Sonntag",
-    "151.00": "Meisterstunde Sonntag"
+    "74.90": "Helferstunde Sonntag"
   },
   "default_rate_description": "Arbeitsstunde",
   "date_format": "%d.%m.%Y",

@@ -64,7 +64,7 @@ def test_invoice_and_order_confirmation_are_due_on_document_date(key):
 
 def test_new_rate_without_comma_is_rejected(tmp_path):
     text = SAMPLE_CONFIG_PATH.read_text(encoding="utf-8")
-    last_rate = '"151.00": "Meisterstunde Sonntag"'
+    last_rate = '"74.90": "Helferstunde Sonntag"'
     new_rate = '"99.00": "Meisterstunde"'
     broken = text.replace(last_rate, f"{last_rate}\n{new_rate}")
     config_path = write_config_text(tmp_path, broken)
