@@ -377,3 +377,20 @@ PowerShell hält die Datei stattdessen mit derselben Sperre offen.
   `Cannot save Angebot Nr. 1234.docx, it may be open in Word`. Kein Traceback.
 - **Aktion 2:** Sperre lösen mit `$lock.Close()`, Angebot erneut erzeugen.
 - **Erwartet:** Angebot wie in W10.
+
+#### W13 — PDF mit Word
+
+Braucht Word in der VM, etwa aus dem Testmonat von Microsoft 365. Nur im
+Overlay installieren, nicht in die Basis übernehmen: Der Testmonat läuft ab,
+und W10 bleibt nach dem Zurücksetzen ohne Word prüfbar.
+
+- **Vorbereitung:** W10 durchlaufen, Word installiert und aktiviert. In Word
+  ein neues Dokument anlegen, ein Wort tippen, nicht speichern.
+- **Aktion 1:** Angebot für `1234` erzeugen.
+- **Erwartet:** `Angebot Nr. 1234.docx` und `Angebot Nr. 1234.pdf` im
+  Projektordner, "PDF erzeugt (Angebot Nr. 1234.pdf)", Toast mit ✅. Das
+  eigene Word bleibt offen, mit dem getippten Wort und ohne Nachfrage. Im
+  Task-Manager danach nur noch ein WINWORD.EXE, das eigene.
+- **Aktion 2:** `Angebot Nr. 1234.docx` in Word öffnen, Angebot erneut
+  erzeugen.
+- **Erwartet:** wie W12 Aktion 1, diesmal mit echter Word-Sperre.
