@@ -21,7 +21,7 @@ def _get_hourly_description(csv_row: CsvRow, config: Config, messages: Messages)
     )
     messages.warning(
         f"Zeile {csv_row.row_number} mit unbekanntem Stundensatz {csv_row.hourly_rate}, "
-        f"nutze Standard ‚{config.default_rate_description}‘"
+        f"nutze Standard '{config.default_rate_description}'"
     )
     return config.default_rate_description
 
