@@ -4,7 +4,8 @@
 
 `services.py` is the sole public entry point for document generation. The entry
 points (`app.py`, `cli.py`) call only `services.py`, with arguments built by
-`input_args.py` — never internal pipeline modules.
+`input_args.py` — never internal pipeline modules. The one exception is
+`DocumentKind` from `config.py`, which the entry points need to name a document.
 
 Input validation and formatting of user-supplied arguments belongs in `input_args.py`,
 not in `services.py`.
@@ -15,8 +16,7 @@ Real client data (company details, rates, the document template, time-tracking
 CSVs) lives outside the repository, at the paths stored in the machine-local
 `settings.json`. Never read the files it points to into context. Use the
 substitutes instead: they are named `_sample` and live in `tests/fixtures/`:
-`Vordruck_sample.docx`, `heinrich_zeiterfassung_sample.csv`, `config_sample.json`
-(not `config.example.json`).
+`Vordruck_sample.docx`, `heinrich_zeiterfassung_sample.csv`, `config_sample.json`.
 
 `notes/` is gitignored too but holds no client data — it's the user's own
 working notes and is always fine to read.
