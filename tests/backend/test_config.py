@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from heinrich_tool.backend.config import read_config
+from heinrich_tool.backend.config import DocumentKind, read_config
 from samples import SAMPLE_CONFIG_PATH
 
 
@@ -54,9 +54,11 @@ def test_hourly_rates_are_looked_up_by_decimal():
 # — Documents —————————————————————————————————————————————————————————————————
 
 
-@pytest.mark.parametrize("key", ["invoice", "order_confirmation"])
-def test_invoice_and_order_confirmation_are_due_on_document_date(key):
-    assert read_config(SAMPLE_CONFIG_PATH).document(key).delivery_days == 0
+@pytest.mark.parametrize(
+    "kind", [DocumentKind.INVOICE, DocumentKind.ORDER_CONFIRMATION]
+)
+def test_invoice_and_order_confirmation_are_due_on_document_date(kind):
+    assert read_config(SAMPLE_CONFIG_PATH).document(kind).delivery_days == 0
 
 
 # — Errors ————————————————————————————————————————————————————————————————————

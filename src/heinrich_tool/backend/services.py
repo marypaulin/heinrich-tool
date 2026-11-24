@@ -4,7 +4,7 @@ import logging
 from datetime import date, timedelta
 from pathlib import Path
 
-from heinrich_tool.backend.config import Config, read_config
+from heinrich_tool.backend.config import Config, DocumentKind, read_config
 from heinrich_tool.backend.csv_loader import load_csv_data
 from heinrich_tool.backend.csv_transformer import csv_rows_to_line_items
 from heinrich_tool.backend.docgen import (
@@ -38,10 +38,10 @@ def _build_meta(
     project_number: str,
     receipt_number: str | None,
     document_date: date,
-    doc_key: str,
+    kind: DocumentKind,
     config: Config,
 ) -> DocumentMeta:
-    doc_config = config.document(doc_key)
+    doc_config = config.document(kind)
     return DocumentMeta(
         project_number=project_number,
         receipt_number=receipt_number,
@@ -52,9 +52,9 @@ def _build_meta(
 
 
 def _build_delivery_date(
-    document_date: date, doc_key: str, config: Config
+    document_date: date, kind: DocumentKind, config: Config
 ) -> DeliveryDate:
-    delivery_days = config.document(doc_key).delivery_days
+    delivery_days = config.document(kind).delivery_days
     return DeliveryDate(document_date + timedelta(days=delivery_days))
 
 
@@ -75,7 +75,7 @@ def _load_line_items(
 
 
 def _generate_document(
-    doc_key: str,
+    kind: DocumentKind,
     project_dir: Path,
     project_number: str,
     receipt_number: str | None,
@@ -86,12 +86,12 @@ def _generate_document(
     messages: Messages,
 ) -> Path:
     target_path = get_target_path(
-        project_dir, doc_key, config, project_number, receipt_number
+        project_dir, kind, config, project_number, receipt_number
     )
     doc = load_template(template_path)
-    meta = _build_meta(project_number, receipt_number, document_date, doc_key, config)
+    meta = _build_meta(project_number, receipt_number, document_date, kind, config)
     totals = Totals.from_line_items(line_items, config.vat_rate)
-    delivery_date = _build_delivery_date(document_date, doc_key, config)
+    delivery_date = _build_delivery_date(document_date, kind, config)
 
     fill_table_with_line_items(doc, line_items)
     replace_placeholders(
@@ -102,7 +102,7 @@ def _generate_document(
     )
     save_docx(doc, target_path)
 
-    log_label = doc_key.replace("_", " ")
+    log_label = kind.replace("_", " ")
     logger.info(f"Generated {log_label}: {target_path.name}")
     messages.info(f"{meta.doctype} erzeugt ({target_path.name})")
     return target_path
@@ -127,7 +127,7 @@ def generate_offer(
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = _generate_document(
-        doc_key="offer",
+        kind=DocumentKind.OFFER,
         project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=None,
@@ -149,7 +149,7 @@ def generate_delivery_note(
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     target_path = _generate_document(
-        doc_key="delivery_note",
+        kind=DocumentKind.DELIVERY_NOTE,
         project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,
@@ -171,7 +171,7 @@ def generate_invoice_and_order(
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
     invoice_path = _generate_document(
-        doc_key="invoice",
+        kind=DocumentKind.INVOICE,
         project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,
@@ -182,7 +182,7 @@ def generate_invoice_and_order(
         messages=messages,
     )
     order_path = _generate_document(
-        doc_key="order_confirmation",
+        kind=DocumentKind.ORDER_CONFIRMATION,
         project_dir=project_dir,
         project_number=args.project_number,
         receipt_number=args.receipt_number,

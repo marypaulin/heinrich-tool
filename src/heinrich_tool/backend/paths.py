@@ -3,7 +3,7 @@
 import logging
 from pathlib import Path
 
-from heinrich_tool.backend.config import Config
+from heinrich_tool.backend.config import Config, DocumentKind
 from heinrich_tool.backend.messages import Messages
 
 logger = logging.getLogger(__name__)
@@ -43,12 +43,12 @@ def get_latest_csv_path(project_dir: Path, config: Config, messages: Messages) -
 
 def get_target_path(
     project_dir: Path,
-    doc_key: str,
+    kind: DocumentKind,
     config: Config,
     project_number: str,
     receipt_number: str | None = None,
 ) -> Path:
-    """Build document path from filename template of `doc_key`.
+    """Build document path from filename template of `kind`.
 
     Receipt number is passed only when given: a template asking for it then
     fails with a clear error instead of naming the file "... None".
@@ -56,5 +56,5 @@ def get_target_path(
     values = {"project_number": project_number}
     if receipt_number is not None:
         values["receipt_number"] = receipt_number
-    filename = _format_filename(config.document(doc_key).filename, **values)
+    filename = _format_filename(config.document(kind).filename, **values)
     return project_dir / filename

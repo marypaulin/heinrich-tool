@@ -1,11 +1,20 @@
 """Client's business config: rates, VAT, document texts and filenames."""
 
 from decimal import Decimal
+from enum import StrEnum
 from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict
 
 from heinrich_tool.backend.json_files import read_json_model
+
+
+# Values match the fields of Documents
+class DocumentKind(StrEnum):
+    OFFER = "offer"
+    DELIVERY_NOTE = "delivery_note"
+    INVOICE = "invoice"
+    ORDER_CONFIRMATION = "order_confirmation"
 
 
 class _ConfigModel(BaseModel):
@@ -36,8 +45,8 @@ class Config(_ConfigModel):
     csv_glob: str
     documents: Documents
 
-    def document(self, doc_key: str) -> DocumentConfig:
-        return getattr(self.documents, doc_key)
+    def document(self, kind: DocumentKind) -> DocumentConfig:
+        return getattr(self.documents, kind)
 
 
 def read_config(path: Path) -> Config:
