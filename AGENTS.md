@@ -90,6 +90,8 @@ working notes and is always fine to read.
 - Long files are divided by section separators: `# — Section name ————————————————`.
 - Absolute imports only (`from heinrich_tool.backend.config import ...`), enforced
   by ruff (TID252). Streamlit runs `app.py` as a script, where relative imports fail.
+- Parameter order: the object worked on, then `kind`, then domain values in the
+  field order of the object built, then `config`, then `messages` last.
 - Terms: *client* is Heinrich Metallbau, the business this tool is built for;
   *customer* is Heinrich Metallbau's customer, who receives the offer or invoice.
 
