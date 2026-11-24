@@ -95,6 +95,8 @@ working notes and is always fine to read.
   field order of the object built, then `config`, then `messages` last.
 - Terms: *client* is Heinrich Metallbau, the business this tool is built for;
   *customer* is Heinrich Metallbau's customer, who receives the offer or invoice.
+- Quotation marks are straight ASCII: `'…'` inside UI texts, `Messages` and
+  `raise` texts, `"…"` in docs and notes. No German low quotes.
 
 ## Testing
 
