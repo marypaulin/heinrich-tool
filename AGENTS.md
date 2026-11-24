@@ -42,7 +42,8 @@ working notes and is always fine to read.
   app's own UI texts are in German. A `raise` text reaches the client as is, so it
   names the file and key at fault in plain terms (see `read_json_model`).
 - Texts shown or logged — `raise` texts, logging, `Messages` entries, toasts and
-  hints in the UI — end without a period.
+  hints in the UI — end without a period. Exception: the Windows scripts in
+  `scripts/` print full sentences to Max's console and end them with a period.
 
 ## Models
 
