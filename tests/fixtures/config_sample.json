@@ -8,7 +8,7 @@
   "default_rate_description": "Arbeitsstunde",
   "date_format": "%d.%m.%Y",
   "vat_rate": 0.19,
-  "csv_glob": "heinrich_zeiterfassung_*.csv",
+  "csv_glob": "*.csv",
   "documents": {
     "offer": {
       "doctype": "Angebot",

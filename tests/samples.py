@@ -11,7 +11,7 @@ FIXTURE_DELIMITER = ";"
 
 
 def _write_lines(directory: Path, lines: list[str]) -> Path:
-    # Sample name matches csv_glob of sample config, so services find the variant
+    # Overwrites copied sample; a second CSV would compete as newest
     csv_path = directory / SAMPLE_CSV_PATH.name
     csv_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return csv_path
