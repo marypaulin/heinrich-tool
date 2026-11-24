@@ -15,7 +15,7 @@ from heinrich_tool.backend.docgen import (
 )
 from heinrich_tool.backend.input_args import DeliveryNoteArgs, InvoiceArgs, OfferArgs
 from heinrich_tool.backend.messages import Messages
-from heinrich_tool.backend.models import DeliveryDate, DocumentMeta, LineItem, Totals
+from heinrich_tool.backend.models import DocumentMeta, LineItem, Totals
 from heinrich_tool.backend.paths import (
     get_latest_csv_path,
     get_project_dir,
@@ -38,6 +38,7 @@ def _build_meta(
     project_number: str,
     receipt_number: str | None,
     document_date: date,
+    delivery_date: date,
     kind: DocumentKind,
     config: Config,
 ) -> DocumentMeta:
@@ -48,14 +49,15 @@ def _build_meta(
         doctype=doc_config.doctype,
         header=doc_config.header,
         document_date=document_date,
+        delivery_date=delivery_date,
     )
 
 
 def _build_delivery_date(
     document_date: date, kind: DocumentKind, config: Config
-) -> DeliveryDate:
+) -> date:
     delivery_days = config.document(kind).delivery_days
-    return DeliveryDate(document_date + timedelta(days=delivery_days))
+    return document_date + timedelta(days=delivery_days)
 
 
 def _load_line_items(
@@ -89,17 +91,14 @@ def _generate_document(
         project_dir, kind, config, project_number, receipt_number
     )
     doc = load_template(template_path)
-    meta = _build_meta(project_number, receipt_number, document_date, kind, config)
-    totals = Totals.from_line_items(line_items, config.vat_rate)
     delivery_date = _build_delivery_date(document_date, kind, config)
+    meta = _build_meta(
+        project_number, receipt_number, document_date, delivery_date, kind, config
+    )
+    totals = Totals.from_line_items(line_items, config.vat_rate)
 
     fill_table_with_line_items(doc, line_items)
-    replace_placeholders(
-        doc,
-        totals.to_mapping()
-        | delivery_date.to_mapping(config.date_format)
-        | meta.to_mapping(config.date_format),
-    )
+    replace_placeholders(doc, totals.to_mapping() | meta.to_mapping(config.date_format))
     save_docx(doc, target_path)
 
     log_label = kind.replace("_", " ")
