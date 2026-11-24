@@ -10,6 +10,9 @@ from heinrich_tool.backend.settings import Settings
 PROJECT_NUMBER_RE = re.compile(r"\d{4}")
 
 
+# — Document arguments ————————————————————————————————————————————————————————
+
+
 @dataclass(frozen=True)
 class DocumentArgs:
     kind: DocumentKind
@@ -47,6 +50,9 @@ def create_document_args(
     return DocumentArgs(
         kind=kind, project_number=project_number, receipt_number=receipt_number
     )
+
+
+# — Settings ——————————————————————————————————————————————————————————————————
 
 
 def _parse_path(path: str, name: str) -> Path:
