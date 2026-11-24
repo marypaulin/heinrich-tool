@@ -1,4 +1,4 @@
-"""User-facing message accumulator for status and warning output."""
+"""User-facing messages with info, warning and error level."""
 
 from dataclasses import dataclass, field
 from enum import Enum

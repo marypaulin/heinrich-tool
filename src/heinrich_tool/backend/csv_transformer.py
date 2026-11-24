@@ -53,16 +53,11 @@ def csv_rows_to_line_items(
     config: Config,
     messages: Messages,
 ) -> list[LineItem]:
-    """
-    Transform CsvRow objects into LineItem domain objects.
-
-    This function contains the business logic for converting raw CSV data
-    into document-ready line items.
+    """Transform CsvRow objects into LineItem domain objects.
 
     Transformation rules:
     - If duration_hours is non-zero, an "hours" LineItem is created.
     - If material_cost is non-zero, a "material" LineItem is created after it.
-    - LineItems are enriched with calculated totals and derived descriptions.
 
     Data lineage:
     - Hours LineItem:
@@ -78,16 +73,7 @@ def csv_rows_to_line_items(
     - Rows without an order number are skipped: the client bills them
       separately to a different customer.
     - Rows with neither hours nor material are skipped.
-    - All numeric values are assumed to be already parsed and validated
-      in the CSV loader.
-
-    Parameters:
-        csv_rows: Iterable of parsed CsvRow objects.
-        config: Application configuration (hourly rate descriptions, defaults).
-        messages: Collects the warnings for skipped rows and unknown rates.
-
-    Returns:
-        A list of LineItem objects ready for document generation or export.
+    - Numeric values arrive validated from the CSV loader.
     """
     result = []
     for csv_row in csv_rows:
