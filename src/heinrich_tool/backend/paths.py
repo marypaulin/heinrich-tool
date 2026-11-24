@@ -44,9 +44,9 @@ def get_latest_csv_path(project_dir: Path, config: Config, messages: Messages) -
 def get_target_path(
     project_dir: Path,
     kind: DocumentKind,
-    config: Config,
     project_number: str,
-    receipt_number: str | None = None,
+    receipt_number: str | None,
+    config: Config,
 ) -> Path:
     """Build document path from filename template of `kind`.
 

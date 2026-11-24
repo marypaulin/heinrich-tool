@@ -35,26 +35,26 @@ logger = logging.getLogger(__name__)
 
 
 def _build_meta(
+    kind: DocumentKind,
     project_number: str,
     receipt_number: str | None,
     document_date: date,
     delivery_date: date,
-    kind: DocumentKind,
     config: Config,
 ) -> DocumentMeta:
     doc_config = config.document(kind)
     return DocumentMeta(
-        project_number=project_number,
-        receipt_number=receipt_number,
         doctype=doc_config.doctype,
         header=doc_config.header,
+        project_number=project_number,
+        receipt_number=receipt_number,
         document_date=document_date,
         delivery_date=delivery_date,
     )
 
 
 def _build_delivery_date(
-    document_date: date, kind: DocumentKind, config: Config
+    kind: DocumentKind, document_date: date, config: Config
 ) -> date:
     delivery_days = config.document(kind).delivery_days
     return document_date + timedelta(days=delivery_days)
@@ -99,16 +99,16 @@ def generate_document(
     line_items = _load_line_items(project_dir, config, messages)
 
     target_path = get_target_path(
-        project_dir, args.kind, config, args.project_number, receipt_number
+        project_dir, args.kind, args.project_number, receipt_number, config
     )
     doc = load_template(settings.template_path)
-    delivery_date = _build_delivery_date(document_date, args.kind, config)
+    delivery_date = _build_delivery_date(args.kind, document_date, config)
     meta = _build_meta(
+        args.kind,
         args.project_number,
         receipt_number,
         document_date,
         delivery_date,
-        args.kind,
         config,
     )
     totals = Totals.from_line_items(line_items, config.vat_rate)
