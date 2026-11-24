@@ -1,5 +1,6 @@
 """Streamlit web app entry point."""
 
+import html
 import logging
 from datetime import date
 from pathlib import Path
@@ -52,6 +53,15 @@ def run_settings():
         st.toast("Fehler beim Speichern", icon="❌")
 
 
+def format_messages(messages):
+    # Mimics former st.code block; markdown would mangle paths in exception texts
+    lines = "".join(
+        f'<div class="level-{m.level.name.lower()}">{html.escape(str(m))}</div>'
+        for m in messages
+    )
+    return f'<div class="generate-messages">{lines}</div>'
+
+
 def toast_result(document, messages):
     # Failed PDF leaves DOCX intact, so generation counts as done but not clean
     if messages.has_errors:
@@ -72,7 +82,7 @@ def run_generate(settings):
     try:
         args = create_document_args(kind, project_number, receipt_number, delivery_date)
         messages = generate_document(args, date.today(), settings)
-        st.session_state.generate_info = [str(m) for m in messages.items]
+        st.session_state.generate_info = messages.items
         toast_result(DOCUMENT_LABELS[kind], messages)
     except (FileNotFoundError, ValueError) as e:
         st.session_state.generate_error = f"Fehler: {e!s}"
@@ -168,10 +178,7 @@ def app():
             )
 
         if st.session_state.generate_info:
-            st.code(
-                "\n".join(st.session_state.generate_info),
-                language="text",
-            )
+            st.html(format_messages(st.session_state.generate_info))
 
         if st.session_state.generate_error:
             st.error(st.session_state.generate_error)

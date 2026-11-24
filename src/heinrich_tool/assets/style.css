@@ -39,3 +39,26 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
+
+/*
+ * Message list after generating, styled like the st.code block it replaces.
+ * Background repeats Streamlit's code block fill, an even mix of
+ * backgroundColor and secondaryBackgroundColor from config.toml.
+ * Warning amber is from the client's Zeiterfassung app, darker in the light
+ * theme to stay readable as text.
+ */
+.generate-messages {
+    background-color: light-dark(
+        color-mix(in srgb, #f3f4f6, #f9fafb),
+        color-mix(in srgb, #000000, #1f2937)
+    );
+    border-radius: 6px;
+    font-size: 0.875rem;
+    overflow-x: auto;
+    padding: 1rem;
+    white-space: pre;
+}
+
+.generate-messages .level-warning {
+    color: light-dark(#b45309, #f59e0b);
+}
