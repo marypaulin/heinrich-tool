@@ -34,3 +34,7 @@ beider Vorlagen, von `docgen` und seinen Tests löst kein aktuelles Problem.
 
 - Platzhalter in Kopf- und Fußzeile werden weiterhin nicht ersetzt.
 - Tabellenformatierung bleibt im Code (`TABLE_FONT_NAME`, `TABLE_FONT_SIZE`).
+
+**Nachtrag 2026-11-23:** Ein Platzhalter, der im Vordruck nicht gefunden
+wird, bricht die Erzeugung ab. Steht einer in Kopf- oder Fußzeile, fällt das
+damit sofort auf, statt dass ein Wert still im Dokument fehlt.

@@ -6,7 +6,7 @@ Dieses Tool wird für Heinrich Metallbau entwickelt, um die manuelle Erstellung 
 
 ---
 
-Die Benutzeroberfläche ist bisher bewusst einfach gehalten: Projektnummer wählen, Lieferdatum eintragen, Dokument erzeugen.
+Die Benutzeroberfläche ist bisher bewusst einfach gehalten: Dokument wählen, Liefertermin und Projektnummer eintragen, erzeugen.
 
 ![Hauptansicht der Webapp](docs/images/webapp_screenshot.png)
 
@@ -51,7 +51,7 @@ Wurden Dateien im Ordner `heinrich-tool` von Hand bearbeitet, bricht das Update 
 Für die Nutzung des Tools werden zwei weitere Dateien benötigt, die sich nicht im Repository befinden:
 
 - `Vordruck.docx` (Word-Template für alle Outputdokumente)
-- `config.json` (Konfigurationsdatei mit Stundenlohn, Mehrwertsteuersatz etc.)
+- `config.json` (Konfigurationsdatei mit den Bezeichnungen der Stundensätze, dem Mehrwertsteuersatz sowie Texten und Dateinamen der Dokumente)
 
 Diese enthalten Geschäftsdaten des Kunden und liegen in seinem OneDrive, damit sie auf allen Geräten synchron sind.
 
@@ -150,4 +150,4 @@ Die Tests liegen unter `tests/` und laufen mit pytest:
 uv run pytest
 ```
 
-Die Abdeckung wächst modulweise mit; das PDF-Rendering wird weiterhin manuell geprüft.
+Manuelle Testfälle für Setup-Skript und Windows-VM stehen in [`docs/testing.md`](docs/testing.md); das PDF-Rendering wird von Hand geprüft.
