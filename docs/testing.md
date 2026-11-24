@@ -12,7 +12,7 @@ Zwei Umgebungen:
 
 - **Linux, `pwsh`:** nur der Update-Weg. Ordner-Dialog, winget und
   Verknüpfungen gibt es dort nicht; der Lauf endet bei den Verknüpfungen mit
-  „Unerwarteter Fehler“ (`$env:WINDIR` fehlt). Das ist erwartet. Die Fälle
+  "Unerwarteter Fehler" (`$env:WINDIR` fehlt). Das ist erwartet. Die Fälle
   sind so geschrieben, dass ein Agent sie selbstständig abarbeiten kann.
 - **Windows-VM:** alles. Windows PowerShell 5.1, nicht `pwsh` — so läuft es
   beim Kunden. Ein Mensch führt die Fälle in der VM aus; vieles lässt sich nur
@@ -42,7 +42,7 @@ git clone https://github.com/marypaulin/heinrich-tool.git <tmp>/heinrich-tool
 - **Aktion:** `pwsh -NoProfile -File <tmp>/heinrich-tool/scripts/setup.ps1`
 - **Erwartet:** Kein Git-/uv-Installationsschritt, kein Ordner-Dialog.
   `Already up to date.`, danach `uv sync` legt `.venv` an bzw. meldet nichts
-  Neues. Ende mit „Unerwarteter Fehler“ bei den Verknüpfungen (s. o.).
+  Neues. Ende mit "Unerwarteter Fehler" bei den Verknüpfungen (s. o.).
 
 #### L2 — Update mit neuem Commit
 
@@ -58,9 +58,9 @@ git clone https://github.com/marypaulin/heinrich-tool.git <tmp>/heinrich-tool
 
 - **Vorbereitung:** `echo test >> README.md` im Klon.
 - **Aktion:** wie L1.
-- **Erwartet:** Abbruch mit „Im Programmordner wurden Dateien geändert:“,
-  darunter ` M README.md`, dann „Das Update wurde abgebrochen …“. Kein
-  `pull`, kein `uv sync`; `HEAD` unverändert. Kein „Unerwarteter Fehler“.
+- **Erwartet:** Abbruch mit "Im Programmordner wurden Dateien geändert:",
+  darunter ` M README.md`, dann "Das Update wurde abgebrochen …". Kein
+  `pull`, kein `uv sync`; `HEAD` unverändert. Kein "Unerwarteter Fehler".
 
 ### Windows-VM einrichten
 
@@ -77,7 +77,7 @@ bestimmt die Codepage der Konsole, sonst sagt der Umlaut-Test in W1 nichts
 die ISO im Home-Verzeichnis, bietet virt-manager an, dem Benutzer
 `libvirt-qemu` Zugriff zu geben; das ist nötig.
 
-**VM `win11`** — im Assistenten „Customize configuration before install“
+**VM `win11`** — im Assistenten "Customize configuration before install"
 anhaken:
 
 | Einstellung | Wert | Grund |
@@ -103,42 +103,42 @@ EOF
 virsh -c qemu:///system attach-device win11 guest-agent-channel.xml --config
 ```
 
-Nach „Begin Installation“ erscheint kurz „Press any key to boot from CD or
-DVD…“ — sofort eine Taste drücken, sonst startet eine UEFI-Shell.
+Nach "Begin Installation" erscheint kurz "Press any key to boot from CD or
+DVD…" — sofort eine Taste drücken, sonst startet eine UEFI-Shell.
 
 **Windows-Setup:**
 
-- „Ich habe keinen Product Key“, Windows 11 Pro. Läuft unaktiviert mit
+- "Ich habe keinen Product Key", Windows 11 Pro. Läuft unaktiviert mit
   Wasserzeichen.
 - Gerätename `win11`.
 - Microsoft-Konto: Ohne geht die Einrichtung nicht, W5 (OneDrive) braucht es
   ohnehin. Ein Konto, dessen OneDrive leer ist — neu angelegt, die Mailadresse
   darf schon existieren —, nicht das des Kunden. Der Benutzerordner heißt nach
   den ersten fünf Zeichen der Adresse (`C:\Users\<Name>`).
-- „Synchronisieren Sie Ihr Microsoft-Konto mit Windows“ → „Nein, nicht
-  synchronisieren“, damit die Test-VM nichts ins Konto zurückschreibt.
+- "Synchronisieren Sie Ihr Microsoft-Konto mit Windows" → "Nein, nicht
+  synchronisieren", damit die Test-VM nichts ins Konto zurückschreibt.
 - OneDrive-Sicherung von Desktop und Dokumenten ablehnen.
 - Testmonat von Microsoft 365 ablehnen: Der Word-Pfad wird hier nicht
   getestet, und der Testmonat verlängert sich kostenpflichtig.
 
 **Danach:**
 
-- Netzwerkverbindung in Windows auf „Getaktete Verbindung“ stellen, damit
+- Netzwerkverbindung in Windows auf "Getaktete Verbindung" stellen, damit
   Windows nach jedem Zurücksetzen nicht dieselben Updates neu lädt.
 - Gast-Tools von Fedora installieren — ohne sie kein Kopieren und Einfügen
   zwischen Host und VM:
   `https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.302-1/virtio-win-guest-tools.exe`
   (SHA-256 `d8ae9ea1e943384ac195e012cd36f82c3161620e5fc9529be4e42e6f420e222d`).
-  Der Installer ist unsigniert, die UAC-Abfrage zeigt „Herausgeber:
-  Unbekannt“. Die versionierte Adresse nehmen: `latest-virtio/` leitet auf
+  Der Installer ist unsigniert, die UAC-Abfrage zeigt "Herausgeber:
+  Unbekannt". Die versionierte Adresse nehmen: `latest-virtio/` leitet auf
   `http://` weiter, und Edge blockt den Download. Die älteren
   `spice-guest-tools` von spice-space.org (2018) taugen nicht, ihre Treiber
   laden unter Windows 11 mit Secure Boot nicht. Kontrolle: Im Geräte-Manager
-  hat „VirtIO Serial Driver“ kein Warndreieck, und
+  hat "VirtIO Serial Driver" kein Warndreieck, und
   `virsh -c qemu:///system qemu-agent-command win11 '{"execute":"guest-ping"}'`
-  antwortet. Der Guest Agent erscheint nicht unter „Installierte Apps“, der
+  antwortet. Der Guest Agent erscheint nicht unter "Installierte Apps", der
   Installer blendet seine Teilpakete dort aus.
-- Nach der Installation die ISO auswerfen („SATA CDROM 1“ → „Disconnect“),
+- Nach der Installation die ISO auswerfen ("SATA CDROM 1" → "Disconnect"),
   sonst startet die VM nicht mehr, sobald die ISO gelöscht ist.
 
 **Basiszustand:** virt-manager 4.1 kann von UEFI-VMs keine Snapshots anlegen.
@@ -193,7 +193,7 @@ EOF
 ```
 
 **Netz trennen (W8):** in virt-manager bei der Netzwerkkarte den Haken
-„Link state: active“ entfernen, oder ohne Oberfläche (Schnittstelle aus
+"Link state: active" entfernen, oder ohne Oberfläche (Schnittstelle aus
 `virsh -c qemu:///system domiflist win11`):
 
 ```bash
@@ -217,30 +217,30 @@ eigene Fixes behoben.
 
 #### W1 — Erstlauf per Einzeiler
 
-- **Aktion:** „Windows PowerShell“ aus dem Startmenü öffnen (nicht als
+- **Aktion:** "Windows PowerShell" aus dem Startmenü öffnen (nicht als
   Administrator), einfügen:
   `(irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1).TrimStart([char]0xFEFF) | iex`
 - **Erwartet:**
   - Kein roter Fehler vor dem ersten Schritt. Ohne `TrimStart` erscheint dort
-    „Die Benennung "#" wurde nicht … erkannt“: `irm` behält den BOM als
+    "Die Benennung `"#"` wurde nicht … erkannt": `irm` behält den BOM als
     Zeichen vor der ersten Zeile.
   - Git wird per winget installiert (UAC-Abfrage), danach uv.
   - Ordner-Dialog öffnet **vor** dem PowerShell-Fenster.
   - Nach Wahl von z. B. `C:\Users\<Name>`: Klon nach
     `C:\Users\<Name>\heinrich-tool`, `uv sync` lädt Python 3.14.
-  - „Fertig. Heinrich Tool startet …“ in Grün.
+  - "Fertig. Heinrich Tool startet …" in Grün.
   - Das PowerShell-Fenster bleibt offen.
-  - **Umlaute** in allen Meldungen richtig („wählen“, „Verknüpfungen“).
+  - **Umlaute** in allen Meldungen richtig ("wählen", "Verknüpfungen").
 
 #### W2 — Verknüpfungen
 
 - **Erwartet:**
-  - Desktop: „Heinrich Tool“ mit App-Icon.
-  - Startmenü: „Heinrich Tool“ und „Heinrich Tool aktualisieren“.
-  - „Heinrich Tool“ startet die App (`scripts/run_windows.bat`), der Browser
+  - Desktop: "Heinrich Tool" mit App-Icon.
+  - Startmenü: "Heinrich Tool" und "Heinrich Tool aktualisieren".
+  - "Heinrich Tool" startet die App (`scripts/run_windows.bat`), der Browser
     öffnet genau einen Tab. Keine Abfrage der Windows-Firewall: Streamlit
     lauscht nur auf `127.0.0.1`.
-  - Block „Pfade“ ist offen, darunter „Noch keine Pfade eingestellt“, das
+  - Block "Pfade" ist offen, darunter "Noch keine Pfade eingestellt", das
     Dokument-Formular ausgegraut.
   - Der erste Start nach der Installation dauert über eine Minute (Python
     kompiliert, Defender prüft jede neue Datei), spätere um 10 Sekunden.
@@ -249,23 +249,23 @@ eigene Fixes behoben.
 #### W3 — Update per `update.bat`
 
 - **Aktion:** Doppelklick auf `update.bat` im Projektordner, danach auch über
-  „Heinrich Tool aktualisieren“ im Startmenü.
+  "Heinrich Tool aktualisieren" im Startmenü.
 - **Erwartet:** Keine Execution-Policy-Warnung, kein Ordner-Dialog,
-  `Already up to date.`, `uv sync`, Verknüpfungen, „Fertig“. Fenster wartet auf
+  `Already up to date.`, `uv sync`, Verknüpfungen, "Fertig". Fenster wartet auf
   Tastendruck. Umlaute richtig (Weg über `-File`, BOM).
 
 #### W4 — Abbruch im Ordner-Dialog
 
-- **Aktion:** Einzeiler, im Dialog „Abbrechen“.
-- **Erwartet:** „Kein Ordner gewählt. Es wurde nichts installiert.“ Kein neuer
-  Ordner. Kein „Unerwarteter Fehler“.
+- **Aktion:** Einzeiler, im Dialog "Abbrechen".
+- **Erwartet:** "Kein Ordner gewählt. Es wurde nichts installiert." Kein neuer
+  Ordner. Kein "Unerwarteter Fehler".
 
 #### W5 — Ordner in OneDrive
 
 - **Vorbereitung:** OneDrive in der VM angemeldet (sonst fehlt `$env:OneDrive`
   und der Fall ist nicht prüfbar).
 - **Aktion:** Einzeiler, im Dialog einen Ordner unter OneDrive wählen.
-- **Erwartet:** Ablehnung mit „Der Ordner liegt in OneDrive: …“. Nichts
+- **Erwartet:** Ablehnung mit "Der Ordner liegt in OneDrive: …". Nichts
   installiert.
 
 #### W6 — Erneuter Einzeiler auf bestehende Installation
@@ -278,15 +278,15 @@ eigene Fixes behoben.
 - **Vorbereitung:** leeren Ordner `heinrich-tool` (ohne `.git`) z. B. unter
   `C:\Temp` anlegen.
 - **Aktion:** Einzeiler, im Dialog `C:\Temp` wählen.
-- **Erwartet:** „Der Ordner … existiert schon, ist aber keine Installation …“.
-  Ordner unverändert. Kein „Unerwarteter Fehler“.
+- **Erwartet:** "Der Ordner … existiert schon, ist aber keine Installation …".
+  Ordner unverändert. Kein "Unerwarteter Fehler".
 
 #### W8 — Kein Netz
 
 - **Vorbereitung:** Netz der VM trennen (s. o.).
 - **Aktion:** `update.bat`.
-- **Erwartet:** „Das Update konnte nicht geholt werden. Besteht eine
-  Internetverbindung? …“. Kein „Unerwarteter Fehler“. Danach startet die App
+- **Erwartet:** "Das Update konnte nicht geholt werden. Besteht eine
+  Internetverbindung? …". Kein "Unerwarteter Fehler". Danach startet die App
   über die Verknüpfung trotzdem.
 
 #### W9 — Update bei laufender App
@@ -297,15 +297,15 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
 - **Vorbereitung:** App über die Verknüpfung starten, Browser-Tab offen lassen.
   Ein neuer Commit auf `main` (sonst wie W3 ohne Neues).
 - **Aktion:** `update.bat`.
-- **Erwartet:** „Heinrich Tool wird beendet“ vor „Neueste Version wird geholt“,
-  dann `Fast-forward`, „Fertig“. Danach startet die App über die Verknüpfung
+- **Erwartet:** "Heinrich Tool wird beendet" vor "Neueste Version wird geholt",
+  dann `Fast-forward`, "Fertig". Danach startet die App über die Verknüpfung
   in der neuen Fassung, nicht nur der Browser.
 
 #### W10 — Pfade eintragen
 
 - **Vorbereitung:** OneDrive in der VM angemeldet (wie W5). Darin einen
   Datenordner mit den Beispieldateien anlegen, in PowerShell im Projektordner.
-  Die letzte Zeile gibt die drei Pfade so aus, wie „Als Pfad kopieren“ sie
+  Die letzte Zeile gibt die drei Pfade so aus, wie "Als Pfad kopieren" sie
   liefert:
   ```powershell
   $data = Join-Path $env:OneDrive 'Heinrich Daten'
@@ -315,9 +315,9 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
   Copy-Item tests\fixtures\heinrich_zeiterfassung_sample.csv $project
   "`"$data`"", "`"$data\config_sample.json`"", "`"$data\Vordruck_sample.docx`""
   ```
-- **Aktion:** App starten. Im Block „Pfade“ die drei Felder füllen, per
-  Rechtsklick → „Als Pfad kopieren“ oder aus der Ausgabe oben,
-  Anführungszeichen stehen lassen, „Speichern“. Dann Angebot für `1234`
+- **Aktion:** App starten. Im Block "Pfade" die drei Felder füllen, per
+  Rechtsklick → "Als Pfad kopieren" oder aus der Ausgabe oben,
+  Anführungszeichen stehen lassen, "Speichern". Dann Angebot für `1234`
   erzeugen. App beenden (Tab schließen reicht nicht, der Server läuft weiter),
   in PowerShell:
   ```powershell
@@ -325,12 +325,12 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
   ```
   Danach über die Verknüpfung neu starten.
 - **Erwartet:**
-  - Nach dem Speichern „Pfade gespeichert“, der Block klappt zu, das
+  - Nach dem Speichern "Pfade gespeichert", der Block klappt zu, das
     Dokument-Formular ist aktiv.
-  - „Projektordner gefunden“, „CSV-Datei gefunden“, Angebot als DOCX im
-    Projektordner. Die PDF fehlt mit „PDF-Erzeugung fehlgeschlagen
-    ((-2147221005, 'Ungültige Klassenzeichenfolge', …))“: Die VM hat kein
-    Word. Der Toast meldet deshalb „Angebot erzeugt, mit Fehlern“ mit ⚠️.
+  - "Projektordner gefunden", "CSV-Datei gefunden", Angebot als DOCX im
+    Projektordner. Die PDF fehlt mit "PDF-Erzeugung fehlgeschlagen
+    ((-2147221005, 'Ungültige Klassenzeichenfolge', …))": Die VM hat kein
+    Word. Der Toast meldet deshalb "Angebot erzeugt, mit Fehlern" mit ⚠️.
     Das erste Angebot nach der Installation braucht um eine Minute,
     weitere sind sofort da.
   - Nach dem Neustart ist der Block zu und hält die drei Pfade ohne
@@ -353,10 +353,10 @@ Der Kunde pflegt die Config direkt im Windows-Editor.
 - **Aktion 1:** Unter `"offer"` die Zeile mit `"filename"` löschen,
   Strg+S, Angebot für `1234` erzeugen. Die App liest die Config bei jedem
   Erzeugen neu, kein Neustart nötig.
-- **Erwartet:** „Fehler beim Erzeugen“, darunter
+- **Erwartet:** "Fehler beim Erzeugen", darunter
   `Invalid config_sample.json: documents.offer.filename: Field required`.
-- **Aktion 2:** Zeile wieder einfügen, „Datei“ → „Speichern unter“,
-  „Codierung“ „UTF-8 mit BOM“, überschreiben. Angebot für `1234` erzeugen.
+- **Aktion 2:** Zeile wieder einfügen, "Datei" → "Speichern unter",
+  "Codierung" "UTF-8 mit BOM", überschreiben. Angebot für `1234` erzeugen.
   Ohne diesen Umweg speichert der Editor ohne BOM.
 - **Erwartet:** Angebot wie in W10.
 
@@ -372,7 +372,7 @@ PowerShell hält die Datei stattdessen mit derselben Sperre offen.
   $lock = [System.IO.File]::Open($docx, 'Open', 'ReadWrite', 'None')
   ```
 - **Aktion 1:** Angebot für `1234` erzeugen.
-- **Erwartet:** „Fehler beim Erzeugen“, darunter
+- **Erwartet:** "Fehler beim Erzeugen", darunter
   `Cannot save Angebot Nr. 1234.docx, it may be open in Word`. Kein Traceback.
 - **Aktion 2:** Sperre lösen mit `$lock.Close()`, Angebot erneut erzeugen.
 - **Erwartet:** Angebot wie in W10.

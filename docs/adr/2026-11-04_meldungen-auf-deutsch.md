@@ -9,7 +9,7 @@ eine Umstellung auf Deutsch umfasst.
 **Kontext:** Bisher waren die Meldungen für den Nutzer (`Messages`) deutsch,
 Logging und die Texte eigener Exceptions englisch. Das Backend meldet deshalb
 vieles doppelt, einmal per `logger` und einmal per `Messages`, und die App
-zeigt Fehler als „Error: “ mit englischem Text. Das Tool läuft nur in einem
+zeigt Fehler als "Error: " mit englischem Text. Das Tool läuft nur in einem
 deutschsprachigen Betrieb; die englische Hälfte liest dort niemand.
 
 **Entscheidung:** Alle Meldungen sind deutsch: Info, Warnung, Fehler und die

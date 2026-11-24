@@ -38,7 +38,7 @@ offensichtlich erfüllt. One-File wäre hier Grauzone.
 *Bei Streamlit bleiben und nur die fachlichen Änderungen umsetzen.* Verworfen: Die
 Change Requests allein rechtfertigen den Umzug nicht — der CSV-Editor ließe sich
 mit `st.data_editor` bauen, das Stundenarchiv spräche sogar für Streamlit. Aber
-die Kernanforderung „installierbare Anwendung" bleibt damit ungelöst.
+die Kernanforderung "installierbare Anwendung" bleibt damit ungelöst.
 
 *Flet oder NiceGUI.* Beide bringen von Haus aus ein moderneres Aussehen mit. Nach
 einem Gestaltungsdurchgang am Qt-Entwurf am 2026-08-26 nicht mehr nötig: Das

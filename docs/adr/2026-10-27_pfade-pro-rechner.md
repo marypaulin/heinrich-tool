@@ -18,7 +18,7 @@ Geschäftsdaten an der Installation:
 **Entscheidung:** Config und Vordruck liegen wie der Datenordner in OneDrive
 und stehen damit auf jedem Rechner bereit. Wo die drei auf dem jeweiligen
 Rechner liegen, hält eine rechnerlokale `settings.json` fest. Der Kunde trägt
-die Pfade einmal pro Rechner im Block „Pfade“ der App ein.
+die Pfade einmal pro Rechner im Block "Pfade" der App ein.
 
 *Ablageort unter Windows.* Windows kennt zwei Orte für benutzerbezogene
 Anwendungsdaten. `%APPDATA%` (`C:\Users\<Name>\AppData\Roaming`) ist für
@@ -47,9 +47,9 @@ gewählt: `roaming` bleibt auf dem Default `False`, sonst läge die Datei in
 Ordnerebene für den Hersteller einschiebt (`HeinrichTool\HeinrichTool`).
 
 *Ablauf.* Fehlt die Datei, liefert `read_settings` `None`: Die App öffnet den
-Block „Pfade“ und sperrt die Dokumente, das CLI bricht mit Hinweis ab.
-`input_args.create_settings` entfernt die Anführungszeichen, die „Als Pfad
-kopieren“ im Explorer mitliefert, und prüft vor dem Speichern, ob alle drei
+Block "Pfade" und sperrt die Dokumente, das CLI bricht mit Hinweis ab.
+`input_args.create_settings` entfernt die Anführungszeichen, die "Als Pfad
+kopieren" im Explorer mitliefert, und prüft vor dem Speichern, ob alle drei
 Pfade existieren.
 
 **Alternativen:**

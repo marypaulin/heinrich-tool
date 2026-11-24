@@ -20,7 +20,7 @@ Installation und Updates übernimmt ein Skript. Vorkenntnisse oder vorinstallier
 
 ### Ersteinrichtung
 
-1. **PowerShell** öffnen (Startmenü → „PowerShell“ eingeben).
+1. **PowerShell** öffnen (Startmenü → "PowerShell" eingeben).
 2. Folgende Zeile einfügen und mit Enter bestätigen:
 
 ```
