@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from heinrich_tool.backend.config import DocumentKind, read_config
+from heinrich_tool.backend.config import read_config
 from samples import SAMPLE_CONFIG_PATH
 
 
@@ -51,16 +51,6 @@ def test_hourly_rates_are_looked_up_by_decimal():
     assert mapping[Decimal("48.00")] == "Helferstunde"
 
 
-# — Documents —————————————————————————————————————————————————————————————————
-
-
-@pytest.mark.parametrize(
-    "kind", [DocumentKind.INVOICE, DocumentKind.ORDER_CONFIRMATION]
-)
-def test_invoice_and_order_confirmation_are_due_on_document_date(kind):
-    assert read_config(SAMPLE_CONFIG_PATH).document(kind).delivery_days == 0
-
-
 # — Errors ————————————————————————————————————————————————————————————————————
 
 
@@ -101,9 +91,7 @@ def test_missing_filename_is_rejected(tmp_path):
 
 def test_misspelled_key_is_rejected(tmp_path):
     raw = read_sample_raw()
-    raw["documents"]["offer"]["delivery_day"] = raw["documents"]["offer"].pop(
-        "delivery_days"
-    )
+    raw["documents"]["offer"]["heder"] = raw["documents"]["offer"].pop("header")
 
     with pytest.raises(ValueError):
         read_config(write_raw(tmp_path, raw))

@@ -67,9 +67,10 @@ def run_generate(settings):
     kind = st.session_state.document_kind
     project_number = st.session_state.get("project_number", "")
     receipt_number = st.session_state.get("receipt_number", "")
+    delivery_date = st.session_state.delivery_date
 
     try:
-        args = create_document_args(kind, project_number, receipt_number)
+        args = create_document_args(kind, project_number, receipt_number, delivery_date)
         messages = generate_document(args, date.today(), settings)
         st.session_state.generate_info = [str(m) for m in messages.items]
         toast_result(DOCUMENT_LABELS[kind], messages)
@@ -129,7 +130,7 @@ def app():
         st.info("Noch keine Pfade eingestellt")
 
     with st.form("document_form"):
-        col1, _ = st.columns(2)
+        col1, col2 = st.columns(2)
 
         with col1:
             st.selectbox(
@@ -137,6 +138,15 @@ def app():
                 options=list(DocumentKind),
                 format_func=DOCUMENT_LABELS.__getitem__,
                 key="document_kind",
+                disabled=disabled,
+            )
+
+        with col2:
+            st.date_input(
+                "Liefertermin",
+                value="today",
+                format="DD.MM.YYYY",
+                key="delivery_date",
                 disabled=disabled,
             )
 

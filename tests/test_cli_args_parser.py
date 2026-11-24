@@ -1,5 +1,7 @@
 """Tests for the argparse rules the CLI enforces before the argument objects are built."""
 
+from datetime import date
+
 import pytest
 
 from heinrich_tool.backend.config import DocumentKind
@@ -14,7 +16,10 @@ def test_cli_builds_offer_args():
     args = parse_cli_args(["-m", "offer", "-p", PROJECT_NUMBER])
 
     assert args == DocumentArgs(
-        kind=DocumentKind.OFFER, project_number=PROJECT_NUMBER, receipt_number=None
+        kind=DocumentKind.OFFER,
+        project_number=PROJECT_NUMBER,
+        receipt_number=None,
+        delivery_date=date.today(),
     )
 
 
@@ -31,8 +36,17 @@ def test_cli_builds_args_with_receipt_number(mode, kind):
     args = parse_cli_args(["-m", mode, "-p", PROJECT_NUMBER, "-r", RECEIPT_NUMBER])
 
     assert args == DocumentArgs(
-        kind=kind, project_number=PROJECT_NUMBER, receipt_number=RECEIPT_NUMBER
+        kind=kind,
+        project_number=PROJECT_NUMBER,
+        receipt_number=RECEIPT_NUMBER,
+        delivery_date=date.today(),
     )
+
+
+def test_cli_reads_delivery_date():
+    args = parse_cli_args(["-m", "offer", "-p", PROJECT_NUMBER, "-d", "2026-12-01"])
+
+    assert args.delivery_date == date(2026, 12, 1)
 
 
 @pytest.mark.parametrize("mode", ["invoice", "order_confirmation"])

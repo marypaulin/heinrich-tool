@@ -18,8 +18,7 @@ class DocumentKind(StrEnum):
 
 
 class _ConfigModel(BaseModel):
-    # Unknown keys are typos in the client's file, e.g. a misspelled
-    # delivery_days that would otherwise silently fall back to its default
+    # Unknown keys are typos or keys an older config still carries; both must surface
     model_config = ConfigDict(frozen=True, extra="forbid")
 
 
@@ -27,7 +26,6 @@ class DocumentConfig(_ConfigModel):
     doctype: str
     header: str
     filename: str
-    delivery_days: int = 0
 
 
 class Documents(_ConfigModel):

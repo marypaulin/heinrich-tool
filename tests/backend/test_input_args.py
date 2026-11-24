@@ -1,5 +1,6 @@
 """Tests for input validation and the argument objects both entry points build."""
 
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -9,19 +10,22 @@ from heinrich_tool.backend.input_args import create_document_args, create_settin
 
 PROJECT_NUMBER = "1408"
 RECEIPT_NUMBER = "8100045372"
+DELIVERY_DATE = date(2026, 12, 1)
 
 
 # — Project number ————————————————————————————————————————————————————————————
 
 
 def test_four_digit_project_number_is_accepted():
-    args = create_document_args(DocumentKind.OFFER, PROJECT_NUMBER)
+    args = create_document_args(DocumentKind.OFFER, PROJECT_NUMBER, None, DELIVERY_DATE)
 
     assert args.project_number == PROJECT_NUMBER
 
 
 def test_project_number_is_trimmed():
-    args = create_document_args(DocumentKind.OFFER, f"  {PROJECT_NUMBER}  ")
+    args = create_document_args(
+        DocumentKind.OFFER, f"  {PROJECT_NUMBER}  ", None, DELIVERY_DATE
+    )
 
     assert args.project_number == PROJECT_NUMBER
 
@@ -31,14 +35,16 @@ def test_project_number_is_trimmed():
 )
 def test_invalid_project_number_is_rejected(project_number):
     with pytest.raises(ValueError):
-        create_document_args(DocumentKind.OFFER, project_number)
+        create_document_args(DocumentKind.OFFER, project_number, None, DELIVERY_DATE)
 
 
 # — Receipt number ————————————————————————————————————————————————————————————
 
 
 def test_delivery_works_without_receipt_number():
-    args = create_document_args(DocumentKind.DELIVERY_NOTE, PROJECT_NUMBER)
+    args = create_document_args(
+        DocumentKind.DELIVERY_NOTE, PROJECT_NUMBER, None, DELIVERY_DATE
+    )
 
     assert args.receipt_number is None
 
@@ -47,7 +53,7 @@ def test_delivery_works_without_receipt_number():
 def test_delivery_turns_a_blank_receipt_number_into_none(receipt_number):
     """Streamlit submits an untouched text input as an empty string, not as None."""
     args = create_document_args(
-        DocumentKind.DELIVERY_NOTE, PROJECT_NUMBER, receipt_number
+        DocumentKind.DELIVERY_NOTE, PROJECT_NUMBER, receipt_number, DELIVERY_DATE
     )
 
     assert args.receipt_number is None
@@ -55,7 +61,9 @@ def test_delivery_turns_a_blank_receipt_number_into_none(receipt_number):
 
 @pytest.mark.parametrize("kind", [DocumentKind.DELIVERY_NOTE, DocumentKind.INVOICE])
 def test_receipt_number_is_trimmed(kind):
-    args = create_document_args(kind, PROJECT_NUMBER, f" {RECEIPT_NUMBER} ")
+    args = create_document_args(
+        kind, PROJECT_NUMBER, f" {RECEIPT_NUMBER} ", DELIVERY_DATE
+    )
 
     assert args.receipt_number == RECEIPT_NUMBER
 
@@ -66,7 +74,7 @@ def test_receipt_number_is_trimmed(kind):
 @pytest.mark.parametrize("receipt_number", [None, "", "   "])
 def test_invoice_and_order_confirmation_require_a_receipt_number(kind, receipt_number):
     with pytest.raises(ValueError):
-        create_document_args(kind, PROJECT_NUMBER, receipt_number)
+        create_document_args(kind, PROJECT_NUMBER, receipt_number, DELIVERY_DATE)
 
 
 # — Settings ——————————————————————————————————————————————————————————————————

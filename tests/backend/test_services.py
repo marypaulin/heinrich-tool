@@ -117,7 +117,7 @@ def assert_no_placeholders_left(doc: DocxDocument) -> None:
 
 
 def test_offer(sample_settings, sample_data_root):
-    args = create_document_args(DocumentKind.OFFER, "1234")
+    args = create_document_args(DocumentKind.OFFER, "1234", None, date(2025, 8, 15))
     generate_document(args, date(2025, 8, 1), sample_settings)
 
     doc = open_document(sample_data_root, "Angebot Nr. 1234.docx")
@@ -140,13 +140,15 @@ def test_failed_pdf_is_reported_to_caller(monkeypatch, sample_settings):
         "render_pdf",
         lambda docx_path, messages: messages.error("PDF-Erzeugung fehlgeschlagen"),
     )
-    args = create_document_args(DocumentKind.OFFER, "1234")
+    args = create_document_args(DocumentKind.OFFER, "1234", None, date(2025, 8, 15))
     messages = generate_document(args, date(2025, 8, 1), sample_settings)
     assert messages.has_errors
 
 
 def test_offer_leaves_out_receipt_number_and_warns(sample_settings, sample_data_root):
-    args = create_document_args(DocumentKind.OFFER, "1234", "4100012345")
+    args = create_document_args(
+        DocumentKind.OFFER, "1234", "4100012345", date(2025, 8, 15)
+    )
     messages = generate_document(args, date(2025, 8, 1), sample_settings)
 
     doc_texts = texts(open_document(sample_data_root, "Angebot Nr. 1234.docx"))
@@ -159,7 +161,9 @@ def test_offer_leaves_out_receipt_number_and_warns(sample_settings, sample_data_
 
 
 def test_delivery_note(sample_settings, sample_data_root):
-    args = create_document_args(DocumentKind.DELIVERY_NOTE, "1234", "4100012345")
+    args = create_document_args(
+        DocumentKind.DELIVERY_NOTE, "1234", "4100012345", date(2025, 8, 22)
+    )
     generate_document(args, date(2025, 8, 15), sample_settings)
 
     doc = open_document(sample_data_root, "Lieferschein Nr. 1234.docx")
@@ -173,7 +177,7 @@ def test_delivery_note(sample_settings, sample_data_root):
         "Vielen Dank für ihr Vertrauen in Heinrich Metallbau. "
         "Wir liefern folgende Positionen an: "
     ) in doc_texts
-    assert "Liefertermin: 15.08.2025" in doc_texts
+    assert "Liefertermin: 22.08.2025" in doc_texts
 
 
 # — Rechnung und Auftragsbestätigung ——————————————————————————————————————————
@@ -199,7 +203,7 @@ def test_delivery_note(sample_settings, sample_data_root):
 def test_invoice_and_order_confirmation(
     sample_settings, sample_data_root, kind, filename, doctype, header
 ):
-    args = create_document_args(kind, "1234", "4100012345")
+    args = create_document_args(kind, "1234", "4100012345", date(2025, 8, 18))
     generate_document(args, date(2025, 8, 20), sample_settings)
 
     doc = open_document(sample_data_root, filename)
@@ -212,7 +216,7 @@ def test_invoice_and_order_confirmation(
     assert (
         f"Vielen Dank für ihr Vertrauen in Heinrich Metallbau. {header} "
     ) in doc_texts
-    assert "Liefertermin: 20.08.2025" in doc_texts
+    assert "Liefertermin: 18.08.2025" in doc_texts
 
 
 # — Errors ————————————————————————————————————————————————————————————————————
@@ -223,5 +227,5 @@ def test_csv_without_order_numbers_raises(sample_settings, sample_data_root):
     write_variant(sample_data_root / PROJECT_FOLDER, column="Auftrags-Nr.", value="")
 
     with pytest.raises(ValueError):
-        args = create_document_args(DocumentKind.OFFER, "1234")
+        args = create_document_args(DocumentKind.OFFER, "1234", None, date(2025, 8, 15))
         generate_document(args, date(2025, 8, 1), sample_settings)

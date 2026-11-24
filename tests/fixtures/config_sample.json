@@ -13,14 +13,12 @@
     "offer": {
       "doctype": "Angebot",
       "header": "Wir bieten folgende Positionen an:",
-      "filename": "Angebot Nr. {project_number}.docx",
-      "delivery_days": 14
+      "filename": "Angebot Nr. {project_number}.docx"
     },
     "delivery_note": {
       "doctype": "Lieferschein",
       "header": "Wir liefern folgende Positionen an:",
-      "filename": "Lieferschein Nr. {project_number}.docx",
-      "delivery_days": 0
+      "filename": "Lieferschein Nr. {project_number}.docx"
     },
     "invoice": {
       "doctype": "Rechnung",

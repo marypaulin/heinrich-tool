@@ -1,7 +1,7 @@
 """Public API for document generation — orchestrates the full pipeline from CSV to PDF."""
 
 import logging
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 from heinrich_tool.backend.config import Config, DocumentKind, read_config
@@ -53,13 +53,6 @@ def _build_meta(
     )
 
 
-def _build_delivery_date(
-    kind: DocumentKind, document_date: date, config: Config
-) -> date:
-    delivery_days = config.document(kind).delivery_days
-    return document_date + timedelta(days=delivery_days)
-
-
 def _load_line_items(
     project_dir: Path,
     config: Config,
@@ -102,13 +95,12 @@ def generate_document(
         project_dir, args.kind, args.project_number, receipt_number, config
     )
     doc = load_template(settings.template_path)
-    delivery_date = _build_delivery_date(args.kind, document_date, config)
     meta = _build_meta(
         args.kind,
         args.project_number,
         receipt_number,
         document_date,
-        delivery_date,
+        args.delivery_date,
         config,
     )
     totals = Totals.from_line_items(line_items, config.vat_rate)

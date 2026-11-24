@@ -2,6 +2,7 @@
 
 import re
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 
 from heinrich_tool.backend.config import DocumentKind
@@ -18,6 +19,7 @@ class DocumentArgs:
     kind: DocumentKind
     project_number: str
     receipt_number: str | None
+    delivery_date: date
 
 
 def _parse_project_number(project_number: str) -> str:
@@ -40,7 +42,10 @@ def _parse_receipt_number_required(receipt_number: str | None) -> str:
 
 
 def create_document_args(
-    kind: DocumentKind, project_number: str, receipt_number: str | None = None
+    kind: DocumentKind,
+    project_number: str,
+    receipt_number: str | None,
+    delivery_date: date,
 ) -> DocumentArgs:
     project_number = _parse_project_number(project_number)
     if kind in (DocumentKind.INVOICE, DocumentKind.ORDER_CONFIRMATION):
@@ -48,7 +53,10 @@ def create_document_args(
     else:
         receipt_number = _parse_receipt_number_optional(receipt_number)
     return DocumentArgs(
-        kind=kind, project_number=project_number, receipt_number=receipt_number
+        kind=kind,
+        project_number=project_number,
+        receipt_number=receipt_number,
+        delivery_date=delivery_date,
     )
 
 

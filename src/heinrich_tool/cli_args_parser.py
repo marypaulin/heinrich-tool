@@ -2,6 +2,7 @@
 
 import argparse
 from collections.abc import Iterable
+from datetime import date
 
 from heinrich_tool.backend.config import DocumentKind
 from heinrich_tool.backend.input_args import DocumentArgs, create_document_args
@@ -31,11 +32,22 @@ def parse_cli_args(argv: Iterable[str] | None = None) -> DocumentArgs:
         ),
     )
 
+    parser.add_argument(
+        "-d",
+        "--delivery-date",
+        type=date.fromisoformat,
+        default=date.today(),
+        help="Delivery date as YYYY-MM-DD, defaults to today",
+    )
+
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     try:
         return create_document_args(
-            DocumentKind(args.mode), args.project_number, args.receipt_number
+            DocumentKind(args.mode),
+            args.project_number,
+            args.receipt_number,
+            args.delivery_date,
         )
     except ValueError as e:
         parser.error(str(e))

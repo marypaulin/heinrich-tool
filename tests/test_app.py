@@ -1,5 +1,6 @@
 """UI tests for the Streamlit app."""
 
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -40,9 +41,12 @@ def app(generated) -> AppTest:
     return AppTest.from_file(str(APP_PATH)).run()
 
 
-def fill_in(app: AppTest, project_number: str, receipt_number: str) -> None:
+def fill_in(
+    app: AppTest, project_number: str, receipt_number: str, delivery_date: date
+) -> None:
     app.text_input(key="project_number").input(project_number)
     app.text_input(key="receipt_number").input(receipt_number)
+    app.date_input(key="delivery_date").set_value(delivery_date)
 
 
 def click_generate(app: AppTest) -> None:
@@ -51,16 +55,18 @@ def click_generate(app: AppTest) -> None:
 
 
 def test_inputs_stay_after_generating(app, generated):
-    fill_in(app, "1234", "4100012345")
+    fill_in(app, "1234", "4100012345", date(2026, 12, 1))
     click_generate(app)
 
     assert len(generated) == 1
+    assert generated[0].delivery_date == date(2026, 12, 1)
     assert app.text_input(key="project_number").value == "1234"
     assert app.text_input(key="receipt_number").value == "4100012345"
+    assert app.date_input(key="delivery_date").value == date(2026, 12, 1)
 
 
 def test_inputs_stay_when_switching_document(app, generated):
-    fill_in(app, "1234", "4100012345")
+    fill_in(app, "1234", "4100012345", date(2026, 12, 1))
     click_generate(app)
     app.selectbox(key="document_kind").select(DocumentKind.DELIVERY_NOTE)
     click_generate(app)
@@ -71,3 +77,4 @@ def test_inputs_stay_when_switching_document(app, generated):
     ]
     assert app.text_input(key="project_number").value == "1234"
     assert app.text_input(key="receipt_number").value == "4100012345"
+    assert app.date_input(key="delivery_date").value == date(2026, 12, 1)
