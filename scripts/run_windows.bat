@@ -18,12 +18,14 @@ if %errorlevel%==0 (
   exit /b 0
 )
 
-REM Bring the environment in line with uv.lock (creates it on first run,
-REM fast once it matches; uv also fetches the pinned Python if missing)
-uv sync --quiet --no-dev
+REM Install exactly the versions in uv.lock (creates the environment on the
+REM first run, fetches the pinned Python if missing). --frozen skips the
+REM check against pyproject.toml: setup.ps1 already did it during install or
+REM update, and the start must not resolve or write anything new
+uv sync --frozen --quiet --no-dev
 
 REM Start Streamlit detached + quiet (so this .bat can finish)
-start "" /b cmd /c uv run --no-dev streamlit run src/heinrich_tool/app.py --server.port %PORT% --server.headless true --browser.gatherUsageStats false ^>nul 2^>nul
+start "" /b cmd /c uv run --frozen --no-dev streamlit run src/heinrich_tool/app.py --server.port %PORT% --server.headless true --browser.gatherUsageStats false ^>nul 2^>nul
 
 REM Wait until the app answers (at most 60 checks)
 set /a ATTEMPTS=0
