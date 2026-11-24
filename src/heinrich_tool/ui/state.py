@@ -6,15 +6,7 @@ import streamlit as st
 def initialize_session_state() -> None:
     if "settings_error" not in st.session_state:
         st.session_state.settings_error = None
-    if "offer_info" not in st.session_state:
-        st.session_state.offer_info = []
-    if "offer_error" not in st.session_state:
-        st.session_state.offer_error = None
-    if "delivery_info" not in st.session_state:
-        st.session_state.delivery_info = []
-    if "delivery_error" not in st.session_state:
-        st.session_state.delivery_error = None
-    if "invoice_info" not in st.session_state:
-        st.session_state.invoice_info = []
-    if "invoice_error" not in st.session_state:
-        st.session_state.invoice_error = None
+    if "generate_info" not in st.session_state:
+        st.session_state.generate_info = []
+    if "generate_error" not in st.session_state:
+        st.session_state.generate_error = None

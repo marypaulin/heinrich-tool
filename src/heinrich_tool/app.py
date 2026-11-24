@@ -8,7 +8,6 @@ import streamlit as st
 
 from heinrich_tool.backend.config import DocumentKind
 from heinrich_tool.backend.input_args import create_document_args, create_settings
-from heinrich_tool.backend.messages import Messages
 from heinrich_tool.backend.services import (
     generate_document,
     load_settings,
@@ -28,6 +27,13 @@ st.set_page_config(
     page_icon=ASSETS_DIR / "icon.ico",
     layout="centered",
 )
+
+DOCUMENT_LABELS = {
+    DocumentKind.OFFER: "Angebot",
+    DocumentKind.DELIVERY_NOTE: "Lieferschein",
+    DocumentKind.INVOICE: "Rechnung",
+    DocumentKind.ORDER_CONFIRMATION: "Auftragsbestätigung",
+}
 
 
 def run_settings():
@@ -54,63 +60,21 @@ def toast_result(document, messages):
         st.toast(f"{document} erzeugt", icon="✅")
 
 
-def run_offer(settings):
-    st.session_state.offer_info = []
-    st.session_state.offer_error = None
+def run_generate(settings):
+    st.session_state.generate_info = []
+    st.session_state.generate_error = None
 
-    project_number = st.session_state.get("project_number_offer", "")
+    kind = st.session_state.document_kind
+    project_number = st.session_state.get("project_number", "")
+    receipt_number = st.session_state.get("receipt_number", "")
 
     try:
-        args = create_document_args(DocumentKind.OFFER, project_number)
+        args = create_document_args(kind, project_number, receipt_number)
         messages = generate_document(args, date.today(), settings)
-        st.session_state.offer_info = [str(m) for m in messages.items]
-        toast_result("Angebot", messages)
+        st.session_state.generate_info = [str(m) for m in messages.items]
+        toast_result(DOCUMENT_LABELS[kind], messages)
     except (FileNotFoundError, ValueError) as e:
-        st.session_state.offer_error = f"Fehler: {e!s}"
-        st.toast("Fehler beim Erzeugen", icon="❌")
-
-
-def run_delivery(settings):
-    st.session_state.delivery_info = []
-    st.session_state.delivery_error = None
-
-    project_number = st.session_state.get("project_number_delivery", "")
-    receipt_number = st.session_state.get("receipt_number_delivery", "")
-
-    try:
-        args = create_document_args(
-            DocumentKind.DELIVERY_NOTE, project_number, receipt_number
-        )
-        messages = generate_document(args, date.today(), settings)
-        st.session_state.delivery_info = [str(m) for m in messages.items]
-        toast_result("Lieferschein", messages)
-    except (FileNotFoundError, ValueError) as e:
-        st.session_state.delivery_error = f"Fehler: {e!s}"
-        st.toast("Fehler beim Erzeugen", icon="❌")
-
-
-def run_invoice(settings):
-    st.session_state.invoice_info = []
-    st.session_state.invoice_error = None
-
-    project_number = st.session_state.get("project_number_invoice", "")
-    receipt_number = st.session_state.get("receipt_number_invoice", "")
-
-    try:
-        invoice_args = create_document_args(
-            DocumentKind.INVOICE, project_number, receipt_number
-        )
-        order_args = create_document_args(
-            DocumentKind.ORDER_CONFIRMATION, project_number, receipt_number
-        )
-        messages = Messages(
-            generate_document(invoice_args, date.today(), settings).items
-            + generate_document(order_args, date.today(), settings).items
-        )
-        st.session_state.invoice_info = [str(m) for m in messages.items]
-        toast_result("Rechnung und Auftragsbestätigung", messages)
-    except (FileNotFoundError, ValueError) as e:
-        st.session_state.invoice_error = f"Fehler: {e!s}"
+        st.session_state.generate_error = f"Fehler: {e!s}"
         st.toast("Fehler beim Erzeugen", icon="❌")
 
 
@@ -164,93 +128,43 @@ def app():
     if disabled:
         st.info("Noch keine Pfade eingestellt")
 
-    with st.form("offer_form"):
-        st.subheader("Angebot")
-        st.text_input("Projektnummer", key="project_number_offer", disabled=disabled)
+    with st.form("document_form"):
+        col1, _ = st.columns(2)
 
-        with st.container(horizontal=True, horizontal_alignment="right"):
-            st.form_submit_button(
-                "Angebot erzeugen",
-                on_click=run_offer,
-                args=(settings,),
-                type="primary",
+        with col1:
+            st.selectbox(
+                "Dokument",
+                options=list(DocumentKind),
+                format_func=DOCUMENT_LABELS.__getitem__,
+                key="document_kind",
                 disabled=disabled,
             )
 
-        if st.session_state.offer_info:
-            st.code(
-                "\n".join(st.session_state.offer_info),
-                language="text",
-            )
-
-        if st.session_state.offer_error:
-            st.error(st.session_state.offer_error)
-
-    with st.form("delivery_form"):
-        st.subheader("Lieferschein")
         col1, col2 = st.columns(2)
 
         with col1:
-            st.text_input(
-                "Projektnummer", key="project_number_delivery", disabled=disabled
-            )
+            st.text_input("Projektnummer", key="project_number", disabled=disabled)
 
         with col2:
-            st.text_input(
-                "Belegnummer (optional)",
-                key="receipt_number_delivery",
-                disabled=disabled,
-            )
+            st.text_input("Belegnummer", key="receipt_number", disabled=disabled)
 
         with st.container(horizontal=True, horizontal_alignment="right"):
             st.form_submit_button(
-                "Lieferschein erzeugen",
-                on_click=run_delivery,
+                "Erzeugen",
+                on_click=run_generate,
                 args=(settings,),
                 type="primary",
                 disabled=disabled,
             )
 
-        if st.session_state.delivery_info:
+        if st.session_state.generate_info:
             st.code(
-                "\n".join(st.session_state.delivery_info),
+                "\n".join(st.session_state.generate_info),
                 language="text",
             )
 
-        if st.session_state.delivery_error:
-            st.error(st.session_state.delivery_error)
-
-    with st.form("invoice_form"):
-        st.subheader("Rechnung & Auftragsbestätigung")
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.text_input(
-                "Projektnummer", key="project_number_invoice", disabled=disabled
-            )
-
-        with col2:
-            st.text_input(
-                "Belegnummer", key="receipt_number_invoice", disabled=disabled
-            )
-
-        with st.container(horizontal=True, horizontal_alignment="right"):
-            st.form_submit_button(
-                "Rechnung und Auftragsbestätigung erzeugen",
-                on_click=run_invoice,
-                args=(settings,),
-                type="primary",
-                disabled=disabled,
-            )
-
-        if st.session_state.invoice_info:
-            st.code(
-                "\n".join(st.session_state.invoice_info),
-                language="text",
-            )
-
-        if st.session_state.invoice_error:
-            st.error(st.session_state.invoice_error)
+        if st.session_state.generate_error:
+            st.error(st.session_state.generate_error)
 
 
 if __name__ == "__main__":
