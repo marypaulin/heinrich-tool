@@ -9,14 +9,17 @@ from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 
-from docx2pdf import convert
-
 from heinrich_tool.backend.messages import Messages
 
 logger = logging.getLogger(__name__)
 
 # One Word conversion at a time: Streamlit reruns and double clicks run in parallel
 _WORD_CONVERT_LOCK = threading.Lock()
+
+# Word constants, named as in Word's object model
+WD_ALERTS_NONE = 0
+WD_EXPORT_FORMAT_PDF = 17
+WD_DO_NOT_SAVE_CHANGES = 0
 
 
 def render_pdf(docx_path: Path, messages: Messages) -> None:
@@ -59,16 +62,7 @@ def _render_with_word(docx_path: Path, messages: Messages) -> None:
 
     try:
         with _WORD_CONVERT_LOCK, _com_initialized():
-            convert(str(docx_path), str(pdf_path))
-
-            # docx2pdf can fail without raising
-            if not pdf_path.exists():
-                messages.error(
-                    "PDF wurde nicht erzeugt, bitte prüfen, ob Word installiert "
-                    "ist, die Datei nicht geöffnet ist und keine WINWORD.EXE hängt"
-                )
-                logger.error(f"docx2pdf finished without creating pdf: {pdf_path}")
-                return
+            _export_with_word(docx_path, pdf_path)
 
         messages.info(f"PDF erzeugt ({pdf_path.name})")
         logger.info(f"Generated PDF document via Word: {pdf_path.name}")
@@ -76,6 +70,27 @@ def _render_with_word(docx_path: Path, messages: Messages) -> None:
     except Exception as e:
         messages.error(f"PDF-Erzeugung fehlgeschlagen ({e})")
         logger.exception("Word-based PDF conversion failed")
+
+
+def _export_with_word(docx_path: Path, pdf_path: Path) -> None:
+    import win32com.client  # type: ignore  # pywin32, Windows only
+
+    # Own Word process: Dispatch would attach to a Word the user has open, and
+    # Quit would then close the user's documents too
+    word = win32com.client.DispatchEx("Word.Application")
+    try:
+        word.DisplayAlerts = WD_ALERTS_NONE
+        doc = word.Documents.Open(
+            str(docx_path.resolve()), ReadOnly=True, AddToRecentFiles=False
+        )
+        try:
+            doc.ExportAsFixedFormat(
+                str(pdf_path.resolve()), ExportFormat=WD_EXPORT_FORMAT_PDF
+            )
+        finally:
+            doc.Close(SaveChanges=WD_DO_NOT_SAVE_CHANGES)
+    finally:
+        word.Quit()
 
 
 def _render_with_libreoffice(docx_path: Path, messages: Messages) -> None:

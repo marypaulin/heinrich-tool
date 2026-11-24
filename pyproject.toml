@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Erzeugt Angebote, Lieferscheine, Auftragsbestätigungen und Rechnungen aus der Zeiterfassung"
 requires-python = ">=3.14"
 dependencies = [
-    "docx2pdf>=0.1.8",
     "python-docx>=1.2.0",
     "streamlit>=1.65.0",
     "pywin32; sys_platform == 'win32'",
