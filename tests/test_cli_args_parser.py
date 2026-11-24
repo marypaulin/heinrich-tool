@@ -21,6 +21,7 @@ def test_cli_builds_offer_args():
 @pytest.mark.parametrize(
     ("mode", "kind"),
     [
+        ("offer", DocumentKind.OFFER),
         ("delivery_note", DocumentKind.DELIVERY_NOTE),
         ("invoice", DocumentKind.INVOICE),
         ("order_confirmation", DocumentKind.ORDER_CONFIRMATION),
@@ -32,11 +33,6 @@ def test_cli_builds_args_with_receipt_number(mode, kind):
     assert args == DocumentArgs(
         kind=kind, project_number=PROJECT_NUMBER, receipt_number=RECEIPT_NUMBER
     )
-
-
-def test_cli_rejects_a_receipt_number_for_offer():
-    with pytest.raises(SystemExit):
-        parse_cli_args(["-m", "offer", "-p", PROJECT_NUMBER, "-r", RECEIPT_NUMBER])
 
 
 @pytest.mark.parametrize("mode", ["invoice", "order_confirmation"])

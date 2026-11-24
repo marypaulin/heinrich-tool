@@ -13,6 +13,7 @@ from docx.table import Table, _Cell
 from heinrich_tool.backend import services
 from heinrich_tool.backend.config import DocumentKind
 from heinrich_tool.backend.input_args import create_document_args
+from heinrich_tool.backend.messages import Level
 from heinrich_tool.backend.services import generate_document
 from heinrich_tool.backend.settings import Settings
 from samples import (
@@ -142,6 +143,16 @@ def test_failed_pdf_is_reported_to_caller(monkeypatch, sample_settings):
     args = create_document_args(DocumentKind.OFFER, "1234")
     messages = generate_document(args, date(2025, 8, 1), sample_settings)
     assert messages.has_errors
+
+
+def test_offer_leaves_out_receipt_number_and_warns(sample_settings, sample_data_root):
+    args = create_document_args(DocumentKind.OFFER, "1234", "4100012345")
+    messages = generate_document(args, date(2025, 8, 1), sample_settings)
+
+    doc_texts = texts(open_document(sample_data_root, "Angebot Nr. 1234.docx"))
+    assert "Angebot Nr. 1234 – " in doc_texts
+    assert "Auftragsnummer:\t1234 / " in doc_texts
+    assert any(m.level is Level.WARNING for m in messages.items)
 
 
 # — Lieferschein ——————————————————————————————————————————————————————————————

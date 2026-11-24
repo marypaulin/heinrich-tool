@@ -26,15 +26,12 @@ def parse_cli_args(argv: Iterable[str] | None = None) -> DocumentArgs:
         "-r",
         "--receipt-number",
         help=(
-            "Receipt number (optional for delivery_note, "
+            "Receipt number (left out for offer, optional for delivery_note, "
             "required for invoice and order_confirmation)"
         ),
     )
 
     args = parser.parse_args(list(argv) if argv is not None else None)
-
-    if args.mode == "offer" and args.receipt_number is not None:
-        parser.error("RECEIPT_NUMBER should not be provided for offer mode")
 
     try:
         return create_document_args(

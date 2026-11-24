@@ -88,18 +88,24 @@ def generate_document(
     args: DocumentArgs, document_date: date, settings: Settings
 ) -> Messages:
     messages = Messages()
+    receipt_number = args.receipt_number
+    if args.kind is DocumentKind.OFFER and receipt_number is not None:
+        logger.warning("Receipt number left out of offer")
+        messages.warning("Angebot enthält keine Belegnummer")
+        receipt_number = None
+
     config = read_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
 
     target_path = get_target_path(
-        project_dir, args.kind, config, args.project_number, args.receipt_number
+        project_dir, args.kind, config, args.project_number, receipt_number
     )
     doc = load_template(settings.template_path)
     delivery_date = _build_delivery_date(document_date, args.kind, config)
     meta = _build_meta(
         args.project_number,
-        args.receipt_number,
+        receipt_number,
         document_date,
         delivery_date,
         args.kind,
