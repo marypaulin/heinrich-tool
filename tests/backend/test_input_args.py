@@ -4,12 +4,8 @@ from pathlib import Path
 
 import pytest
 
-from heinrich_tool.backend.input_args import (
-    create_delivery_note_args,
-    create_invoice_args,
-    create_offer_args,
-    create_settings,
-)
+from heinrich_tool.backend.config import DocumentKind
+from heinrich_tool.backend.input_args import create_document_args, create_settings
 
 PROJECT_NUMBER = "1408"
 RECEIPT_NUMBER = "8100045372"
@@ -19,11 +15,15 @@ RECEIPT_NUMBER = "8100045372"
 
 
 def test_four_digit_project_number_is_accepted():
-    assert create_offer_args(PROJECT_NUMBER).project_number == PROJECT_NUMBER
+    args = create_document_args(DocumentKind.OFFER, PROJECT_NUMBER)
+
+    assert args.project_number == PROJECT_NUMBER
 
 
 def test_project_number_is_trimmed():
-    assert create_offer_args(f"  {PROJECT_NUMBER}  ").project_number == PROJECT_NUMBER
+    args = create_document_args(DocumentKind.OFFER, f"  {PROJECT_NUMBER}  ")
+
+    assert args.project_number == PROJECT_NUMBER
 
 
 @pytest.mark.parametrize(
@@ -31,57 +31,42 @@ def test_project_number_is_trimmed():
 )
 def test_invalid_project_number_is_rejected(project_number):
     with pytest.raises(ValueError):
-        create_offer_args(project_number)
-
-
-@pytest.mark.parametrize(
-    "create",
-    [
-        create_offer_args,
-        create_delivery_note_args,
-        lambda project_number: create_invoice_args(project_number, RECEIPT_NUMBER),
-    ],
-)
-def test_every_mode_validates_the_project_number(create):
-    with pytest.raises(ValueError):
-        create("140")
+        create_document_args(DocumentKind.OFFER, project_number)
 
 
 # — Receipt number ————————————————————————————————————————————————————————————
 
 
 def test_delivery_works_without_receipt_number():
-    assert create_delivery_note_args(PROJECT_NUMBER).receipt_number is None
+    args = create_document_args(DocumentKind.DELIVERY_NOTE, PROJECT_NUMBER)
+
+    assert args.receipt_number is None
 
 
 @pytest.mark.parametrize("receipt_number", ["", "   "])
 def test_delivery_turns_a_blank_receipt_number_into_none(receipt_number):
     """Streamlit submits an untouched text input as an empty string, not as None."""
-    assert (
-        create_delivery_note_args(PROJECT_NUMBER, receipt_number).receipt_number is None
+    args = create_document_args(
+        DocumentKind.DELIVERY_NOTE, PROJECT_NUMBER, receipt_number
     )
 
-
-def test_receipt_number_is_trimmed():
-    padded = f" {RECEIPT_NUMBER} "
-
-    assert (
-        create_delivery_note_args(PROJECT_NUMBER, padded).receipt_number
-        == RECEIPT_NUMBER
-    )
-    assert create_invoice_args(PROJECT_NUMBER, padded).receipt_number == RECEIPT_NUMBER
+    assert args.receipt_number is None
 
 
-@pytest.mark.parametrize("receipt_number", ["", "   "])
-def test_invoice_requires_a_receipt_number(receipt_number):
+@pytest.mark.parametrize("kind", [DocumentKind.DELIVERY_NOTE, DocumentKind.INVOICE])
+def test_receipt_number_is_trimmed(kind):
+    args = create_document_args(kind, PROJECT_NUMBER, f" {RECEIPT_NUMBER} ")
+
+    assert args.receipt_number == RECEIPT_NUMBER
+
+
+@pytest.mark.parametrize(
+    "kind", [DocumentKind.INVOICE, DocumentKind.ORDER_CONFIRMATION]
+)
+@pytest.mark.parametrize("receipt_number", [None, "", "   "])
+def test_invoice_and_order_confirmation_require_a_receipt_number(kind, receipt_number):
     with pytest.raises(ValueError):
-        create_invoice_args(PROJECT_NUMBER, receipt_number)
-
-
-def test_each_factory_sets_its_own_mode():
-    assert create_offer_args(PROJECT_NUMBER).mode == "offer"
-    assert create_delivery_note_args(PROJECT_NUMBER).mode == "delivery"
-    assert create_invoice_args(PROJECT_NUMBER, RECEIPT_NUMBER).mode == "invoice"
+        create_document_args(kind, PROJECT_NUMBER, receipt_number)
 
 
 # — Settings ——————————————————————————————————————————————————————————————————

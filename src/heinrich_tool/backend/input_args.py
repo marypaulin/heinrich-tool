@@ -3,34 +3,18 @@
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
 
+from heinrich_tool.backend.config import DocumentKind
 from heinrich_tool.backend.settings import Settings
 
 PROJECT_NUMBER_RE = re.compile(r"\d{4}")
 
 
 @dataclass(frozen=True)
-class OfferArgs:
-    mode: Literal["offer"]
-    project_number: str
-
-
-@dataclass(frozen=True)
-class DeliveryNoteArgs:
-    mode: Literal["delivery"]
+class DocumentArgs:
+    kind: DocumentKind
     project_number: str
     receipt_number: str | None
-
-
-@dataclass(frozen=True)
-class InvoiceArgs:
-    mode: Literal["invoice"]
-    project_number: str
-    receipt_number: str
-
-
-InputArgs = OfferArgs | DeliveryNoteArgs | InvoiceArgs
 
 
 def _parse_project_number(project_number: str) -> str:
@@ -45,33 +29,23 @@ def _parse_receipt_number_optional(receipt_number: str | None) -> str | None:
     return (receipt_number or "").strip() or None
 
 
-def _parse_receipt_number_required(receipt_number: str) -> str:
-    receipt_number = receipt_number.strip()
+def _parse_receipt_number_required(receipt_number: str | None) -> str:
+    receipt_number = (receipt_number or "").strip()
     if not receipt_number:
         raise ValueError("Receipt number is required")
     return receipt_number
 
 
-def create_offer_args(project_number: str) -> OfferArgs:
+def create_document_args(
+    kind: DocumentKind, project_number: str, receipt_number: str | None = None
+) -> DocumentArgs:
     project_number = _parse_project_number(project_number)
-    return OfferArgs(mode="offer", project_number=project_number)
-
-
-def create_delivery_note_args(
-    project_number: str, receipt_number: str | None = None
-) -> DeliveryNoteArgs:
-    project_number = _parse_project_number(project_number)
-    receipt_number = _parse_receipt_number_optional(receipt_number)
-    return DeliveryNoteArgs(
-        mode="delivery", project_number=project_number, receipt_number=receipt_number
-    )
-
-
-def create_invoice_args(project_number: str, receipt_number: str) -> InvoiceArgs:
-    project_number = _parse_project_number(project_number)
-    receipt_number = _parse_receipt_number_required(receipt_number)
-    return InvoiceArgs(
-        mode="invoice", project_number=project_number, receipt_number=receipt_number
+    if kind in (DocumentKind.INVOICE, DocumentKind.ORDER_CONFIRMATION):
+        receipt_number = _parse_receipt_number_required(receipt_number)
+    else:
+        receipt_number = _parse_receipt_number_optional(receipt_number)
+    return DocumentArgs(
+        kind=kind, project_number=project_number, receipt_number=receipt_number
     )
 
 

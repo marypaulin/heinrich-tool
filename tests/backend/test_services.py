@@ -11,16 +11,9 @@ from docx.document import Document as DocxDocument
 from docx.table import Table, _Cell
 
 from heinrich_tool.backend import services
-from heinrich_tool.backend.input_args import (
-    create_delivery_note_args,
-    create_invoice_args,
-    create_offer_args,
-)
-from heinrich_tool.backend.services import (
-    generate_delivery_note,
-    generate_invoice_and_order,
-    generate_offer,
-)
+from heinrich_tool.backend.config import DocumentKind
+from heinrich_tool.backend.input_args import create_document_args
+from heinrich_tool.backend.services import generate_document
 from heinrich_tool.backend.settings import Settings
 from samples import (
     SAMPLE_CONFIG_PATH,
@@ -123,7 +116,8 @@ def assert_no_placeholders_left(doc: DocxDocument) -> None:
 
 
 def test_offer(sample_settings, sample_data_root):
-    generate_offer(create_offer_args("1234"), date(2025, 8, 1), sample_settings)
+    args = create_document_args(DocumentKind.OFFER, "1234")
+    generate_document(args, date(2025, 8, 1), sample_settings)
 
     doc = open_document(sample_data_root, "Angebot Nr. 1234.docx")
     doc_texts = texts(doc)
@@ -145,9 +139,8 @@ def test_failed_pdf_is_reported_to_caller(monkeypatch, sample_settings):
         "render_pdf",
         lambda docx_path, messages: messages.error("PDF-Erzeugung fehlgeschlagen"),
     )
-    messages = generate_offer(
-        create_offer_args("1234"), date(2025, 8, 1), sample_settings
-    )
+    args = create_document_args(DocumentKind.OFFER, "1234")
+    messages = generate_document(args, date(2025, 8, 1), sample_settings)
     assert messages.has_errors
 
 
@@ -155,8 +148,8 @@ def test_failed_pdf_is_reported_to_caller(monkeypatch, sample_settings):
 
 
 def test_delivery_note(sample_settings, sample_data_root):
-    args = create_delivery_note_args("1234", "4100012345")
-    generate_delivery_note(args, date(2025, 8, 15), sample_settings)
+    args = create_document_args(DocumentKind.DELIVERY_NOTE, "1234", "4100012345")
+    generate_document(args, date(2025, 8, 15), sample_settings)
 
     doc = open_document(sample_data_root, "Lieferschein Nr. 1234.docx")
     doc_texts = texts(doc)
@@ -176,14 +169,16 @@ def test_delivery_note(sample_settings, sample_data_root):
 
 
 @pytest.mark.parametrize(
-    ("filename", "doctype", "header"),
+    ("kind", "filename", "doctype", "header"),
     [
         (
+            DocumentKind.INVOICE,
             "Rechnung Nr. 1234 - 4100012345.docx",
             "Rechnung",
             "Wir bitten um Ausgleich der folgenden Positionen:",
         ),
         (
+            DocumentKind.ORDER_CONFIRMATION,
             "Auftragsbestätigung Nr. 1234 - 4100012345.docx",
             "Auftragsbestätigung",
             "Wir bestätigen den Auftrag über folgende Positionen:",
@@ -191,10 +186,10 @@ def test_delivery_note(sample_settings, sample_data_root):
     ],
 )
 def test_invoice_and_order_confirmation(
-    sample_settings, sample_data_root, filename, doctype, header
+    sample_settings, sample_data_root, kind, filename, doctype, header
 ):
-    args = create_invoice_args("1234", "4100012345")
-    generate_invoice_and_order(args, date(2025, 8, 20), sample_settings)
+    args = create_document_args(kind, "1234", "4100012345")
+    generate_document(args, date(2025, 8, 20), sample_settings)
 
     doc = open_document(sample_data_root, filename)
     doc_texts = texts(doc)
@@ -217,4 +212,5 @@ def test_csv_without_order_numbers_raises(sample_settings, sample_data_root):
     write_variant(sample_data_root / PROJECT_FOLDER, column="Auftrags-Nr.", value="")
 
     with pytest.raises(ValueError):
-        generate_offer(create_offer_args("1234"), date(2025, 8, 1), sample_settings)
+        args = create_document_args(DocumentKind.OFFER, "1234")
+        generate_document(args, date(2025, 8, 1), sample_settings)

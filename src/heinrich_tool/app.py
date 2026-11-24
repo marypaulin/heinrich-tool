@@ -6,16 +6,11 @@ from pathlib import Path
 
 import streamlit as st
 
-from heinrich_tool.backend.input_args import (
-    create_delivery_note_args,
-    create_invoice_args,
-    create_offer_args,
-    create_settings,
-)
+from heinrich_tool.backend.config import DocumentKind
+from heinrich_tool.backend.input_args import create_document_args, create_settings
+from heinrich_tool.backend.messages import Messages
 from heinrich_tool.backend.services import (
-    generate_delivery_note,
-    generate_invoice_and_order,
-    generate_offer,
+    generate_document,
     load_settings,
     save_settings,
 )
@@ -66,8 +61,8 @@ def run_offer(settings):
     project_number = st.session_state.get("project_number_offer", "")
 
     try:
-        args = create_offer_args(project_number)
-        messages = generate_offer(args, date.today(), settings)
+        args = create_document_args(DocumentKind.OFFER, project_number)
+        messages = generate_document(args, date.today(), settings)
         st.session_state.offer_info = [str(m) for m in messages.items]
         toast_result("Angebot", messages)
     except (FileNotFoundError, ValueError) as e:
@@ -83,8 +78,10 @@ def run_delivery(settings):
     receipt_number = st.session_state.get("receipt_number_delivery", "")
 
     try:
-        args = create_delivery_note_args(project_number, receipt_number)
-        messages = generate_delivery_note(args, date.today(), settings)
+        args = create_document_args(
+            DocumentKind.DELIVERY_NOTE, project_number, receipt_number
+        )
+        messages = generate_document(args, date.today(), settings)
         st.session_state.delivery_info = [str(m) for m in messages.items]
         toast_result("Lieferschein", messages)
     except (FileNotFoundError, ValueError) as e:
@@ -100,8 +97,16 @@ def run_invoice(settings):
     receipt_number = st.session_state.get("receipt_number_invoice", "")
 
     try:
-        args = create_invoice_args(project_number, receipt_number)
-        messages = generate_invoice_and_order(args, date.today(), settings)
+        invoice_args = create_document_args(
+            DocumentKind.INVOICE, project_number, receipt_number
+        )
+        order_args = create_document_args(
+            DocumentKind.ORDER_CONFIRMATION, project_number, receipt_number
+        )
+        messages = Messages(
+            generate_document(invoice_args, date.today(), settings).items
+            + generate_document(order_args, date.today(), settings).items
+        )
         st.session_state.invoice_info = [str(m) for m in messages.items]
         toast_result("Rechnung und Auftragsbestätigung", messages)
     except (FileNotFoundError, ValueError) as e:

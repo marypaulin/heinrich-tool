@@ -6,9 +6,7 @@ from datetime import date
 
 from heinrich_tool.backend.services import (
     SETTINGS_PATH,
-    generate_delivery_note,
-    generate_invoice_and_order,
-    generate_offer,
+    generate_document,
     load_settings,
 )
 from heinrich_tool.cli_args_parser import parse_cli_args
@@ -28,12 +26,7 @@ def main():
             f"No settings found at {SETTINGS_PATH}, set the paths in the app first"
         )
 
-    if args.mode == "offer":
-        generate_offer(args, date.today(), settings)
-    elif args.mode == "delivery":
-        generate_delivery_note(args, date.today(), settings)
-    elif args.mode == "invoice":
-        generate_invoice_and_order(args, date.today(), settings)
+    generate_document(args, date.today(), settings)
 
 
 if __name__ == "__main__":

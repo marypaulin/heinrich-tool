@@ -13,7 +13,7 @@ from heinrich_tool.backend.docgen import (
     replace_placeholders,
     save_docx,
 )
-from heinrich_tool.backend.input_args import DeliveryNoteArgs, InvoiceArgs, OfferArgs
+from heinrich_tool.backend.input_args import DocumentArgs
 from heinrich_tool.backend.messages import Messages
 from heinrich_tool.backend.models import DocumentMeta, LineItem, Totals
 from heinrich_tool.backend.paths import (
@@ -73,40 +73,6 @@ def _load_line_items(
     return line_items
 
 
-# — Private document orchestrator —————————————————————————————————————————————
-
-
-def _generate_document(
-    kind: DocumentKind,
-    project_dir: Path,
-    project_number: str,
-    receipt_number: str | None,
-    document_date: date,
-    line_items: list[LineItem],
-    template_path: Path,
-    config: Config,
-    messages: Messages,
-) -> Path:
-    target_path = get_target_path(
-        project_dir, kind, config, project_number, receipt_number
-    )
-    doc = load_template(template_path)
-    delivery_date = _build_delivery_date(document_date, kind, config)
-    meta = _build_meta(
-        project_number, receipt_number, document_date, delivery_date, kind, config
-    )
-    totals = Totals.from_line_items(line_items, config.vat_rate)
-
-    fill_table_with_line_items(doc, line_items)
-    replace_placeholders(doc, totals.to_mapping() | meta.to_mapping(config.date_format))
-    save_docx(doc, target_path)
-
-    log_label = kind.replace("_", " ")
-    logger.info(f"Generated {log_label}: {target_path.name}")
-    messages.info(f"{meta.doctype} erzeugt ({target_path.name})")
-    return target_path
-
-
 # — Public API ————————————————————————————————————————————————————————————————
 
 
@@ -118,79 +84,36 @@ def save_settings(settings: Settings) -> None:
     write_settings(SETTINGS_PATH, settings)
 
 
-def generate_offer(
-    args: OfferArgs, document_date: date, settings: Settings
+def generate_document(
+    args: DocumentArgs, document_date: date, settings: Settings
 ) -> Messages:
     messages = Messages()
     config = read_config(settings.config_path)
     project_dir = get_project_dir(settings.data_root, args.project_number, messages)
     line_items = _load_line_items(project_dir, config, messages)
-    target_path = _generate_document(
-        kind=DocumentKind.OFFER,
-        project_dir=project_dir,
-        project_number=args.project_number,
-        receipt_number=None,
-        document_date=document_date,
-        line_items=line_items,
-        template_path=settings.template_path,
-        config=config,
-        messages=messages,
+
+    target_path = get_target_path(
+        project_dir, args.kind, config, args.project_number, args.receipt_number
     )
+    doc = load_template(settings.template_path)
+    delivery_date = _build_delivery_date(document_date, args.kind, config)
+    meta = _build_meta(
+        args.project_number,
+        args.receipt_number,
+        document_date,
+        delivery_date,
+        args.kind,
+        config,
+    )
+    totals = Totals.from_line_items(line_items, config.vat_rate)
+
+    fill_table_with_line_items(doc, line_items)
+    replace_placeholders(doc, totals.to_mapping() | meta.to_mapping(config.date_format))
+    save_docx(doc, target_path)
+
+    log_label = args.kind.replace("_", " ")
+    logger.info(f"Generated {log_label}: {target_path.name}")
+    messages.info(f"{meta.doctype} erzeugt ({target_path.name})")
+
     render_pdf(target_path, messages)
-    return messages
-
-
-def generate_delivery_note(
-    args: DeliveryNoteArgs, document_date: date, settings: Settings
-) -> Messages:
-    messages = Messages()
-    config = read_config(settings.config_path)
-    project_dir = get_project_dir(settings.data_root, args.project_number, messages)
-    line_items = _load_line_items(project_dir, config, messages)
-    target_path = _generate_document(
-        kind=DocumentKind.DELIVERY_NOTE,
-        project_dir=project_dir,
-        project_number=args.project_number,
-        receipt_number=args.receipt_number,
-        document_date=document_date,
-        line_items=line_items,
-        template_path=settings.template_path,
-        config=config,
-        messages=messages,
-    )
-    render_pdf(target_path, messages)
-    return messages
-
-
-def generate_invoice_and_order(
-    args: InvoiceArgs, document_date: date, settings: Settings
-) -> Messages:
-    messages = Messages()
-    config = read_config(settings.config_path)
-    project_dir = get_project_dir(settings.data_root, args.project_number, messages)
-    line_items = _load_line_items(project_dir, config, messages)
-    invoice_path = _generate_document(
-        kind=DocumentKind.INVOICE,
-        project_dir=project_dir,
-        project_number=args.project_number,
-        receipt_number=args.receipt_number,
-        document_date=document_date,
-        line_items=line_items,
-        template_path=settings.template_path,
-        config=config,
-        messages=messages,
-    )
-    order_path = _generate_document(
-        kind=DocumentKind.ORDER_CONFIRMATION,
-        project_dir=project_dir,
-        project_number=args.project_number,
-        receipt_number=args.receipt_number,
-        document_date=document_date,
-        line_items=line_items,
-        template_path=settings.template_path,
-        config=config,
-        messages=messages,
-    )
-    render_pdf(invoice_path, messages)
-    render_pdf(order_path, messages)
     return messages

@@ -3,15 +3,11 @@
 import argparse
 from collections.abc import Iterable
 
-from heinrich_tool.backend.input_args import (
-    InputArgs,
-    create_delivery_note_args,
-    create_invoice_args,
-    create_offer_args,
-)
+from heinrich_tool.backend.config import DocumentKind
+from heinrich_tool.backend.input_args import DocumentArgs, create_document_args
 
 
-def parse_cli_args(argv: Iterable[str] | None = None) -> InputArgs:
+def parse_cli_args(argv: Iterable[str] | None = None) -> DocumentArgs:
     parser = argparse.ArgumentParser(
         description="Generate documents from CSV and Word template."
     )
@@ -20,8 +16,8 @@ def parse_cli_args(argv: Iterable[str] | None = None) -> InputArgs:
         "--mode",
         type=str.lower,
         required=True,
-        choices=["offer", "delivery", "invoice"],
-        help="Mode: offer, delivery or invoice",
+        choices=list(DocumentKind),
+        help="Document to generate",
     )
     parser.add_argument(
         "-p", "--project-number", required=True, help="4-digit project number"
@@ -29,7 +25,10 @@ def parse_cli_args(argv: Iterable[str] | None = None) -> InputArgs:
     parser.add_argument(
         "-r",
         "--receipt-number",
-        help="Receipt number (optional for delivery, required for invoice)",
+        help=(
+            "Receipt number (optional for delivery_note, "
+            "required for invoice and order_confirmation)"
+        ),
     )
 
     args = parser.parse_args(list(argv) if argv is not None else None)
@@ -38,13 +37,8 @@ def parse_cli_args(argv: Iterable[str] | None = None) -> InputArgs:
         parser.error("RECEIPT_NUMBER should not be provided for offer mode")
 
     try:
-        if args.mode == "offer":
-            return create_offer_args(args.project_number)
-        elif args.mode == "delivery":
-            return create_delivery_note_args(args.project_number, args.receipt_number)
-        else:
-            if args.receipt_number is None:
-                parser.error("RECEIPT_NUMBER is required for invoice mode")
-            return create_invoice_args(args.project_number, args.receipt_number)
+        return create_document_args(
+            DocumentKind(args.mode), args.project_number, args.receipt_number
+        )
     except ValueError as e:
         parser.error(str(e))
