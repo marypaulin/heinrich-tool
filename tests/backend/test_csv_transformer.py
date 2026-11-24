@@ -169,20 +169,25 @@ def test_row_without_hours_and_material_is_skipped_with_warning(
 # — Order of items ——————————————————————————————————————————————————————————————
 
 
-def test_items_follow_the_csv_order(sample_config, messages):
+def test_hours_come_before_material_in_csv_order(sample_config, messages):
     rows = [
         csv_row(
             order_number="90010001",
             hourly_rate=Decimal("84.90"),
             material_cost=Decimal("30.00"),
         ),
-        csv_row(order_number="90010002", hourly_rate=Decimal("84.90")),
+        csv_row(
+            order_number="90010002",
+            hourly_rate=Decimal("84.90"),
+            material_cost=Decimal("95.00"),
+        ),
     ]
 
     line_items = csv_rows_to_line_items(rows, sample_config, messages)
 
     assert [item.description for item in line_items] == [
         "Meisterstunde zu Auftrag Nr. 90010001",
-        "Material zu Auftrag Nr. 90010001",
         "Meisterstunde zu Auftrag Nr. 90010002",
+        "Material zu Auftrag Nr. 90010001",
+        "Material zu Auftrag Nr. 90010002",
     ]

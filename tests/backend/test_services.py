@@ -28,17 +28,17 @@ PROJECT_FOLDER = "1234 - Schutzgitter Mischer 3"
 # CSV row 11 has a blank order number and is skipped
 ITEM_ROWS = [
     ["1", "1", "Meisterstunde zu Auftrag Nr. 123", "84,90€", "84,90€"],
-    ["2", "1", "Material zu Auftrag Nr. 123", "95,00€", "95,00€"],
-    ["3", "11", "Meisterstunde zu Auftrag Nr. 90010001", "84,90€", "933,90€"],
-    ["4", "5", "Meisterstunde zu Auftrag Nr. 90010002", "84,90€", "424,50€"],
-    ["5", "7", "Meisterstunde zu Auftrag Nr. 90010003", "84,90€", "594,30€"],
-    ["6", "4", "Meisterstunde Sonntag zu Auftrag Nr. 90010003", "139,90€", "559,60€"],
-    ["7", "7", "Helferstunde zu Auftrag Nr. 111", "48,00€", "336,00€"],
-    ["8", "1", "Material zu Auftrag Nr. 111", "30,00€", "30,00€"],
-    ["9", "3", "Helferstunde zu Auftrag Nr. 111", "48,00€", "144,00€"],
-    ["10", "1", "Material zu Auftrag Nr. 111", "270,00€", "270,00€"],
-    ["11", "2,5", "Meisterstunde zu Auftrag Nr. 90010004", "84,90€", "212,25€"],
-    ["12", "2", "Meisterstunde zu Auftrag Nr. 90010005", "84,90€", "169,80€"],
+    ["2", "11", "Meisterstunde zu Auftrag Nr. 90010001", "84,90€", "933,90€"],
+    ["3", "5", "Meisterstunde zu Auftrag Nr. 90010002", "84,90€", "424,50€"],
+    ["4", "7", "Meisterstunde zu Auftrag Nr. 90010003", "84,90€", "594,30€"],
+    ["5", "4", "Meisterstunde Sonntag zu Auftrag Nr. 90010003", "139,90€", "559,60€"],
+    ["6", "7", "Helferstunde zu Auftrag Nr. 111", "48,00€", "336,00€"],
+    ["7", "3", "Helferstunde zu Auftrag Nr. 111", "48,00€", "144,00€"],
+    ["8", "2,5", "Meisterstunde zu Auftrag Nr. 90010004", "84,90€", "212,25€"],
+    ["9", "2", "Meisterstunde zu Auftrag Nr. 90010005", "84,90€", "169,80€"],
+    ["10", "1", "Material zu Auftrag Nr. 123", "95,00€", "95,00€"],
+    ["11", "1", "Material zu Auftrag Nr. 111", "30,00€", "30,00€"],
+    ["12", "1", "Material zu Auftrag Nr. 111", "270,00€", "270,00€"],
     ["13", "1", "Material zu Auftrag Nr. 90010006", "145,00€", "145,00€"],
 ]
 

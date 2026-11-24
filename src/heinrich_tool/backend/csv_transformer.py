@@ -57,7 +57,9 @@ def csv_rows_to_line_items(
 
     Transformation rules:
     - If duration_hours is non-zero, an "hours" LineItem is created.
-    - If material_cost is non-zero, a "material" LineItem is created after it.
+    - If material_cost is non-zero, a "material" LineItem is created.
+    - All hours items come before all material items, each group in CSV
+      order (client's request).
 
     Data lineage:
     - Hours LineItem:
@@ -75,7 +77,8 @@ def csv_rows_to_line_items(
     - Rows with neither hours nor material are skipped.
     - Numeric values arrive validated from the CSV loader.
     """
-    result = []
+    hours_items = []
+    material_items = []
     for csv_row in csv_rows:
         if not csv_row.order_number:
             logger.info(f"Skipping row {csv_row.row_number} without order number")
@@ -93,8 +96,8 @@ def csv_rows_to_line_items(
             continue
 
         if csv_row.duration_hours != 0:
-            result.append(_hours_item(csv_row, config, messages))
+            hours_items.append(_hours_item(csv_row, config, messages))
         if csv_row.material_cost != 0:
-            result.append(_material_item(csv_row))
+            material_items.append(_material_item(csv_row))
 
-    return result
+    return hours_items + material_items
