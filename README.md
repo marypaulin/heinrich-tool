@@ -1,12 +1,12 @@
 # Automatisierung des Rechnungsprozesses für Heinrich Metallbau
 
-Dieses Tool wird für Heinrich Metallbau entwickelt, um die manuelle Erstellung von Angeboten, Lieferscheinen, Auftragsbestätigungen und Rechnungen zu automatisieren. Perspektivisch ist auch die Erstellung von E-Rechnungen geplant. Es ist aktuell als lokale Streamlit-Webapp sowie als CLI-Tool nutzbar. Grundlage sind CSV-Exporte aus der bestehenden Zeiterfassungssoftware des Kunden, die automatisch verarbeitet und in ein vorhandenes Word-Template übertragen werden.
+Dieses Tool wird für Heinrich Metallbau entwickelt, um die manuelle Erstellung von Angeboten, Lieferscheinen, Auftragsbestätigungen und Rechnungen zu automatisieren. Perspektivisch ist auch die Erstellung von E-Rechnungen geplant. Es ist aktuell als lokale Streamlit-Webapp sowie als CLI-Tool nutzbar. Grundlage sind CSV-Exporte aus der bestehenden Zeiterfassungssoftware des Kunden, die automatisch verarbeitet und in ein vorhandenes Word-Template übertragen werden. Statt den Betrieb an eine Standardsoftware anzupassen, passt sich das Tool an dessen bestehende Geschäftsprozesse an.
 
-> **Warum ist das öffentlich?** Heinrich Metallbau hat freundlicherweise zugestimmt, dass ich das Projekt als Portfolio-Beispiel zeigen darf. Sensible Daten liegen nicht im Repo.
+> **Warum ist das öffentlich?** Heinrich Metallbau hat freundlicherweise der Nutzung als Portfolio-Projekt zugestimmt. Sensible Daten liegen nicht im Repo.
 
 ---
 
-Die Benutzeroberfläche ist bisher bewusst einfach gehalten: Projektnummer eingeben, Dokument erzeugen.
+Die Benutzeroberfläche ist bisher bewusst einfach gehalten: Projektnummer wählen, Lieferdatum eintragen, Dokument erzeugen.
 
 ![Hauptansicht der Webapp](docs/images/webapp_screenshot.png)
 
@@ -27,7 +27,7 @@ Installation und Updates übernimmt ein Skript. Vorkenntnisse oder vorinstallier
 (irm https://raw.githubusercontent.com/marypaulin/heinrich-tool/main/scripts/setup.ps1).TrimStart([char]0xFEFF) | iex
 ```
 
-> **Wichtig:** Als Installationsort einen lokalen Ordner wählen, nicht in OneDrive.
+> **Wichtig:** Als Installationsort einen lokalen Ordner wählen, nicht OneDrive.
 
 Das Skript
 
@@ -53,7 +53,7 @@ Für die Nutzung des Tools werden zwei weitere Dateien benötigt, die sich nicht
 - `Vordruck.docx` (Word-Template für alle Outputdokumente)
 - `config.json` (Konfigurationsdatei mit Stundenlohn, Mehrwertsteuersatz etc.)
 
-Diese erhält der Nutzer des Tools per Mail und legt sie an einem beliebigen Ort ab, etwa im Datenordner neben den Projektordnern.
+Diese enthalten Geschäftsdaten des Kunden und liegen in seinem OneDrive, damit sie auf allen Geräten synchron sind.
 
 Beim ersten Start ist der Block **Pfade** oben auf der Hauptseite geöffnet, die Dokumente sind bis dahin gesperrt. Dort einmal pro Rechner eintragen und **Speichern**:
 
@@ -72,6 +72,8 @@ Das Tool läuft als lokale Web-App und wird per Doppelklick auf die Verknüpfung
 * Die App öffnet sich automatisch im Standardbrowser.
 * Ist die App bereits geöffnet, wird lediglich ein weiterer Browser-Tab geöffnet.
 
+Im Formular **Dokument** wählen, **Liefertermin** setzen (vorbelegt mit heute), **Projektnummer** und bei Bedarf **Belegnummer** eintragen, dann **Erzeugen**. Die Eingaben bleiben stehen, bis sie geändert werden, so lassen sich etwa Angebot und Lieferschein direkt nacheinander erzeugen.
+
 ---
 
 ## 4. Nutzung als CLI-Tool
@@ -80,50 +82,31 @@ Als CLI-Tool wird das Programm im Projektordner über die Kommandozeile gestarte
 
 Das CLI nutzt die in der App gespeicherten Pfade (Abschnitt 2). Sind dort noch keine eingetragen, bricht es mit einem Hinweis ab.
 
-### Angebot erzeugen
+```
+uv run python -m heinrich_tool.cli -m MODUS -p PROJEKTNUMMER [-r BELEGNUMMER] [-d JJJJ-MM-TT]
+```
 
-```
-uv run python -m heinrich_tool.cli --mode offer --project-number 1408
-```
-oder kurz
+| Option | Bedeutung |
+|---|---|
+| `-m`, `--mode` | `offer`, `delivery_note`, `invoice` oder `order_confirmation` |
+| `-p`, `--project-number` | vierstellige Projektnummer |
+| `-r`, `--receipt-number` | Belegnummer, je nach Dokument (siehe Abschnitt 5) |
+| `-d`, `--delivery-date` | Liefertermin, ohne Angabe heute |
+
+Beispiele:
+
 ```
 uv run python -m heinrich_tool.cli -m offer -p 1408
+uv run python -m heinrich_tool.cli -m invoice -p 1408 -r 8100045372 -d 2026-12-01
 ```
 
----
-
-### Lieferschein erzeugen
-
-```
-uv run python -m heinrich_tool.cli --mode delivery --project-number 1408
-```
-oder kurz
-```
-uv run python -m heinrich_tool.cli -m delivery -p 1408
-```
-oder mit optionaler Belegnummer
-```
-uv run python -m heinrich_tool.cli -m delivery -p 1408 -r 8100045372
-```
-
-
----
-
-### Rechnung & Auftragsbestätigung erzeugen
-
-```
-uv run python -m heinrich_tool.cli --mode invoice --project-number 1408 --receipt-number 8100045372
-```
-oder kurz
-```
-uv run python -m heinrich_tool.cli -m invoice -p 1408 -r 8100045372
-```
+Alle Optionen zeigt `--help`.
 
 ---
 
 ## 5. Dokumenten-Workflows
 
-Das Tool arbeitet mit klar getrennten Modi. Jeder Modus erzeugt seine Dokumente direkt aus der Zeiterfassungs-CSV des Projekts, unabhängig davon, ob für das Projekt schon andere Dokumente erzeugt wurden.
+Jeder Durchgang erzeugt genau ein Dokument, direkt aus der Zeiterfassungs-CSV des Projekts und unabhängig davon, ob für das Projekt schon andere Dokumente erzeugt wurden.
 
 **Gemeinsamer Ablauf je Dokument**
 
@@ -137,37 +120,16 @@ Das Tool arbeitet mit klar getrennten Modi. Jeder Modus erzeugt seine Dokumente 
 
 ---
 
-### Modus `offer` oder `delivery` – Angebot oder Lieferschein erzeugen
+### Eingaben und Ergebnisse
 
-**Eingaben**
+Jedes Dokument braucht die Projektnummer, den Liefertermin und die Zeiterfassungs-CSV im Projektordner (automatisch erkannt anhand der Projektnummer). Die Belegnummer hängt vom Dokument ab:
 
-* `project_number`
-* Optional: `receipt_number` (für delivery mode)
-* Zeiterfassungs-CSV im Projektordner (automatisch erkannt anhand `project_number`)
-
-**Ergebnisse**
-
-* `Angebot/Lieferschein Nr. <project_number>.docx`
-* `Angebot/Lieferschein Nr. <project_number>.pdf`
-
----
-
-### Modus `invoice` – Rechnung und Auftragsbestätigung erzeugen
-
-**Eingaben**
-
-* `project_number`
-* `receipt_number`
-* Zeiterfassungs-CSV im Projektordner (automatisch erkannt anhand `project_number`)
-
-Der gemeinsame Ablauf läuft zweimal, einmal für die Rechnung und einmal für die Auftragsbestätigung.
-
-**Ergebnisse**
-
-* `Rechnung Nr. <project_number> - <receipt_number>.docx`
-* `Rechnung Nr. <project_number> - <receipt_number>.pdf`
-* `Auftragsbestätigung Nr. <project_number> - <receipt_number>.docx`
-* `Auftragsbestätigung Nr. <project_number> - <receipt_number>.pdf`
+| Dokument | Modus (CLI) | Belegnummer | Datei |
+|---|---|---|---|
+| Angebot | `offer` | entfällt, eine angegebene wird mit Warnung ignoriert | `Angebot Nr. <project_number>.docx/.pdf` |
+| Lieferschein | `delivery_note` | optional | `Lieferschein Nr. <project_number>.docx/.pdf` |
+| Rechnung | `invoice` | Pflicht | `Rechnung Nr. <project_number> - <receipt_number>.docx/.pdf` |
+| Auftragsbestätigung | `order_confirmation` | Pflicht | `Auftragsbestätigung Nr. <project_number> - <receipt_number>.docx/.pdf` |
 
 ---
 

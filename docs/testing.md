@@ -240,8 +240,8 @@ eigene Fixes behoben.
   - „Heinrich Tool“ startet die App (`scripts/run_windows.bat`), der Browser
     öffnet genau einen Tab. Keine Abfrage der Windows-Firewall: Streamlit
     lauscht nur auf `127.0.0.1`.
-  - Block „Pfade“ ist offen, darunter „Noch keine Pfade eingestellt“, alle
-    Dokument-Formulare ausgegraut.
+  - Block „Pfade“ ist offen, darunter „Noch keine Pfade eingestellt“, das
+    Dokument-Formular ausgegraut.
   - Der erste Start nach der Installation dauert über eine Minute (Python
     kompiliert, Defender prüft jede neue Datei), spätere um 10 Sekunden.
   - Zweiter Klick bei laufender App: nur der Browser öffnet.
@@ -325,8 +325,8 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
   ```
   Danach über die Verknüpfung neu starten.
 - **Erwartet:**
-  - Nach dem Speichern „Pfade gespeichert“, der Block klappt zu, die
-    Dokument-Formulare sind aktiv.
+  - Nach dem Speichern „Pfade gespeichert“, der Block klappt zu, das
+    Dokument-Formular ist aktiv.
   - „Projektordner gefunden“, „CSV-Datei gefunden“, Angebot als DOCX im
     Projektordner. Die PDF fehlt mit „PDF-Erzeugung fehlgeschlagen
     ((-2147221005, 'Ungültige Klassenzeichenfolge', …))“: Die VM hat kein
@@ -334,7 +334,7 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
     Das erste Angebot nach der Installation braucht um eine Minute,
     weitere sind sofort da.
   - Nach dem Neustart ist der Block zu und hält die drei Pfade ohne
-    Anführungszeichen, die Formulare sind sofort aktiv.
+    Anführungszeichen, das Formular ist sofort aktiv.
   - `%LOCALAPPDATA%\HeinrichTool\settings.json` existiert und hält die drei
     Pfade, in PowerShell:
     ```powershell
