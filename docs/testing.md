@@ -246,10 +246,9 @@ eigene Fixes behoben.
     kompiliert, Defender prüft jede neue Datei), spätere um 10 Sekunden.
   - Zweiter Klick bei laufender App: nur der Browser öffnet.
 
-#### W3 — Update per `update.bat`
+#### W3 — Update über das Startmenü
 
-- **Aktion:** Doppelklick auf `update.bat` im Projektordner, danach auch über
-  "Heinrich Tool aktualisieren" im Startmenü.
+- **Aktion:** "Heinrich Tool aktualisieren" im Startmenü.
 - **Erwartet:** Keine Execution-Policy-Warnung, kein Ordner-Dialog,
   `Already up to date.`, `uv sync`, Verknüpfungen, "Fertig". Fenster wartet auf
   Tastendruck. Umlaute richtig (Weg über `-File`, BOM).
