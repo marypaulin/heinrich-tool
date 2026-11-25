@@ -149,6 +149,11 @@ unverändert. UEFI-Variablen (NVRAM) und TPM-Zustand liegen nicht im
 Plattenabbild und ändern sich bei jedem Lauf; sie bekommen Basiskopien neben
 dem Abbild und werden beim Zurücksetzen mit zurückgeholt.
 
+Die Basis hat die Hinweise zur Geräteeinrichtung abgeschaltet und OneDrive mit
+dem Test-Konto angemeldet, ohne "Heinrich Daten". Die Cloud wird beim
+Zurücksetzen nicht mit zurückgesetzt: Am Ende jedes Laufs "Heinrich Daten" in
+OneDrive löschen, die Synchronisierung abwarten und erst dann herunterfahren.
+
 Einmalig, bei ausgeschalteter VM:
 
 ```bash
@@ -329,11 +334,9 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
   - "Projektordner gefunden", "CSV-Datei gefunden", Angebot als DOCX im
     Projektordner. Das erste Angebot nach der Installation braucht um eine
     Minute, weitere sind sofort da.
-  - Ohne Word: Die PDF fehlt mit "PDF-Erzeugung fehlgeschlagen
-    ((-2147221005, 'Ungültige Klassenzeichenfolge', …))". Der Toast meldet
-    "Angebot erzeugt, mit Fehlern" mit ⚠️.
-  - Mit Word: "PDF erzeugt (Angebot Nr. 1234.pdf)", die PDF liegt neben der
-    DOCX. Der Toast meldet "Angebot erzeugt" mit ✅.
+  - "PDF erzeugt (Angebot Nr. 1234.pdf)", die PDF liegt neben der DOCX. Der
+    Toast meldet "Angebot erzeugt" mit ✅. Ohne Word in der VM fehlt die PDF
+    mit Fehlermeldung und ⚠️-Toast. Das ist kein Befund: Max hat immer Word.
   - Nach dem Neustart ist der Block zu und hält die drei Pfade ohne
     Anführungszeichen, das Formular ist sofort aktiv.
   - `%LOCALAPPDATA%\HeinrichTool\settings.json` existiert und hält die drei
@@ -381,8 +384,7 @@ PowerShell hält die Datei stattdessen mit derselben Sperre offen.
 #### W13 — PDF mit Word
 
 Braucht Word in der VM, etwa aus dem Testmonat von Microsoft 365. Nur im
-Overlay installieren, nicht in die Basis übernehmen: Der Testmonat läuft ab,
-und W10 bleibt nach dem Zurücksetzen ohne Word prüfbar.
+Overlay installieren, nicht in die Basis übernehmen: Der Testmonat läuft ab.
 
 - **Vorbereitung:** W10 durchlaufen, Word installiert und aktiviert. In Word
   ein neues Dokument anlegen, ein Wort tippen, nicht speichern.
