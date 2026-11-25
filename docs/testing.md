@@ -327,11 +327,13 @@ Nur unter Windows prüfbar: Unter Linux fehlt `Get-NetTCPConnection`, das Skript
   - Nach dem Speichern "Pfade gespeichert", der Block klappt zu, das
     Dokument-Formular ist aktiv.
   - "Projektordner gefunden", "CSV-Datei gefunden", Angebot als DOCX im
-    Projektordner. Die PDF fehlt mit "PDF-Erzeugung fehlgeschlagen
-    ((-2147221005, 'Ungültige Klassenzeichenfolge', …))": Die VM hat kein
-    Word. Der Toast meldet deshalb "Angebot erzeugt, mit Fehlern" mit ⚠️.
-    Das erste Angebot nach der Installation braucht um eine Minute,
-    weitere sind sofort da.
+    Projektordner. Das erste Angebot nach der Installation braucht um eine
+    Minute, weitere sind sofort da.
+  - Ohne Word: Die PDF fehlt mit "PDF-Erzeugung fehlgeschlagen
+    ((-2147221005, 'Ungültige Klassenzeichenfolge', …))". Der Toast meldet
+    "Angebot erzeugt, mit Fehlern" mit ⚠️.
+  - Mit Word: "PDF erzeugt (Angebot Nr. 1234.pdf)", die PDF liegt neben der
+    DOCX. Der Toast meldet "Angebot erzeugt" mit ✅.
   - Nach dem Neustart ist der Block zu und hält die drei Pfade ohne
     Anführungszeichen, das Formular ist sofort aktiv.
   - `%LOCALAPPDATA%\HeinrichTool\settings.json` existiert und hält die drei
